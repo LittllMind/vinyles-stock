@@ -34,6 +34,9 @@ class CartController extends Controller
      */
     public function add(Request $request)
     {
+        // capture incoming request data for debugging if needed
+        \Illuminate\Support\Facades\Log::info('CartController.add request', $request->all());
+
         $data = $request->validate([
             'vinyle_id' => 'required|integer|exists:vinyles,id',
             'quantite'  => 'required|integer|min:1',

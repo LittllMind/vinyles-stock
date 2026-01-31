@@ -55,6 +55,26 @@ class CartService
                 ]
             );
 
+            // If the cart is empty but there's a recent anonymous cart with items (session cookies sometimes
+            // don't persist in test environments or certain browsers), try to adopt that cart to the current
+            // session to avoid losing items between requests.
+            if ($cart->items()->count() === 0) {
+                $recentAnon = Cart::whereNull('user_id')
+                    ->where('id', '!=', $cart->id)
+                    ->where('created_at', '>=', now()->subMinutes(10))
+                    ->whereHas('items')
+                    ->orderByDesc('created_at')
+                    ->first();
+
+                if ($recentAnon) {
+                    // attach to current session id
+                    $recentAnon->session_id = $sessionId;
+                    $recentAnon->save();
+
+                    $cart = $recentAnon;
+                }
+            }
+
             // Also set a cookie with the anonymous cart id so it can be referenced directly on login
             try {
                 if ($cart && $cart->id) {
@@ -299,10 +319,23 @@ class CartService
 
             if (!$anonCart) {
                 \Illuminate\Support\Facades\Log::info('mergeAnonymousCart: no anon cart found by session', ['source_session' => $sourceSessionId]);
-                return false;
-            }
 
-            \Illuminate\Support\Facades\Log::info('mergeAnonymousCart: found anon cart by session', ['source_session' => $sourceSessionId, 'anon_cart_id' => $anonCart->id, 'items' => $anonCart->items()->count()]);
+                // Extra fallback: pick a recent anonymous cart with items created in the last X minutes
+                $recentAnon = Cart::whereNull('user_id')
+                    ->whereHas('items')
+                    ->where('created_at', '>=', now()->subMinutes(10))
+                    ->orderByDesc('created_at')
+                    ->first();
+
+                if ($recentAnon) {
+                    \Illuminate\Support\Facades\Log::info('mergeAnonymousCart: found recent anon cart fallback', ['anon_cart_id' => $recentAnon->id, 'items' => $recentAnon->items()->count()]);
+                    $anonCart = $recentAnon;
+                } else {
+                    return false;
+                }
+            } else {
+                \Illuminate\Support\Facades\Log::info('mergeAnonymousCart: found anon cart by session', ['source_session' => $sourceSessionId, 'anon_cart_id' => $anonCart->id, 'items' => $anonCart->items()->count()]);
+            }
         }
 
         // Ensure user cart exists (use current session id)

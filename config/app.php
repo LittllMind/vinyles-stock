@@ -18,6 +18,9 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
+    /* Admin email for order notifications */
+    'admin_email' => env('ADMIN_EMAIL', null),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment

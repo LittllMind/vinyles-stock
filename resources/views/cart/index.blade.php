@@ -140,11 +140,12 @@
                                 </div>
 
                                 @if (empty($stockErrors))
-                                    <button type="button"
-                                        class="block w-full bg-gray-400 text-white text-center py-3 rounded-lg cursor-not-allowed"
-                                        disabled>
-                                        Valider ma commande (bientôt)
-                                    </button>
+                                    <form method="POST" action="{{ route('orders.prepare') }}">
+                                        @csrf
+                                        <button type="submit" class="block w-full bg-blue-600 text-white text-center py-3 rounded-lg hover:bg-blue-700">
+                                            Valider ma commande
+                                        </button>
+                                    </form>
                                 @else
                                     <button disabled
                                         class="block w-full bg-gray-400 text-white text-center py-3 rounded-lg cursor-not-allowed font-semibold">

@@ -153,8 +153,13 @@ class VinyleController extends Controller
                 'image_standard' => $vinyle->getFirstMediaUrl('photo_standard', 'medium')
                     ?: $vinyle->getFirstMediaUrl('photos', 'medium'),
 
-                'image_miroir'   => $vinyle->getFirstMediaUrl('photo_miroir', 'medium'),
-                'image_dore'     => $vinyle->getFirstMediaUrl('photo_dore', 'medium'),
+                'image_miroir' => $vinyle->getFirstMediaUrl('photo_miroir', 'medium')
+                    ?: $vinyle->getFirstMediaUrl('photo_standard', 'medium')
+                    ?: $vinyle->getFirstMediaUrl('photos', 'medium'),
+
+                'image_dore'   => $vinyle->getFirstMediaUrl('photo_dore', 'medium')
+                    ?: $vinyle->getFirstMediaUrl('photo_standard', 'medium')
+                    ?: $vinyle->getFirstMediaUrl('photos', 'medium'),
             ];
         });
 

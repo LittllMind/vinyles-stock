@@ -49,8 +49,17 @@ Route::prefix('kiosque')->name('kiosque.')->group(function () {
 });
 
 
+Route::post('/orders/prepare', [OrderController::class, 'prepare'])->name('orders.prepare');
+
 Route::get('/orders/create', [OrderController::class, 'create'])
+    ->middleware('auth')
     ->name('orders.create');
+
+Route::get('/orders/payment', [OrderController::class, 'payment'])
+    ->middleware('auth')
+    ->name('orders.payment');
+
+Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 
 // Cookies
 Route::post('/cookies/accept', function () {
