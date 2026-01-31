@@ -16,6 +16,9 @@
                 <a href="{{ route('stats') }}" class="{{ request()->routeIs('stats') ? 'active' : '' }}">
                     Statistiques
                 </a>
+                <a href="{{ route('account.orders.index') }}" class="{{ request()->routeIs('account.orders.*') ? 'active' : '' }}">
+                    Mes commandes
+                </a>
                 <a href="{{ route('kiosque.index') }}" target="_blank">
                     Kiosque
                 </a>

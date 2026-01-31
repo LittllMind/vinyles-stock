@@ -16,7 +16,7 @@ Route::get('/dashboard', function () {
     return redirect()->route('vinyles.index');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'role:employe|admin'])->group(function () {
     Route::resource('vinyles', VinyleController::class);
     Route::get('/stats', [StatsController::class, 'index'])->name('stats');
 
@@ -24,6 +24,14 @@ Route::middleware('auth')->group(function () {
     Route::resource('fonds', FondController::class)->only(['index', 'update']);
 
     Route::resource('ventes', VenteController::class);
+});
+
+// Routes pour l'espace client (compte)
+Route::middleware('auth')->group(function () {
+    Route::prefix('account')->name('account.')->group(function () {
+        Route::get('/orders', [OrderController::class, 'myOrders'])->name('orders.index');
+        Route::get('/orders/{order}', [OrderController::class, 'myOrdersShow'])->name('orders.show');
+    });
 });
 
 

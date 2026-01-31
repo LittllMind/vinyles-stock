@@ -10,7 +10,13 @@ class CheckUserRole
 {
     public function handle(Request $request, Closure $next, string $role): Response
     {
-        if (!auth()->check() || auth()->user()->role !== $role) {
+        if (!auth()->check()) {
+            abort(403, 'Accès non autorisé');
+        }
+
+        // Allow multiple roles separated by '|' or ',' (e.g. 'admin|employe')
+        $allowed = preg_split('/[|,]/', $role);
+        if (!in_array(auth()->user()->role, $allowed, true)) {
             abort(403, 'Accès non autorisé');
         }
 

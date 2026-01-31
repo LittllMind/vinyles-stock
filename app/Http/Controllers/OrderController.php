@@ -92,6 +92,27 @@ class OrderController extends Controller
         ]);
     }
 
+    /**
+     * Liste des commandes pour l'utilisateur connecté (espace Mon compte)
+     */
+    public function myOrders()
+    {
+        $orders = auth()->user()->orders()->latest()->get();
+        return view('orders.index', compact('orders'));
+    }
+
+    /**
+     * Détail d'une commande appartenant à l'utilisateur connecté
+     */
+    public function myOrdersShow(\App\Models\Order $order)
+    {
+        if ($order->user_id !== auth()->id()) {
+            abort(403, 'Accès non autorisé');
+        }
+
+        return view('orders.show', compact('order'));
+    }
+
     public function store()
     {
         $validated = request()->validate([
