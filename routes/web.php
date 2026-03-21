@@ -15,6 +15,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ModeMarcheController;
+use App\Http\Controllers\BougieController;
 
 // ============================================
 // ROUTES PUBLIQUES (Accès sans authentification)
@@ -99,7 +100,7 @@ Route::middleware(['auth', 'role:admin,employe'])->group(function () {
     // Statistiques
     Route::get('/stats', [StatsController::class, 'index'])->name('stats');
 
-    // Note: Les routes fonds sont déjà définies plus haut (lignes ~78-81)
+    // Note: Les routes fonds sont déjà définies plus haut
     // Pas de duplication ici
 
     // Historique des mouvements de stock
@@ -109,8 +110,15 @@ Route::middleware(['auth', 'role:admin,employe'])->group(function () {
     // Gestion des ventes (admin)
     Route::resource('ventes', VenteController::class);
 
-    // Note: Les routes Mode Marché sont définies en dehors de ce groupe
-    // pour avoir les noms 'marche.xxx' sans préfixe 'admin.'
+    // Gestion des bougies (admin)
+    Route::resource('bougies', BougieController::class);
+});
+
+// ============================================
+// ROUTES ADMIN BOUGIES (Admin et Employé)
+// ============================================
+Route::middleware(['auth', 'role:admin,employe'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('bougies', BougieController::class)->parameters(['bougies' => 'bougie']);
 });
 
 // ============================================
