@@ -8,29 +8,39 @@ use App\Models\Bougie;
 class MouvementStockObserver
 {
     /**
-     * Handle the MouvementStock "created" event.
+     * Handle the MouvementStock "creating" event.
+     * Met à jour le stock de la bougie avant la création du mouvement.
      */
-    public function created(MouvementStock $mouvement): void
+    public function creating(MouvementStock $mouvement): void
     {
-        // Vérifier que c'est une Bougie (polymorphique)
-        if ($mouvement->stockable_type !== Bougie::class) {
-            return;
-        }
-
-        $bougie = Bougie::find($mouvement->stockable_id);
-        if (!$bougie) {
-            return;
-        }
+        // Récupérer le produit concerné
+        /** @var Bougie $produit */
+        $produit = $mouvement->stockable;
 
         if ($mouvement->isEntree()) {
-            $bougie->quantite += $mouvement->quantite;
-        } elseif ($mouvement->isSortie()) {
-            $bougie->quantite -= $mouvement->quantite;
-            if ($bougie->quantite < 0) {
-                $bougie->quantite = 0; // Sécurité stock négatif
-            }
+            $produit->quantite += $mouvement->quantite;
+        } else {
+            $produit->quantite -= $mouvement->quantite;
         }
 
-        $bougie->save();
+        $produit->save();
+    }
+
+    /**
+     * Handle the MouvementStock "deleting" event.
+     * Annule le mouvement de stock en cas de suppression.
+     */
+    public function deleting(MouvementStock $mouvement): void
+    {
+        /** @var Bougie $produit */
+        $produit = $mouvement->stockable;
+
+        if ($mouvement->isEntree()) {
+            $produit->quantite -= $mouvement->quantite;
+        } else {
+            $produit->quantite += $mouvement->quantite;
+        }
+
+        $produit->save();
     }
 }

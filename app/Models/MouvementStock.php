@@ -23,17 +23,14 @@ class MouvementStock extends Model
     ];
 
     protected $casts = [
-        'type' => 'string',
         'quantite' => 'integer',
     ];
 
-    /** @return MorphTo */
     public function stockable(): MorphTo
     {
         return $this->morphTo();
     }
 
-    /** @return BelongsTo */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
