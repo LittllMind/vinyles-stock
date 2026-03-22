@@ -14,7 +14,7 @@ return new class extends Migration
             $table->enum('type', ['entree', 'sortie']);
             $table->integer('quantite')->unsigned();
             $table->string('raison')->nullable();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
         });
     }

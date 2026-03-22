@@ -7,6 +7,8 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvi
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
+use App\Models\Bougie;
+use App\Observers\BougieObserver;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -29,41 +31,15 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         $this->routes(function () {
-            $this->mapApiRoutes();
-            $this->mapWebRoutes();
-        });
-    }
-
-    /**
-     * Define the "web" routes for the application.
-     */
-    protected function mapWebRoutes(): void
-    {
-        foreach ($this->centralDomains() as $domain) {
             Route::middleware('web')
-                ->domain($domain)
                 ->group(base_path('routes/web.php'));
-        }
-    }
-
-    /**
-     * Define the "api" routes for the application.
-     */
-    protected function mapApiRoutes(): void
-    {
-        foreach ($this->centralDomains() as $domain) {
+                
             Route::middleware('api')
-                ->domain($domain)
                 ->prefix('api')
                 ->group(base_path('routes/api.php'));
-        }
-    }
+        });
 
-    /**
-     * Get the central domains for the application.
-     */
-    protected function centralDomains(): array
-    {
-        return [null];
+        // Enregistrer l'observer Bougie
+        Bougie::observe(BougieObserver::class);
     }
 }

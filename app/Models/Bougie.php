@@ -34,7 +34,12 @@ class Bougie extends Model
 
     public function isEnAlerte(): bool
     {
-        return $this->quantite <= $this->seuil_alerte;
+        return $this->quantite < $this->seuil_alerte;
+    }
+
+    public function stockAlerts(): MorphMany
+    {
+        return $this->morphMany(StockAlert::class, 'alertable');
     }
 
     /** @return MorphMany */
