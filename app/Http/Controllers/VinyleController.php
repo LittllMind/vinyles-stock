@@ -164,10 +164,32 @@ class VinyleController extends Controller
         
         $vinyles = $query->paginate(12)->withQueryString();
         
+        // Transformer les vinyles pour Alpine.js (ajouter l'URL de la fiche)
+        $vinylesData = $vinyles->map(function ($vinyle) {
+            return [
+                'id' => $vinyle->id,
+                'artiste' => $vinyle->artiste,
+                'modele' => $vinyle->modele,
+                'prix' => $vinyle->prix,
+                'quantite' => $vinyle->quantite,
+                'image' => $vinyle->image,
+            ];
+        });
+        
         // Liste des genres et styles pour les filtres
         $genres = Vinyle::distinct()->pluck('genre')->filter()->values();
         $styles = Vinyle::distinct()->pluck('style')->filter()->values();
         
-        return view('kiosque.kiosque', compact('vinyles', 'genres', 'styles'));
+        return view('kiosque', compact('vinyles', 'vinylesData', 'genres', 'styles'));
+    }
+
+    /**
+     * Affiche la fiche produit publique d'un vinyle
+     */
+    public function showPublic(Vinyle $vinyle): View
+    {
+        $vinyle->load('media');
+        
+        return view('vinyle.show', compact('vinyle'));
     }
 }

@@ -71,10 +71,12 @@
 
                 <!-- Contenu -->
                 <div class="p-4 space-y-3">
-                    <div>
-                        <h3 class="font-bold text-lg text-gray-100 truncate" x-text="vinyle.artiste"></h3>
-                        <p class="text-sm text-gray-400" x-text="vinyle.modele"></p>
-                    </div>
+                    <a :href="`/kiosque/vinyle/${vinyle.id}`" class="block hover:opacity-80 transition">
+                        <div>
+                            <h3 class="font-bold text-lg text-gray-100 truncate" x-text="vinyle.artiste"></h3>
+                            <p class="text-sm text-gray-400" x-text="vinyle.modele"></p>
+                        </div>
+                    </a>
 
                     <div class="flex items-center justify-between">
                         <div class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">

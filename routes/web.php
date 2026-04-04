@@ -144,6 +144,9 @@ Route::prefix('kiosque')->name('kiosque.')->group(function () {
     // Consultation du catalogue - accessible à tous (visiteurs inclus)
     Route::get('/', [VinyleController::class, 'kiosque'])->name('index');
 
+    // Fiche produit individuelle - accessible à tous
+    Route::get('/vinyle/{vinyle}', [VinyleController::class, 'showPublic'])->name('vinyle.show');
+
     // Achat - nécessite d'être connecté
     Route::post('/vendre', [VenteController::class, 'storeFromKiosque'])
         ->middleware('auth')
