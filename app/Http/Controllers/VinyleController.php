@@ -164,11 +164,23 @@ class VinyleController extends Controller
         
         $vinyles = $query->paginate(12)->withQueryString();
         
+        // Transformer les données pour la vue AlpineJS avec le bon champ 'artiste'
+        $vinylesData = $vinyles->map(function ($vinyle) {
+            return [
+                'id' => $vinyle->id,
+                'artiste' => $vinyle->artiste,
+                'modele' => $vinyle->modele,
+                'prix' => $vinyle->prix,
+                'quantite' => $vinyle->quantite,
+                'image' => $vinyle->getFirstMediaUrl('photo', 'medium') ?: '/images/no-image.png',
+            ];
+        });
+        
         // Liste des genres et styles pour les filtres
         $genres = Vinyle::distinct()->pluck('genre')->filter()->values();
         $styles = Vinyle::distinct()->pluck('style')->filter()->values();
         
-        return view('kiosque.kiosque', compact('vinyles', 'genres', 'styles'));
+        return view('kiosque', compact('vinylesData', 'genres', 'styles'));
     }
 
     /**

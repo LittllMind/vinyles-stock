@@ -132,11 +132,11 @@
             x-transition:leave-start="opacity-100 scale-100"
             x-transition:leave-end="opacity-0 scale-95">
             <h3 class="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
-                x-text="selectedVinyle?.nom"></h3>
+                x-text="selectedVinyle?.artiste"></h3>
 
             <!-- Image -->
             <div class="my-4 rounded-xl overflow-hidden bg-gray-900">
-                <img :src="selectedVinyle?.image || '/images/no-image.png'" :alt="selectedVinyle?.nom"
+                <img :src="selectedVinyle?.image || '/images/no-image.png'" :alt="selectedVinyle?.artiste"
                     class="w-full h-56 object-contain" />
             </div>
 
