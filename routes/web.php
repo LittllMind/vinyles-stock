@@ -15,6 +15,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ModeMarcheController;
+use App\Http\Controllers\NewsletterController;
 
 // ============================================
 // ROUTES PUBLIQUES (Accès sans authentification)
@@ -225,6 +226,12 @@ Route::middleware(['auth'])->group(function () {
 
 // Webhook Stripe (doit être public)
 Route::post('/stripe/webhook', [PaymentController::class, 'webhook'])->name('stripe.webhook');
+
+// ============================================
+// ROUTES NEWSLETTER (Public)
+// ============================================
+Route::get('/newsletter/confirm/{token}', [NewsletterController::class, 'confirm'])->name('newsletter.confirm');
+Route::get('/newsletter/unsubscribe/{token}', [NewsletterController::class, 'unsubscribe'])->name('newsletter.unsubscribe');
 
 
 
