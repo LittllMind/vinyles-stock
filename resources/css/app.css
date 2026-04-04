@@ -11,6 +11,19 @@
     display: none !important;
 }
 
+/* Animation de shrink pour la barre de progression du toast */
+@keyframes shrink {
+    from { transform: scaleX(1); }
+    to { transform: scaleX(0); }
+}
+
+.animate-shrink {
+    animation-name: shrink;
+    animation-duration: 3000ms;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+}
+
 /* Reset et Base */
 * {
     margin: 0;

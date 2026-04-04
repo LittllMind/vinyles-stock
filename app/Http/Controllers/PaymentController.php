@@ -109,12 +109,24 @@ class PaymentController extends Controller
                         $cartService->clear();
                     }
 
-                    return view('payment.success', compact('payment'));
+                    // Vider la session pending_order_id
+                    \Illuminate\Support\Facades\Session::forget('pending_order_id');
+
+                    return redirect()
+                        ->route('orders.my')
+                        ->with('toast', [
+                            'type' => 'success',
+                            'message' => 'Commande passée avec succès ! Merci pour votre achat.',
+                        ]);
                 }
             }
 
             // Paiement non confirmé ou échoué
-            return redirect()->route('kiosque.index')->with('error', 'Paiement non confirmé');
+            return redirect()->route('kiosque.index')
+                ->with('toast', [
+                    'type' => 'error',
+                    'message' => 'Paiement non confirmé',
+                ]);
         } catch (\Stripe\Exception\InvalidRequestException $e) {
             // Session Stripe invalide ou expirée
             Log::error('Session Stripe invalide: ' . $e->getMessage());
@@ -127,7 +139,12 @@ class PaymentController extends Controller
      */
     public function cancel()
     {
-        return view('payment.cancel');
+        return redirect()
+            ->route('orders.payment')
+            ->with('toast', [
+                'type' => 'info',
+                'message' => 'Paiement annulé. Votre panier est toujours disponible.',
+            ]);
     }
 
     /**

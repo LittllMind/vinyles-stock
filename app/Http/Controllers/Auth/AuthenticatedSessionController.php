@@ -44,7 +44,12 @@ class AuthenticatedSessionController extends Controller
             'current_session_id' => session()->getId(),
         ]);
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        return redirect()
+            ->intended(RouteServiceProvider::HOME)
+            ->with('toast', [
+                'type' => 'success',
+                'message' => 'Bienvenue ! Connexion réussie.',
+            ]);
     }
 
     /**

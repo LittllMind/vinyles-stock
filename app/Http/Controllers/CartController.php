@@ -49,7 +49,13 @@ class CartController extends Controller
             $fondType
         );
 
-        return back()->with('success', 'Vinyle ajouté au panier !');
+        $vinyle = \App\Models\Vinyle::find($data['vinyle_id']);
+        $vinyleName = $vinyle ? '"' . $vinyle->titre . '"' : 'Vinyle';
+
+        return back()->with('toast', [
+            'type' => 'success',
+            'message' => $vinyleName . ' ajouté au panier !',
+        ]);
     }
 
     /**
