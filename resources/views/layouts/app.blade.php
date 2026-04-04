@@ -50,6 +50,10 @@
                             🎧 S'inscrire
                         </a>
                     @else
+                        <a href="{{ route('wishlist.index') }}" class="text-sm text-gray-300 hover:text-purple-400 transition {{ request()->routeIs('wishlist.*') ? 'text-pink-400 font-semibold' : '' }}">
+                            ❤️ Mes favoris
+                        </a>
+                        
                         <a href="{{ route('orders.my') }}" class="text-sm text-gray-300 hover:text-purple-400 transition {{ request()->routeIs('orders.my') ? 'text-pink-400 font-semibold' : '' }}">
                             📦 Mes commandes
                         </a>
