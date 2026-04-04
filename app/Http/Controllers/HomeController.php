@@ -12,8 +12,9 @@ class HomeController extends Controller
      */
     public function landing()
     {
-        // Récupérer quelques vinyles en vedette pour la landing page
+        // Récupérer quelques vinyles en vedette pour la landing page avec leurs images
         $featured = Vinyle::where('quantite', '>', 0)
+            ->with('media')
             ->orderBy('created_at', 'desc')
             ->take(6)
             ->get();

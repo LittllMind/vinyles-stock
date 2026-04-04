@@ -157,13 +157,22 @@
                 @foreach($featured as $vinyle)
                 <div class="bg-gray-900 rounded-2xl overflow-hidden border border-gray-700 hover:border-purple-500 transition group">
                     <div class="aspect-square bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center relative overflow-hidden">
-                        <div class="text-6xl group-hover:scale-110 transition duration-300">💿</div>
+                        @php
+                            $imageUrl = $vinyle->getFirstMediaUrl('photo', 'medium');
+                        @endphp
+                        @if($imageUrl)
+                            <img src="{{ $imageUrl }}" alt="{{ $vinyle->artiste }} - {{ $vinyle->modele }}"
+                                class="w-full h-full object-cover group-hover:scale-110 transition duration-300" />
+                        @else
+                            <img src="/images/no-image.png" alt="Pas d'image disponible"
+                                class="w-full h-full object-contain p-8 group-hover:scale-110 transition duration-300" />
+                        @endif
                         <div class="absolute top-4 right-4 px-3 py-1 {{ $vinyle->quantite > 0 ? 'bg-green-600' : 'bg-red-600' }} rounded-full text-xs font-medium">
                             {{ $vinyle->quantite > 0 ? 'Disponible' : 'Rupture' }}
                         </div>
                     </div>
                     <div class="p-6">
-                        <h3 class="text-xl font-semibold mb-2">{{ $vinyle->nom }}</h3>
+                        <h3 class="text-xl font-semibold mb-2">{{ $vinyle->artiste }}</h3>
                         <p class="text-gray-400 mb-4">{{ $vinyle->modele }}</p>
                         <div class="flex justify-between items-center">
                             <span class="text-2xl font-bold text-purple-400">{{ number_format($vinyle->prix, 2) }}€</span>
