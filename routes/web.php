@@ -9,6 +9,7 @@ use App\Http\Controllers\StockAlertController;
 use App\Http\Controllers\StockMovementController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ContactController;
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
@@ -22,6 +23,7 @@ use App\Http\Controllers\ModeMarcheController;
 Route::get('/', [HomeController::class, 'landing'])->name('landing');
 Route::get('/about', [HomeController::class, 'about'])->name('about');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
