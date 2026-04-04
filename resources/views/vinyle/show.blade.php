@@ -89,11 +89,48 @@
 
             {{-- Section Informations --}}
             <div class="space-y-6">
-                {{-- Titre et Artiste --}}
-                <div>
-                    <h1 class="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent mb-2">
-                        {{ $vinyle->artiste }}
-                    </h1>
+                {{-- Titre et Artiste + Bouton Favoris --}}
+                <div class="flex items-start justify-between gap-4">
+                    <div>
+                        <h1 class="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent mb-2">
+                            {{ $vinyle->artiste }}
+                        </h1>
+                    </div>
+                    
+                    {{-- Bouton Favoris --}}
+                    @auth
+                        @php
+                            $isInWishlist = \App\Models\Wishlist::isInWishlist(Auth::id(), $vinyle->id);
+                        @endphp
+                        @if($isInWishlist)
+                            <form action="{{ route('wishlist.remove', $vinyle) }}" method="POST" class="flex-shrink-0">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" 
+                                        class="w-12 h-12 bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 rounded-full flex items-center justify-center transition group"
+                                        title="Retirer des favoris">
+                                    <span class="text-2xl group-hover:scale-110 transition">❤️</span>
+                                </button>
+                            </form>
+                        @else
+                            <form action="{{ route('wishlist.add') }}" method="POST" class="flex-shrink-0">
+                                @csrf
+                                <input type="hidden" name="vinyle_id" value="{{ $vinyle->id }}">
+                                <button type="submit" 
+                                        class="w-12 h-12 bg-gray-700 hover:bg-gray-600 border border-gray-600 rounded-full flex items-center justify-center transition group"
+                                        title="Ajouter aux favoris">
+                                    <span class="text-2xl group-hover:scale-110 transition">🤍</span>
+                                </button>
+                            </form>
+                        @endif
+                    @else
+                        <a href="{{ route('login') }}" 
+                           class="w-12 h-12 bg-gray-700 hover:bg-gray-600 border border-gray-600 rounded-full flex items-center justify-center transition"
+                           title="Connectez-vous pour ajouter aux favoris">
+                            <span class="text-2xl">🤍</span>
+                        </a>
+                    @endauth
+                </div>
                     @if($vinyle->modele)
                         <p class="text-2xl text-gray-400">{{ $vinyle->modele }}</p>
                     @endif

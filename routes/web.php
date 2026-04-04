@@ -16,6 +16,7 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ModeMarcheController;
 use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\WishlistController;
 
 // ============================================
 // ROUTES PUBLIQUES (Accès sans authentification)
@@ -232,6 +233,16 @@ Route::post('/stripe/webhook', [PaymentController::class, 'webhook'])->name('str
 // ============================================
 Route::get('/newsletter/confirm/{token}', [NewsletterController::class, 'confirm'])->name('newsletter.confirm');
 Route::get('/newsletter/unsubscribe/{token}', [NewsletterController::class, 'unsubscribe'])->name('newsletter.unsubscribe');
+
+// ============================================
+// ROUTES WISHLIST (Authentifié)
+// ============================================
+Route::middleware('auth')->prefix('wishlist')->name('wishlist.')->group(function () {
+    Route::get('/', [WishlistController::class, 'index'])->name('index');
+    Route::post('/add', [WishlistController::class, 'add'])->name('add');
+    Route::delete('/remove/{vinyle}', [WishlistController::class, 'remove'])->name('remove');
+    Route::post('/to-cart/{vinyle}', [WishlistController::class, 'toCart'])->name('to-cart');
+});
 
 
 
