@@ -61,6 +61,15 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 });
 
 // ============================================
+// ROUTES ADMIN REVIEWS (Admin et Employé)
+// ============================================
+Route::middleware(['auth', 'role:admin,employe'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/reviews', [\App\Http\Controllers\Admin\ReviewController::class, 'index'])->name('reviews.index');
+    Route::patch('/reviews/{review}/approve', [\App\Http\Controllers\Admin\ReviewController::class, 'approve'])->name('reviews.approve');
+    Route::patch('/reviews/{review}/reject', [\App\Http\Controllers\Admin\ReviewController::class, 'reject'])->name('reviews.reject');
+});
+
+// ============================================
 // ROUTES ADMIN DASHBOARD (Admin et Employé)
 // ============================================
 Route::middleware(['auth', 'role:admin,employe'])->prefix('admin')->name('admin.')->group(function () {
@@ -151,6 +160,11 @@ Route::prefix('kiosque')->name('kiosque.')->group(function () {
     Route::post('/vendre', [VenteController::class, 'storeFromKiosque'])
         ->middleware('auth')
         ->name('vendre');
+
+    // Soumission d'avis (authentifié uniquement)
+    Route::post('/vinyle/{vinyle}/reviews', [\App\Http\Controllers\Review\ReviewController::class, 'store'])
+        ->middleware('auth')
+        ->name('reviews.store');
 });
 
 // ============================================

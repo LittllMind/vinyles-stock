@@ -137,4 +137,37 @@ class Vinyle extends Model implements HasMedia
     {
         return $this->hasMany(OrderItem::class);
     }
+
+    /**
+     * Relation : Un vinyle a plusieurs avis
+     */
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    /**
+     * Relation : Avis approuvés uniquement
+     */
+    public function approvedReviews(): HasMany
+    {
+        return $this->reviews()->where('status', 'approved');
+    }
+
+    /**
+     * Note moyenne des avis approuvés
+     */
+    public function getAverageRatingAttribute(): ?float
+    {
+        $avg = $this->approvedReviews()->avg('rating');
+        return $avg ? round($avg, 1) : null;
+    }
+
+    /**
+     * Nombre d'avis approuvés
+     */
+    public function getReviewsCountAttribute(): int
+    {
+        return $this->approvedReviews()->count();
+    }
 }

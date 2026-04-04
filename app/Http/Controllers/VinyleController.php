@@ -8,6 +8,7 @@ use App\Models\Vinyle;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Auth;
 
 class VinyleController extends Controller
 {
@@ -188,8 +189,22 @@ class VinyleController extends Controller
      */
     public function showPublic(Vinyle $vinyle): View
     {
-        $vinyle->load('media');
+        $vinyle->load(['media', 'approvedReviews.user']);
         
-        return view('vinyle.show', compact('vinyle'));
+        // Récupérer les avis approuvés triés par date décroissante
+        $reviews = $vinyle->approvedReviews()
+            ->with('user')
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        // Vérifier si l'utilisateur connecté a déjà laissé un avis
+        $userHasReviewed = false;
+        if (Auth::check()) {
+            $userHasReviewed = $vinyle->reviews()
+                ->where('user_id', Auth::id())
+                ->exists();
+        }
+        
+        return view('vinyle.show', compact('vinyle', 'reviews', 'userHasReviewed'));
     }
 }
