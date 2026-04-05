@@ -28,6 +28,7 @@
                     <a href="{{ route('landing') }}" class="text-gray-300 hover:text-white transition">Accueil</a>
                     <a href="{{ route('kiosque.index') }}" class="text-gray-300 hover:text-white transition">Catalogue</a>
                     <a href="{{ route('about') }}" class="text-gray-300 hover:text-white transition">Le Concept</a>
+                    <a href="{{ route('faq') }}" class="text-gray-300 hover:text-white transition">FAQ</a>
                     <a href="{{ route('contact') }}" class="text-gray-300 hover:text-white transition">Contact</a>
                 </div>
                 

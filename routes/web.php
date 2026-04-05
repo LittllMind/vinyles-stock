@@ -22,6 +22,7 @@ use App\Http\Controllers\ModeMarcheController;
 Route::get('/', [HomeController::class, 'landing'])->name('landing');
 Route::get('/about', [HomeController::class, 'about'])->name('about');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
+Route::get('/faq', [HomeController::class, 'faq'])->name('faq');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
