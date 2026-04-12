@@ -1,0 +1,562 @@
+/* ============================================
+   FUNDISC - Thème VINYL CULT
+   Dark underground + Jaune label 45 tours
+   Culture vinyle / Indie / Authentique
+   ============================================ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   VARIABLES CSS - Palette Vinyl Cult
+   ============================================ */
+:root {
+    /* Fonds - Dark Underground */
+    --vc-bg-primary: #0D0D0D;
+    --vc-bg-secondary: #141414;
+    --vc-bg-tertiary: #1A1A1A;
+    --vc-bg-elevated: #222222;
+    --vc-bg-card: #1C1C1C;
+    
+    /* Texte */
+    --vc-text-primary: #FAF9F6;
+    --vc-text-secondary: #B3B3B3;
+    --vc-text-muted: #666666;
+    --vc-text-disabled: #404040;
+    
+    /* Accent - Jaune Label Vinyle */
+    --vc-label: #FFB800;
+    --vc-label-light: #FFCC33;
+    --vc-label-dark: #CC8F00;
+    --vc-label-glow: rgba(255, 184, 0, 0.3);
+    
+    /* Secondaires */
+    --vc-accent-red: #E63946;
+    --vc-accent-green: #2A9D8F;
+    --vc-accent-blue: #457B9D;
+    
+    /* Bordures */
+    --vc-border: #333333;
+    --vc-border-light: #404040;
+    --vc-border-hover: #555555;
+    
+    /* Ombres */
+    --vc-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+    --vc-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+    --vc-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5);
+    --vc-shadow-glow: 0 0 20px var(--vc-label-glow);
+    
+    /* Typo */
+    --vc-font-sans: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+    --vc-font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* ============================================
+   BASE & RESET
+   ============================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--vc-font-sans);
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--vc-text-primary);
+    background: var(--vc-bg-primary);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Texture subtile grain vinyle */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0.02;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    z-index: 9999;
+}
+
+/* ============================================
+   TYPOGRAPHIE
+   ============================================ */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--vc-font-sans);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--vc-text-primary);
+}
+
+h1 { font-size: 2.5rem; font-weight: 800; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.5rem; }
+h4 { font-size: 1.25rem; }
+
+.text-label {
+    color: var(--vc-label);
+}
+
+.text-secondary {
+    color: var(--vc-text-secondary);
+}
+
+.text-muted {
+    color: var(--vc-text-muted);
+}
+
+/* ============================================
+   NAVIGATION - Style underground
+   ============================================ */
+.vc-nav {
+    background: var(--vc-bg-secondary);
+    border-bottom: 1px solid var(--vc-border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+}
+
+.vc-nav-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 4rem;
+}
+
+.vc-nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--vc-text-primary);
+    text-decoration: none;
+    letter-spacing: -0.05em;
+}
+
+.vc-nav-brand::before {
+    content: '💿';
+    font-size: 1.75rem;
+    filter: drop-shadow(0 0 8px var(--vc-label-glow));
+}
+
+.vc-nav-brand span {
+    background: linear-gradient(135deg, var(--vc-text-primary) 0%, var(--vc-text-secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.vc-nav-menu {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+}
+
+.vc-nav-menu a {
+    color: var(--vc-text-secondary);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 0.5rem 0;
+    position: relative;
+    transition: color 0.2s ease;
+}
+
+.vc-nav-menu a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--vc-label);
+    transition: width 0.3s ease;
+}
+
+.vc-nav-menu a:hover,
+.vc-nav-menu a.active {
+    color: var(--vc-text-primary);
+}
+
+.vc-nav-menu a:hover::after,
+.vc-nav-menu a.active::after {
+    width: 100%;
+}
+
+/* ============================================
+   BOUTONS - Style label 45 tours
+   ============================================ */
+.vc-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 2px;
+    font-family: var(--vc-font-sans);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Bouton principal - Jaune Label */
+.vc-btn-primary {
+    background: var(--vc-label);
+    color: var(--vc-bg-primary);
+    box-shadow: 0 4px 0 var(--vc-label-dark);
+}
+
+.vc-btn-primary:hover {
+    background: var(--vc-label-light);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 var(--vc-label-dark), var(--vc-shadow-glow);
+}
+
+.vc-btn-primary:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 var(--vc-label-dark);
+}
+
+/* Bouton secondaire - Outline */
+.vc-btn-secondary {
+    background: transparent;
+    color: var(--vc-text-primary);
+    border: 2px solid var(--vc-border);
+}
+
+.vc-btn-secondary:hover {
+    border-color: var(--vc-label);
+    color: var(--vc-label);
+    background: rgba(255, 184, 0, 0.05);
+}
+
+/* Bouton outline label */
+.vc-btn-outline {
+    background: transparent;
+    color: var(--vc-label);
+    border: 2px solid var(--vc-label);
+}
+
+.vc-btn-outline:hover {
+    background: var(--vc-label);
+    color: var(--vc-bg-primary);
+}
+
+/* Bouton ghost */
+.vc-btn-ghost {
+    background: transparent;
+    color: var(--vc-text-secondary);
+}
+
+.vc-btn-ghost:hover {
+    color: var(--vc-text-primary);
+    background: var(--vc-bg-elevated);
+}
+
+/* Tailles */
+.vc-btn-sm { padding: 0.5rem 1rem; font-size: 0.8rem; }
+.vc-btn-lg { padding: 1rem 2rem; font-size: 1rem; }
+
+/* ============================================
+   CARTES PRODUITS - Style galerie vinyle
+   ============================================ */
+.vc-card {
+    background: var(--vc-bg-card);
+    border: 1px solid var(--vc-border);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.vc-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--vc-label);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.vc-card:hover {
+    border-color: var(--vc-border-hover);
+    transform: translateY(-4px);
+    box-shadow: var(--vc-shadow-lg);
+}
+
+.vc-card:hover::before {
+    transform: scaleX(1);
+}
+
+.vc-card-image {
+    aspect-ratio: 1;
+    background: var(--vc-bg-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.vc-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.vc-card:hover .vc-card-image img {
+    transform: scale(1.05);
+}
+
+/* Badge édition limitée */
+.vc-badge {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: var(--vc-bg-primary);
+    border: 1px solid var(--vc-label);
+    color: var(--vc-label);
+    padding: 0.25rem 0.75rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.vc-card-content {
+    padding: 1.25rem;
+}
+
+.vc-card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--vc-text-primary);
+    margin-bottom: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.vc-card-artist {
+    font-size: 0.9rem;
+    color: var(--vc-text-secondary);
+    margin-bottom: 0.75rem;
+}
+
+.vc-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--vc-border);
+}
+
+.vc-card-price {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--vc-label);
+}
+
+.vc-card-price .currency {
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+/* ============================================
+   GRILLE CATALOGUE
+   ============================================ */
+.vc-catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    padding: 2rem 0;
+}
+
+/* ============================================
+   FORMULAIRES
+   ============================================ */
+.vc-form-group {
+    margin-bottom: 1.5rem;
+}
+
+.vc-form-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--vc-text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.vc-form-input,
+.vc-form-select,
+.vc-form-textarea {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    background: var(--vc-bg-tertiary);
+    border: 1px solid var(--vc-border);
+    border-radius: 2px;
+    color: var(--vc-text-primary);
+    font-family: var(--vc-font-sans);
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.vc-form-input:focus,
+.vc-form-select:focus,
+.vc-form-textarea:focus {
+    outline: none;
+    border-color: var(--vc-label);
+    box-shadow: 0 0 0 3px var(--vc-label-glow);
+}
+
+.vc-form-input::placeholder {
+    color: var(--vc-text-muted);
+}
+
+/* ============================================
+   BADGES & LABELS
+   ============================================ */
+.vc-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    background: var(--vc-bg-elevated);
+    border: 1px solid var(--vc-border);
+    border-radius: 2px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--vc-text-secondary);
+}
+
+.vc-tag-label {
+    background: rgba(255, 184, 0, 0.1);
+    border-color: var(--vc-label);
+    color: var(--vc-label);
+}
+
+/* ============================================
+   HEADER / HERO
+   ============================================ */
+.vc-hero {
+    background: linear-gradient(180deg, var(--vc-bg-secondary) 0%, var(--vc-bg-primary) 100%);
+    padding: 4rem 0;
+    text-align: center;
+    border-bottom: 1px solid var(--vc-border);
+}
+
+.vc-hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    letter-spacing: -0.03em;
+}
+
+.vc-hero-title span {
+    color: var(--vc-label);
+}
+
+.vc-hero-subtitle {
+    font-size: 1.25rem;
+    color: var(--vc-text-secondary);
+    max-width: 600px;
+    margin: 0 auto 2rem;
+}
+
+/* ============================================
+   UTILITAIRES
+   ============================================ */
+.vc-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+.vc-section {
+    padding: 3rem 0;
+}
+
+.vc-divider {
+    height: 1px;
+    background: var(--vc-border);
+    margin: 2rem 0;
+}
+
+/* Animation pulse label */
+@keyframes vc-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.vc-pulse {
+    animation: vc-pulse 2s ease-in-out infinite;
+}
+
+/* Écusson style sérigraphie */
+.vc-ecusson {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: var(--vc-bg-elevated);
+    border: 2px solid var(--vc-border);
+    border-radius: 50%;
+    font-size: 1.25rem;
+}
+
+/* Scrollbar custom */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--vc-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--vc-border);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--vc-border-hover);
+}
+
+/* Selection */
+::selection {
+    background: var(--vc-label);
+    color: var(--vc-bg-primary);
+}
