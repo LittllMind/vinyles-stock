@@ -44,4 +44,12 @@ class HomeController extends Controller
     {
         return view('contact');
     }
+
+    /**
+     * Page Article - Hermes Agent vs OpenClaw
+     */
+    public function articleHermesVsOpenclaw()
+    {
+        return view('articles.hermes-vs-openclaw');
+    }
 }
