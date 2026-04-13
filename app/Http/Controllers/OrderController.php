@@ -70,6 +70,32 @@ class OrderController extends Controller
             'facturation_pays' => 'nullable|string|max:2',
         ]);
 
+        // ✅ VÉRIFICATION STOCK AVANT CRÉATION COMMANDE
+        $cart = $this->cartService->getCart();
+        $itemsForStock = [];
+        foreach ($cart->items as $item) {
+            $itemsForStock[$item->vinyle_id] = $item->quantite;
+        }
+        
+        $stockService = new \App\Services\StockService();
+        $check = $stockService->verifierDisponibilite($itemsForStock);
+        
+        if (!$check['available']) {
+            return redirect()->route('cart.index')
+                ->with('error', 'Stock insuffisant : ' . implode(', ', $check['errors']));
+        }
+        
+        // Vérifier fonds si présents
+        foreach ($cart->items as $item) {
+            if ($item->type_fond) {
+                $fondCheck = $stockService->verifierFondDisponible($item->type_fond);
+                if (!$fondCheck['available']) {
+                    return redirect()->route('cart.index')
+                        ->with('error', $fondCheck['error']);
+                }
+            }
+        }
+        
         // Préparer les données de livraison
         $shipping = [
             'nom' => $validated['nom'],

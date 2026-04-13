@@ -87,7 +87,7 @@
         <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e5e5e5;">
             <p style="font-size: 0.9rem; color: #666;">
                 Pas encore de compte ? 
-                <a href="{{ route('register') }}?theme=art-print" style="text-decoration: underline; color: inherit;">Créer un compte</a>
+                <a  href="{{ route('register') }}" style="text-decoration: underline; color: inherit;">Créer un compte</a>
             </p>
         </div>
     </div>

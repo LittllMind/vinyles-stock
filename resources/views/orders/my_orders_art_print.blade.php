@@ -21,7 +21,7 @@
                 
                 <p style="color: #666; margin-bottom: 1.5rem;">Vous n'avez pas encore passé de commande.</p>
                 
-                <a href="{{ route('kiosque.index') }}?theme=art-print" class="ap-btn ap-btn-dark">
+                <a  href="{{ route('kiosque.index') }}" class="ap-btn ap-btn-dark">
                     Découvrir la collection →
                 </a>
             </div>

@@ -188,8 +188,8 @@ foreach ($cart->items as $item) {
                     
                     {{-- Boutons --}}
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <a href="{{ route('cart.index') }}?theme=art-print" 
-                           style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: #666; text-decoration: none;">
+                        <a  href="{{ route('cart.index') }} 
+                          " style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: #666; text-decoration: none;">
                             ← Retour au panier
                         </a>
                         

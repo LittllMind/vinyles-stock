@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Mail\OrderStatusUpdated;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class OrderAdminController extends Controller
 {
@@ -79,6 +81,11 @@ class OrderAdminController extends Controller
         }
 
         $order->update($updates);
+
+        // ✅ Envoyer email de notification au client si statut change
+        if ($oldStatut !== $newStatut) {
+            Mail::to($order->email)->queue(new OrderStatusUpdated($order, $oldStatut));
+        }
 
         return redirect()
             ->back()

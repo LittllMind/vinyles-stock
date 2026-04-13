@@ -42,7 +42,7 @@ foreach ($cart->items as $item) {
                     Explorez notre collection pour découvrir les pièces disponibles.
                 </p>
                 
-                <a href="{{ route('kiosque.index') }}?theme=art-print" class="ap-btn ap-btn-dark" style="margin-top: 2rem;">
+                <a  href="{{ route('kiosque.index') }}" class="ap-btn ap-btn-dark" style="margin-top: 2rem;">
                     Découvrir la collection
                 </a>
             </div>
@@ -88,8 +88,8 @@ foreach ($cart->items as $item) {
                                     </p>
                                     
                                     <p style="font-weight: 500; margin-bottom: 0.5rem;">
-                                        <a href="{{ route('kiosque.show', $vinyle->id) }}?theme=art-print" 
-                                           style="color: inherit; text-decoration: none;">
+                                        <a  href="{{ route('kiosque.show', $vinyle->id) }} 
+                                          " style="color: inherit; text-decoration: none;">
                                             {{ $vinyle->modele }}
                                         </a>
                                     </p>
@@ -151,8 +151,8 @@ foreach ($cart->items as $item) {
                     
                     {{-- Retour collection --}}
                     <div style="margin-top: 2rem;">
-                        <a href="{{ route('kiosque.index') }}?theme=art-print" 
-                           style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: #666; text-decoration: none;">
+                        <a  href="{{ route('kiosque.index') }} 
+                          " style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: #666; text-decoration: none;">
                            ← Continuer mes achats
                         </a>
                     </div>
@@ -190,11 +190,11 @@ foreach ($cart->items as $item) {
                         
                         {{-- CTA --}}
                         @if(auth()->check())
-                            <a href="{{ route('orders.create') }}?theme=art-print" class="ap-btn ap-btn-dark" style="display: block; text-align: center; width: 100%; padding: 1rem;">
+                            <a  href="{{ route('orders.create') }}" class="ap-btn ap-btn-dark" style="display: block; text-align: center; width: 100%; padding: 1rem;">
                                 Valider ma commande →
                             </a>
                         @else
-                            <a href="{{ route('login') }}?redirect={{ urlencode(route('cart.index') . '?theme=art-print') }}" 
+                            <a href="{{ route('login') }}?redirect={{ urlencode(route('cart.index') . ') }}" 
                                class="ap-btn ap-btn-dark" style="display: block; text-align: center; width: 100%; padding: 1rem;">
                                 Se connecter pour commander
                             </a>

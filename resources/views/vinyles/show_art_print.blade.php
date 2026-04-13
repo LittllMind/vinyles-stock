@@ -10,7 +10,7 @@
 {{-- Navigation secondaire --}}
 <div style="padding-top: 7rem; padding-bottom: 2rem; border-bottom: 1px solid #e5e5e5;">
     <div class="ap-container">
-        <a href="{{ route('kiosque.index') }}?theme=art-print" style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: #666; text-decoration: none;">
+        <a  href="{{ route('kiosque.index') }}" style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: #666; text-decoration: none;">
             ← Retour à la collection
         </a>
     </div>
@@ -163,7 +163,7 @@
         <h2 style="font-size: 1.25rem; font-weight: 300; margin-bottom: 2rem;">Vous aimerez aussi</h2>
         
         <p style="color: #999;">
-            <a href="{{ route('kiosque.index') }}?theme=art-print" style="color: inherit;">Découvrir la collection complète →</a>
+            <a  href="{{ route('kiosque.index') }}" style="color: inherit;">Découvrir la collection complète →</a>
         </p>
     </div>
 </section>

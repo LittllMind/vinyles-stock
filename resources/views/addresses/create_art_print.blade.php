@@ -113,7 +113,7 @@
                     Enregistrer →
                 </button>
                 
-                <a href="{{ route('addresses.index') }}?theme=art-print" style="align-self: center; font-size: 0.9rem; text-decoration: underline; color: #666;">Annuler</a>
+                <a  href="{{ route('addresses.index') }}" style="align-self: center; font-size: 0.9rem; text-decoration: underline; color: #666;">Annuler</a>
             </div>
         </form>
     </div>

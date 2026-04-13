@@ -25,11 +25,11 @@
         </div>
         
         <div style="display: flex; flex-direction: column; gap: 1rem;">
-            <a href="{{ route('cart.index') }}?theme=art-print" class="ap-btn ap-btn-dark">
+            <a  href="{{ route('cart.index') }}" class="ap-btn ap-btn-dark">
                 Retour au panier →
             </a>
             
-            <a href="{{ route('kiosque.index') }}?theme=art-print" class="ap-btn ap-btn-outline">
+            <a  href="{{ route('kiosque.index') }}" class="ap-btn ap-btn-outline">
                 Continuer les achats
             </a>
         </div>

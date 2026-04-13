@@ -26,6 +26,7 @@
                     @auth
                         <a href="/cart" class="hover:text-purple-400 transition">Panier</a>
                         <a href="{{ route('orders.my') }}" class="hover:text-purple-400 transition">Mes commandes</a>
+                        <a href="{{ route('conversations.index') }}" class="hover:text-purple-400 transition">Mes messages</a>
                         <a href="/dashboard" class="text-yellow-400 hover:text-yellow-300 font-semibold">🔧 Dashboard</a>
                         <a href="/addresses" class="hover:text-purple-400 transition" title="Mes adresses">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

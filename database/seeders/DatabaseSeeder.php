@@ -6,7 +6,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Database\Seeders\UserSeeder;
-use Database\Seeders\BougieSeeder;
 use Database\Seeders\VenteSeeder;
 use Database\Seeders\FondSeeder;
 use Database\Seeders\MouvementStockSeeder;
@@ -24,7 +23,6 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             FondSeeder::class,
             VinyleSeeder::class,
-            BougieSeeder::class,
             MouvementStockSeeder::class,
             VenteSeeder::class,
         ]);

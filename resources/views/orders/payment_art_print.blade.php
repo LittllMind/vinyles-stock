@@ -45,7 +45,7 @@
                 <div style="border: 1px solid #E5E5E5; padding: 1.5rem; margin-bottom: 1.5rem;">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
                         <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #666;">Adresse de livraison</p>
-                        <a href="{{ route('orders.create') }}?theme=art-print" style="font-size: 0.75rem; text-decoration: underline;">Modifier</a>
+                        <a  href="{{ route('orders.create') }}" style="font-size: 0.75rem; text-decoration: underline;">Modifier</a>
                     </div>
                     
                     @if(isset($shipping) && is_array($shipping))
@@ -140,8 +140,8 @@
                         </button>
                     </form>
                     
-                    <a href="{{ route('orders.create') }}?theme=art-print"
-                       style="display: block; text-align: center; margin-top: 1rem; font-size: 0.85rem; text-decoration: underline; color: #666;">
+                    <a  href="{{ route('orders.create') }}
+                      " style="display: block; text-align: center; margin-top: 1rem; font-size: 0.85rem; text-decoration: underline; color: #666;">
                         ← Retour
                     </a>
                     

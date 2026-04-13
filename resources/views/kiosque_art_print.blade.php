@@ -71,7 +71,7 @@
     @else
         <div class="ap-grid">
             @foreach($vinylesData as $vinyle)
-                <article class="ap-card" style="cursor: pointer;" onclick="window.location.href='{{ route('kiosque.show', $vinyle['id']) }}?theme=art-print'">
+                <article class="ap-card" style="cursor: pointer;" onclick="window.location.href='{{ route('kiosque.show', $vinyle['id']) }}">
                     
                     <!-- Image Œuvre -->
                     <div class="ap-card-image">
@@ -85,15 +85,13 @@
                     <!-- Méta Œuvre -->
                     <div class="ap-card-meta">
                         <h3 class="ap-card-title">{{ $vinyle['artiste'] }}</h3>
-                        @if(isset($vinyle['annee']) && $vinyle['annee'])
-                            <span class="ap-card-year">{{ $vinyle['annee'] }}</span>
-                        @endif
+                        <span class="ap-card-year">{{ $vinyle['genre'] ?? 'Vinyle' }}</span>
                     </div>
                     
                     <p class="ap-card-artist">{{ $vinyle['modele'] ?? 'Vinyle d\'occasion' }}</p>
                     
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
-                        <p class="ap-card-price">€ {{ number_format($vinyle['prix'] ?? 0, 2, ',', ' ') }}</p>
+                        <p class="ap-card-price">€ {{ number_format(($vinyle['prix'] ?? 0) / 100, 2, ',', ' ') }}</p>
                         
                         @if(($vinyle['quantite'] ?? 0) > 0)
                             <form action="{{ route('cart.add') }}" method="POST" style="margin: 0;">

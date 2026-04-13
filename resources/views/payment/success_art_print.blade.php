@@ -42,11 +42,11 @@
         </div>
         
         <div style="display: flex; gap: 1rem; justify-content: center;">
-            <a href="{{ route('orders.my') }}?theme=art-print" class="ap-btn ap-btn-dark">
+            <a  href="{{ route('orders.my') }}" class="ap-btn ap-btn-dark">
                 Mes commandes →
             </a>
             
-            <a href="{{ route('kiosque.index') }}?theme=art-print" class="ap-btn ap-btn-outline">
+            <a  href="{{ route('kiosque.index') }}" class="ap-btn ap-btn-outline">
                 Continuer les achats
             </a>
         </div>

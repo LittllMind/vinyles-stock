@@ -19,7 +19,7 @@ class VinyleController extends Controller
         $filter = $request->get('filter', null);
 
         $vinyles = Vinyle::query()
-            ->with(['media']) // eager load photos
+            ->with(['media'])
             ->when($search, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('artiste', 'like', "%{$search}%")
@@ -41,7 +41,7 @@ class VinyleController extends Controller
             ->paginate(25)
             ->appends($request->only('search', 'filter'));
 
-        return view('vinyles.index', compact('vinyles', 'search', 'filter'));
+        return view(theme_view('vinyles.index'), compact('vinyles', 'search', 'filter'));
     }
 
     public function create()
@@ -178,8 +178,8 @@ class VinyleController extends Controller
                 'modele'    => $vinyle->modele,
                 'prix'      => $vinyle->prix,
                 'quantite'  => $vinyle->quantite,
+                'genre'     => $vinyle->genre,
                 'image'     => $vinyle->getFirstMediaUrl('photo', 'medium'),
-                'annee'     => $vinyle->created_at?->format('Y'),
             ];
         })->all();
 
@@ -197,6 +197,6 @@ class VinyleController extends Controller
         // Charger les relations nécessaires
         $vinyle->load(['media']);
 
-        return view(theme_view('vinyles.show-public'), compact('vinyle'));
+        return view(theme_view('vinyles.show_public'), compact('vinyle'));
     }
 }

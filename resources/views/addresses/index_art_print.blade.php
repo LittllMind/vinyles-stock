@@ -13,7 +13,7 @@
         <!-- Header -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
             <p class="ap-hero-label">Livraison</p>
-            <a href="{{ route('addresses.create') }}?theme=art-print" class="ap-btn ap-btn-dark">
+            <a  href="{{ route('addresses.create') }}" class="ap-btn ap-btn-dark">
                 + Nouvelle adresse
             </a>
         </div>
@@ -52,7 +52,7 @@
                             </div>
                             
                             <div style="display: flex; gap: 0.5rem;">
-                                <a href="{{ route('addresses.edit', $address) }}?theme=art-print" style="font-size: 0.75rem; text-decoration: underline; color: #666;">Modifier</a>
+                                <a  href="{{ route('addresses.edit', $address) }}" style="font-size: 0.75rem; text-decoration: underline; color: #666;">Modifier</a>
                                 
                                 @if(!$address->is_default)
                                     <form action="{{ route('addresses.destroy', $address) }}" method="POST" style="display: inline;">
@@ -95,7 +95,7 @@
         @else
             <div style="text-align: center; padding: 4rem; border: 1px solid #E5E5E5;">
                 <p style="color: #666; margin-bottom: 1.5rem;">Aucune adresse enregistrée</p>
-                <a href="{{ route('addresses.create') }}?theme=art-print" class="ap-btn ap-btn-dark">
+                <a  href="{{ route('addresses.create') }}" class="ap-btn ap-btn-dark">
                     + Ajouter une adresse
                 </a>
             </div>

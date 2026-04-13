@@ -40,7 +40,7 @@
 <section style="padding: 6rem 0; border-top: 1px solid #E5E5E5;">
     <div class="ap-container" style="text-align: center;">
         
-        <a href="{{ route('kiosque.index') }}?theme=art-print" class="ap-btn ap-btn-dark">
+        <a  href="{{ route('kiosque.index') }}" class="ap-btn ap-btn-dark">
             Retour au catalogue →
         </a>
     </div>

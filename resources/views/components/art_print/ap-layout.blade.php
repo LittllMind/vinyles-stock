@@ -32,5 +32,8 @@
     <!-- Footer Galerie -->
     @include('components.art_print.ap-footer')
 
+    <!-- Modale Sélecteur de Fond -->
+    @include('components.art_print.fond-selector-modal')
+
 </body>
 </html>

@@ -88,7 +88,7 @@
         <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e5e5e5;">
             <p style="font-size: 0.9rem; color: #666;">
                 Déjà inscrit ? 
-                <a href="{{ route('login') }}?theme=art-print" style="text-decoration: underline; color: inherit;">Se connecter</a>
+                <a  href="{{ route('login') }}" style="text-decoration: underline; color: inherit;">Se connecter</a>
             </p>
         </div>
     </div>

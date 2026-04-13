@@ -15,6 +15,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ModeMarcheController;
+use App\Http\Controllers\ContactController;
 
 // ============================================
 // ROUTES PUBLIQUES (Accès sans authentification)
@@ -22,16 +23,29 @@ use App\Http\Controllers\ModeMarcheController;
 Route::get('/', [HomeController::class, 'landing'])->name('landing');
 Route::get('/about', [HomeController::class, 'about'])->name('about');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 Route::get('/articles/hermes-vs-openclaw', [HomeController::class, 'articleHermesVsOpenclaw'])->name('articles.hermes-vs-openclaw');
 
-// Switch de thème (persiste en session) - Réservé admin via middleware
+// Routes conversations clients (authentifiés)
+Route::middleware('auth')->group(function () {
+    Route::get('/conversations', [App\Http\Controllers\ConversationController::class, 'index'])->name('conversations.index');
+    Route::get('/conversations/{conversation}', [App\Http\Controllers\ConversationController::class, 'show'])->name('conversations.show');
+    Route::post('/conversations', [App\Http\Controllers\ConversationController::class, 'store'])->name('conversations.store');
+    Route::post('/conversations/{conversation}/reply', [App\Http\Controllers\ConversationController::class, 'reply'])->name('conversations.reply');
+    Route::post('/orders/{order}/contact', [App\Http\Controllers\ConversationController::class, 'storeFromOrder'])->name('orders.contact');
+});
+
+    // Routes reviews (authentifiés)
+    Route::middleware('auth')->group(function () {
+        Route::post('/vinyles/{vinyle}/reviews', [App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
+    });
 Route::get('/theme/{theme}', function ($theme) {
     if (in_array($theme, ['art_print', 'vinyl_cult'])) {
         session(['theme' => $theme]);
     }
     return redirect()->back();
 })->where('theme', 'art-print|vinyl-cult')
-    ->middleware(['auth'])  // Seuls users connectés peuvent switcher
+    ->middleware(['auth'])
     ->name('theme.switch');
 
 Route::get('/dashboard', function () {
@@ -69,6 +83,11 @@ Route::middleware(['auth', 'role:admin,employe'])->prefix('admin')->name('admin.
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/reports/inventory/vinyls/pdf', [\App\Http\Controllers\Admin\ReportController::class, 'exportVinylesInventory'])->name('reports.inventory.vinyls');
     Route::get('/reports/inventory/fonds/pdf', [\App\Http\Controllers\Admin\ReportController::class, 'exportFondsInventory'])->name('reports.inventory.fonds');
+    // Routes reviews admin
+    Route::get('/reviews', [\App\Http\Controllers\Admin\ReviewController::class, 'index'])->name('reviews.index');
+    Route::get('/reviews/pending', [\App\Http\Controllers\Admin\ReviewController::class, 'pending'])->name('reviews.pending');
+    Route::patch('/reviews/{review}/approve', [\App\Http\Controllers\Admin\ReviewController::class, 'approve'])->name('reviews.approve');
+    Route::patch('/reviews/{review}/reject', [\App\Http\Controllers\Admin\ReviewController::class, 'reject'])->name('reviews.reject');
 });
 
 // ============================================
@@ -78,6 +97,25 @@ Route::middleware(['auth', 'role:admin,employe'])->prefix('admin')->name('admin.
     Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/stats', [\App\Http\Controllers\Admin\DashboardController::class, 'statsApi'])->name('stats.json');
     Route::get('/stats/charts', [\App\Http\Controllers\Admin\DashboardController::class, 'chartsApi'])->name('stats.charts');
+});
+
+// ============================================
+// ROUTES ADMIN CONTACT MESSAGES (Admin et Employé)
+// ============================================
+use App\Http\Controllers\Admin\ContactMessageController;
+Route::middleware(['auth', 'role:admin,employe'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/contact-messages', [ContactMessageController::class, 'index'])->name('contact-messages.index');
+    Route::get('/contact-messages/{message}', [ContactMessageController::class, 'show'])->name('contact-messages.show');
+    Route::patch('/contact-messages/{message}/read', [ContactMessageController::class, 'markAsRead'])->name('contact-messages.read');
+    Route::post('/contact-messages/{message}/reply', [ContactMessageController::class, 'reply'])->name('contact-messages.reply');
+    Route::patch('/contact-messages/{message}/archive', [ContactMessageController::class, 'archive'])->name('contact-messages.archive');
+
+    // Conversations admin (nouveau)
+    Route::get('/conversations', [\App\Http\Controllers\Admin\ConversationController::class, 'index'])->name('conversations.index');
+    Route::get('/conversations/{conversation}', [\App\Http\Controllers\Admin\ConversationController::class, 'show'])->name('conversations.show');
+    Route::post('/conversations/{conversation}/reply', [\App\Http\Controllers\Admin\ConversationController::class, 'reply'])->name('conversations.reply');
+    Route::patch('/conversations/{conversation}/close', [\App\Http\Controllers\Admin\ConversationController::class, 'close'])->name('conversations.close');
+    Route::patch('/conversations/{conversation}/messages/{message}/read', [\App\Http\Controllers\Admin\ConversationController::class, 'markMessageRead'])->name('conversations.messages.read');
 });
 
 // ============================================
@@ -154,6 +192,7 @@ Route::middleware(['auth', 'role:admin,employe'])->group(function () {
 Route::prefix('kiosque')->name('kiosque.')->group(function () {
     // Consultation du catalogue - accessible à tous (visiteurs inclus)
     Route::get('/', [VinyleController::class, 'kiosque'])->name('index');
+    Route::get('/catalogue', [VinyleController::class, 'kiosque'])->name('catalogue');
 
     // Affichage public d'un vinyle (style galerie)
     Route::get('/vinyle/{vinyle}', [VinyleController::class, 'showPublic'])->name('show');

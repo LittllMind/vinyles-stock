@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('vinyles', function (Blueprint $table) {
-            $table->dropForeign(['fond_id']);
-            $table->dropColumn('fond_id');
-        });
+        // Ne rien faire - la colonne n'existe plus suite au refactoring des migrations
+        // Les fonds sont des accessoires séparés
     }
 
     public function down(): void
