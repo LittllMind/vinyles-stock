@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Thème Vinyl-Cult | Fundisc</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/vinyl-cult-theme.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--vc-bg-primary, #0D0D0D);
+            color: var(--vc-text-primary, #F5F5F5);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* NAVIGATION */
+        .vc-nav {
+            background: var(--vc-bg-secondary, #141414);
+            border-bottom: 1px solid var(--vc-border, #333);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .vc-nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .vc-brand {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--vc-text-primary);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .vc-brand-icon {
+            color: var(--vc-label, #FFB800);
+        }
+
+        .vc-nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .vc-nav-links a {
+            color: var(--vc-text-secondary, #A0A0A0);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+            font-weight: 500;
+        }
+
+        .vc-nav-links a:hover,
+        .vc-nav-links a.active {
+            color: var(--vc-label, #FFB800);
+        }
+
+        /* HERO */
+        .vc-hero {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(180deg, var(--vc-bg-secondary, #141414) 0%, var(--vc-bg-primary, #0D0D0D) 100%);
+            border-bottom: 1px solid var(--vc-border, #333);
+            position: relative;
+            padding: 4rem 2rem;
+        }
+
+        .vc-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--vc-label, #FFB800), transparent);
+        }
+
+        .vc-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .vc-hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.5rem;
+        }
+
+        .vc-hero h1 .highlight {
+            color: var(--vc-label, #FFB800);
+        }
+
+        .vc-hero p {
+            font-size: 1.25rem;
+            color: var(--vc-text-secondary, #A0A0A0);
+            max-width: 600px;
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+        }
+
+        /* BUTTONS */
+        .vc-btn-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .vc-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .vc-btn-primary {
+            background: var(--vc-label, #FFB800);
+            color: var(--vc-bg-primary, #0D0D0D);
+        }
+
+        .vc-btn-primary:hover {
+            background: #FFC933;
+        }
+
+        .vc-btn-outline {
+            background: transparent;
+            color: var(--vc-text-secondary, #A0A0A0);
+            border: 1px solid var(--vc-border, #333);
+        }
+
+        .vc-btn-outline:hover {
+            border-color: var(--vc-label, #FFB800);
+            color: var(--vc-label, #FFB800);
+        }
+
+        /* CONTENT SECTIONS */
+        .vc-section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .vc-section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            color: var(--vc-label, #FFB800);
+            margin-bottom: 2rem;
+        }
+
+        /* CARDS */
+        .vc-card {
+            background: var(--vc-bg-card, #1C1C1C);
+            border: 1px solid var(--vc-border, #333);
+            border-radius: 2px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.2s;
+        }
+
+        .vc-card:hover {
+            border-color: var(--vc-label, #FFB800);
+            box-shadow: 0 0 30px rgba(255, 184, 0, 0.1);
+        }
+
+        .vc-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--vc-label, #FFB800);
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .vc-card p {
+            color: var(--vc-text-secondary, #A0A0A0);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* GRID */
+        .vc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        /* FOOTER */
+        .vc-footer {
+            background: var(--vc-bg-secondary, #141414);
+            border-top: 1px solid var(--vc-border, #333);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .vc-footer p {
+            color: var(--vc-text-muted, #666);
+            font-size: 0.9rem;
+        }
+
+        .vc-footer-url {
+            color: var(--vc-label, #FFB800);
+            margin-left: 0.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .vc-nav-links {
+                display: none;
+            }
+            
+            .vc-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .vc-btn-group {
+                flex-direction: column;
+            }
+            
+            .vc-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="vc-nav">
+        <div class="vc-nav-container">
+            <a href="#" class="vc-brand">
+                <span class="vc-brand-icon">💿</span>
+                Fundisc
+            </a>
+            <ul class="vc-nav-links">
+                <li><a href="#" class="active">Vinyles</a></li>
+                <li><a href="#">Nouveautés</a></li>
+                <li><a href="#">À propos</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="vc-hero">
+        <div class="vc-container">
+            <h1>
+                La culture vinyle<br>
+                <span class="highlight">en ligne</span>
+            </h1>
+            <p>
+                Découvrez une sélection pointue de vinyles d'occasion, 
+                triés par des passionnés pour des passionnés.
+            </p>
+            <div class="vc-btn-group">
+                <a href="#catalog" class="vc-btn vc-btn-primary">
+                    Explorer le catalogue →
+                </a>
+                <a href="#" class="vc-btn vc-btn-outline">
+                    Voir le kiosque
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Catalog Section -->
+    <section id="catalog" class="vc-section">
+        <h2 class="vc-section-title">Thème Vinyl-Cult Actif ✓</h2>
+        
+        <div class="vc-card">
+            <h3>🔥 Dark Underground + Jaune Label</h3>
+            <p>
+                Ce thème utilise une palette inspirée des labels 45 tours indépendants : 
+                fonds noirs profonds, accents jaune/orange vibrants, typographie Space Grotesk moderniste.
+            </p>
+        </div>
+
+        <div class="vc-grid">
+            <div class="vc-card">
+                <h3>🎵 Vinyle Rock</h3>
+                <p>
+                    <strong>Artiste :</strong> Pink Floyd<br>
+                    <strong>Album :</strong> The Dark Side of the Moon<br>
+                    <strong>Prix :</strong> <span style="color: var(--vc-label, #FFB800); font-weight: 600;">24.99 €</span>
+                </p>
+            </div>
+            
+            <div class="vc-card">
+                <h3>🎺 Vinyle Jazz</h3>
+                <p>
+                    <strong>Artiste :</strong> Miles Davis<br>
+                    <strong>Album :</strong> Kind of Blue<br>
+                    <strong>Prix :</strong> <span style="color: var(--vc-label, #FFB800); font-weight: 600;">32.50 €</span>
+                </p>
+            </div>
+            
+            <div class="vc-card">
+                <h3>🎸 Vinyle Indie</h3>
+                <p>
+                    <strong>Artiste :</strong> Arctic Monkeys<br>
+                    <strong>Album :</strong> AM<br>
+                    <strong>Prix :</strong> <span style="color: var(--vc-label, #FFB800); font-weight: 600;">19.99 €</span>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="vc-footer">
+        <div class="vc-container">
+            <p>
+                Test local du thème Vinyl-Cult
+                <span class="vc-footer-url">http://10.5.0.2:8000/test-vinyl-cult.html</span>
+            </p>
+            <p style="margin-top: 1rem; font-size: 0.85rem;">
+                Accessible depuis tout appareil sur le réseau local
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>

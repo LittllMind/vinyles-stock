@@ -10,7 +10,7 @@ class HomeController extends Controller
     /**
      * Page d'accueil publique - Vinyle Hydrodécoupé
      */
-    public function landing()
+    public function landing(Request $request)
     {
         // Récupérer quelques vinyles en vedette pour la landing page
         $featured = Vinyle::where('quantite', '>', 0)
@@ -26,23 +26,24 @@ class HomeController extends Controller
                 ->count(),
         ];
 
-        return view('landing', compact('featured', 'stats'));
+        // Utilise le helper theme_view pour le thème depuis session/middleware
+        return view(theme_view('landing'), compact('featured', 'stats'));
     }
 
     /**
      * Page À propos
      */
-    public function about()
+    public function about(Request $request)
     {
-        return view('about');
+        return view(theme_view('about'));
     }
 
     /**
      * Page Contact
      */
-    public function contact()
+    public function contact(Request $request)
     {
-        return view('contact');
+        return view(theme_view('contact'));
     }
 
     /**

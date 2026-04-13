@@ -1,0 +1,421 @@
+/*
+ * ART PRINT THEME
+ * Concept: Ton vinyle devient une œuvre d'art exposée
+ * Vibe: "J'achète une œuvre d'art", minimalisme galerie MoMA
+ */
+
+:root {
+    /* Palette Galerie */
+    --ap-bg-primary: #FFFFFF;
+    --ap-bg-secondary: #FAFAFA;
+    --ap-bg-card: #FFFFFF;
+    
+    /* Texte */
+    --ap-text-primary: #1A1A1A;
+    --ap-text-secondary: #666666;
+    --ap-text-muted: #999999;
+    
+    /* Accents */
+    --ap-accent: #2D2D2D;
+    --ap-accent-hover: #1A1A1A;
+    --ap-border: #E5E5E5;
+    --ap-border-light: #F0F0F0;
+    
+    /* Typo */
+    --ap-font-display: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --ap-font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Reset galere */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body.art-print-theme,
+.art-print-theme {
+    font-family: var(--ap-font-body);
+    background: var(--ap-bg-primary);
+    color: var(--ap-text-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== NAVIGATION MINIMALISTE ===== */
+.ap-nav {
+    background: var(--ap-bg-primary);
+    border-bottom: 1px solid var(--ap-border);
+    padding: 1.5rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.ap-nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ap-brand {
+    font-family: var(--ap-font-display);
+    font-weight: 300;
+    font-size: 1.25rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ap-text-primary);
+    text-decoration: none;
+}
+
+.ap-brand:hover {
+    color: var(--ap-text-secondary);
+}
+
+.ap-nav-links {
+    display: flex;
+    gap: 3rem;
+    list-style: none;
+}
+
+.ap-nav-links a {
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ap-text-secondary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-weight: 400;
+}
+
+.ap-nav-links a:hover,
+.ap-nav-links a.active {
+    color: var(--ap-text-primary);
+}
+
+/* ===== HERO GALERIE ===== */
+.ap-hero {
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    background: var(--ap-bg-secondary);
+    padding: 6rem 3rem;
+    position: relative;
+}
+
+.ap-hero::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 3rem;
+    width: 1px;
+    height: 60px;
+    background: var(--ap-border);
+    transform: translateY(-50%);
+}
+
+.ap-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 0 1rem;
+}
+
+.ap-hero-content {
+    max-width: 700px;
+    margin-left: 4rem;
+}
+
+.ap-hero-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ap-text-muted);
+    margin-bottom: 2rem;
+    font-weight: 400;
+}
+
+.ap-hero h1 {
+    font-family: var(--ap-font-display);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 300;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    color: var(--ap-text-primary);
+}
+
+.ap-hero h1 .light {
+    font-weight: 200;
+    color: var(--ap-text-secondary);
+}
+
+.ap-hero p {
+    font-size: 1rem;
+    color: var(--ap-text-secondary);
+    max-width: 500px;
+    line-height: 1.8;
+    margin-bottom: 3rem;
+    font-weight: 300;
+}
+
+/* ===== BOUTONS GALERIE ===== */
+.ap-btn-group {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.ap-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2.5rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-family: var(--ap-font-display);
+    font-weight: 400;
+}
+
+.ap-btn-dark {
+    background: var(--ap-accent);
+    color: var(--ap-bg-primary);
+}
+
+.ap-btn-dark:hover {
+    background: var(--ap-accent-hover);
+}
+
+.ap-btn-outline {
+    background: transparent;
+    color: var(--ap-text-secondary);
+    border: 1px solid var(--ap-border);
+}
+
+.ap-btn-outline:hover {
+    border-color: var(--ap-text-primary);
+    color: var(--ap-text-primary);
+}
+
+/* ===== SECTIONS ===== */
+.ap-section {
+    padding: 8rem 3rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.ap-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 4rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--ap-border-light);
+}
+
+.ap-section-title {
+    font-family: var(--ap-font-display);
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ap-text-muted);
+    font-weight: 400;
+}
+
+.ap-section-count {
+    font-size: 0.65rem;
+    color: var(--ap-text-muted);
+    letter-spacing: 0.1em;
+}
+
+/* ===== CARTES ŒUVRE ===== */
+.ap-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 4rem;
+}
+
+.ap-card {
+    background: var(--ap-bg-card);
+    border: 1px solid var(--ap-border-light);
+    padding: 2.5rem;
+    transition: all 0.4s ease;
+    position: relative;
+}
+
+.ap-card::after {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border: 1px solid var(--ap-border);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.ap-card:hover::after {
+    opacity: 1;
+}
+
+.ap-card:hover {
+    border-color: var(--ap-border);
+}
+
+.ap-card-image {
+    aspect-ratio: 1;
+    background: var(--ap-bg-secondary);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ap-text-muted);
+    font-size: 3rem;
+}
+
+.ap-card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.5rem;
+}
+
+.ap-card-title {
+    font-family: var(--ap-font-display);
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--ap-text-primary);
+    letter-spacing: 0.02em;
+}
+
+.ap-card-year {
+    font-size: 0.7rem;
+    color: var(--ap-text-muted);
+    letter-spacing: 0.1em;
+}
+
+.ap-card-artist {
+    font-size: 0.8rem;
+    color: var(--ap-text-secondary);
+    margin-bottom: 1rem;
+    font-weight: 300;
+}
+
+.ap-card-price {
+    font-size: 0.85rem;
+    color: var(--ap-text-primary);
+    letter-spacing: 0.05em;
+    font-weight: 400;
+}
+
+/* ===== TEXT BLOCK ===== */
+.ap-text-block {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 4rem;
+    background: var(--ap-bg-secondary);
+    border: 1px solid var(--ap-border-light);
+    text-align: center;
+}
+
+.ap-text-block h3 {
+    font-family: var(--ap-font-display);
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: var(--ap-text-primary);
+    margin-bottom: 1rem;
+    letter-spacing: 0.05em;
+}
+
+.ap-text-block p {
+    font-size: 0.9rem;
+    color: var(--ap-text-secondary);
+    line-height: 1.8;
+    font-weight: 300;
+}
+
+/* ===== FOOTER ===== */
+.ap-footer {
+    background: var(--ap-bg-secondary);
+    border-top: 1px solid var(--ap-border-light);
+    padding: 4rem 3rem;
+    text-align: center;
+}
+
+.ap-footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.ap-footer p {
+    color: var(--ap-text-muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+}
+
+.ap-footer-url {
+    color: var(--ap-text-secondary);
+    margin-left: 0.5rem;
+    font-weight: 400;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .ap-nav-container {
+        padding: 0 1.5rem;
+    }
+    
+    .ap-nav-links {
+        display: none;
+    }
+    
+    .ap-hero {
+        padding: 4rem 1.5rem;
+        min-height: auto;
+    }
+    
+    .ap-hero::before {
+        display: none;
+    }
+    
+    .ap-hero-content {
+        margin-left: 0;
+    }
+    
+    .ap-hero h1 {
+        font-size: 1.75rem;
+    }
+    
+    .ap-section {
+        padding: 4rem 1.5rem;
+    }
+    
+    .ap-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .ap-card {
+        padding: 1.5rem;
+    }
+    
+    .ap-btn-group {
+        flex-direction: column;
+    }
+    
+    .ap-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}

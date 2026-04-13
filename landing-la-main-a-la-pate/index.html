@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Main à la Pâte | Agents Autonomes IA</title>
+    <meta name="description" content="Création d'agents IA autonomes pour entreprises. Architecture Hermes + OpenClaw. Mémoire persistante, multi-canaux.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-primary: #0D0D0D;
+            --bg-secondary: #141414;
+            --bg-elevated: #1A1A1A;
+            --bg-card: #222222;
+            --accent: #FFB800;
+            --accent-hover: #FFC933;
+            --text-primary: #F5F5F5;
+            --text-secondary: #A0A0A0;
+            --text-muted: #666666;
+            --border: #333333;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        h1, h2, h3, .brand {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+        }
+        
+        /* Header */
+        header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+        }
+        
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .brand {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .brand span {
+            color: var(--accent);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+        
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 2rem 4rem;
+            background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        }
+        
+        .hero-content {
+            max-width: 900px;
+            text-align: center;
+        }
+        
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.03em;
+        }
+        
+        h1 .highlight {
+            color: var(--accent);
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            line-height: 1.6;
+        }
+        
+        .cta-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background: var(--accent);
+            color: var(--bg-primary);
+        }
+        
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-outline:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        
+        /* Architecture Section */
+        .section {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .section-subtitle {
+            color: var(--text-secondary);
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 4rem;
+        }
+        
+        /* Architecture Visual */
+        .arch-diagram {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 3rem;
+            margin: 3rem 0;
+            position: relative;
+        }
+        
+        .arch-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .arch-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 1.5rem 2rem;
+            text-align: center;
+            min-width: 180px;
+        }
+        
+        .arch-box h3 {
+            color: var(--accent);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .arch-box p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        
+        .arch-arrow {
+            color: var(--accent);
+            font-size: 1.5rem;
+        }
+        
+        .arch-label {
+            position: absolute;
+            bottom: -0.75rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-primary);
+            padding: 0 1rem;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        /* Features */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 4rem;
+        }
+        
+        .feature-card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            padding: 2rem;
+        }
+        
+        .feature-card:hover {
+            border-color: var(--accent);
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+            color: var(--accent);
+        }
+        
+        .feature-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Services */
+        .services {
+            background: var(--bg-secondary);
+            padding: 6rem 2rem;
+        }
+        
+        .services-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .service-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .service-item {
+            background: var(--bg-elevated);
+            border-left: 3px solid var(--accent);
+            padding: 2rem;
+        }
+        
+        .service-item h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Newsletter */
+        .newsletter {
+            padding: 6rem 2rem;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+        
+        .newsletter-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .newsletter h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .newsletter p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+        
+        .newsletter-form {
+            display: flex;
+            gap: 0.5rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .newsletter-form input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+        
+        .newsletter-form input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        
+        footer p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .arch-flow { flex-direction: column; }
+            .arch-arrow { transform: rotate(90deg); }
+            .newsletter-form { flex-direction: column; }
+            .cta-group { flex-direction: column; }
+            .cta-group .btn { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <a href="#" class="brand">
+                <span>◈</span> La Main à la Pâte
+            </a>
+            <ul class="nav-links">
+                <li><a href="#architecture">Architecture</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#articles">Articles</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="tag">Agents Autonomes IA</div>
+            <h1>
+                Votre agent qui <span class="highlight">apprend</span><br>
+                sur tous vos canaux
+            </h1>
+            <p class="hero-subtitle">
+                J'architecte des agents IA autonomes combinant mémoire persistante 
+                et distribution multi-canaux. Un agent unique qui se souvient 
+                et évolue avec votre entreprise.
+            </p>
+            <div class="cta-group">
+                <a href="#services" class="btn btn-primary">Découvrir l'architecture</a>
+                <a href="mailto:contact@la-main-a-la-pate.online" class="btn btn-outline">Me contacter</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="architecture" class="section">
+        <h2 class="section-title">L'architecture "Deux en Un"</h2>
+        <p class="section-subtitle">
+            Forgée par la lecture approfondie de deux projets open source majeurs, 
+            cette architecture combine le meilleur des deux mondes.
+        </p>
+        
+        <div class="arch-diagram">
+            <div class="arch-flow">
+                <div class="arch-box">
+                    <h3>📱 Canaux</h3>
+                    <p>WhatsApp, Telegram,<br>Discord, Email, SMS</p>
+                </div>
+                <span class="arch-arrow">→</span>
+                <div class="arch-box">
+                    <h3>🔗 Gateway</h3>
+                    <p>OpenClaw<br>Multi-plateforme</p>
+                </div>
+                <span class="arch-arrow">→</span>
+                <div class="arch-box">
+                    <h3>🧠 Agent</h3>
+                    <p>Hermes<br>Mémoire persistante</p>
+                </div>
+                <span class="arch-arrow">→</span>
+                <div class="arch-box">
+                    <h3>⚡ Action</h3>
+                    <p>Terminal, Code,<br>API, Web</p>
+                </div>
+            </div>
+            <div class="arch-label">Flux de conversation</div>
+        </div>
+        
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">🧠</div>
+                <h3>Mémoire persistante</h3>
+                <p>L'agent se souvient de vos conventions, projets et préférences. Plus besoin de tout réexpliquer à chaque conversation.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Multi-canaux natif</h3>
+                <p>Vos clients et collaborateurs interagissent avec l'agent sur leur canal préféré : WhatsApp, Telegram, Discord ou email.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚙️</div>
+                <h3>Actions concrètes</h3>
+                <p>L'agent ne parle pas dans le vide : il exécute du code, consulte des APIs, gère des bases de données, surveille des systèmes.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h3>Amélioration continue</h3>
+                <p>Chaque interaction enrichit le modèle de l'utilisateur. L'agent devient plus pertinent au fil du temps.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="services">
+        <div class="services-content">
+            <h2 class="section-title">Services disponibles</h2>
+            <p class="section-subtitle">
+                Déploiements sur-mesure pour des cas d'usage concrets.
+                Infrastructure hébergée ou accompagnement installation.
+            </p>
+            
+            <div class="service-list">
+                <div class="service-item">
+                    <h3>🎧 Agent Support Client</h3>
+                    <p>Réponses instantanées, escalade intelligente, historique complet des échanges. Connecté à votre CRM et base de connaissances.</p>
+                </div>
+                <div class="service-item">
+                    <h3>📊 Agent Reporting</h3>
+                    <p>Surveillance métriques, alertes contextuelles, génération automatique de rapports. Intégration avec vos outils existants.</p>
+                </div>
+                <div class="service-item">
+                    <h3>🔧 Agent Technique</h3>
+                    <p>Exécution commandes, diagnostic automatique, déclenchement procédures. Accès contrôlé à votre infrastructure.</p>
+                </div>
+                <div class="service-item">
+                    <h3>📅 Agent Coordination</h3>
+                    <p>Planification réunions, suivi projets, relances automatiques. Intégration calendriers et outils de gestion.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="section">
+        <h2 class="section-title">En pratique</h2>
+        <p class="section-subtitle">
+            Chaque déploiement suit une méthode éprouvée : audit du besoin, 
+            conception de l'agent, itérations de test, mise en production.
+        </p>
+        
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">1️⃣</div>
+                <h3>Audit</h3>
+                <p>Analyse de vos processus, identification des tâches répétitives à automatiser, définition des canaux de communication.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">2️⃣</div>
+                <h3>Architecture</h3>
+                <p>Conception du système de mémoire, choix des outils intégrés, définition des règles de sécurité et d'accès.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">3️⃣</div>
+                <h3>Itération</h3>
+                <p>Phase d'apprentissage avec retours réels, ajustement des skills, affinage du comportement de l'agent.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">4️⃣</div>
+                <h3>Production</h3>
+                <p>Déploiement sur infrastructure dédiée, monitoring, support continu et évolutions.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="newsletter" id="articles">
+        <div class="newsletter-content">
+            <h2>Restez informé</h2>
+            <p>Articles, retours d'expérience et évolutions de l'écosystème des agents autonomes.</p>
+            <form class="newsletter-form" action="#" method="POST">
+                <input type="email" placeholder="votre@email.com" required>
+                <button type="submit" class="btn btn-primary">S'inscrire</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <p>
+            La Main à la Pâte • Agents Autonomes IA<br>
+            <a href="mailto:contact@la-main-a-la-pate.online">contact@la-main-a-la-pate.online</a>
+        </p>
+    </footer>
+
+</body>
+</html>

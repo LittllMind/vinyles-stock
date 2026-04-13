@@ -24,6 +24,14 @@ Route::get('/about', [HomeController::class, 'about'])->name('about');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 Route::get('/articles/hermes-vs-openclaw', [HomeController::class, 'articleHermesVsOpenclaw'])->name('articles.hermes-vs-openclaw');
 
+// Switch de thème (persiste en session)
+Route::get('/theme/{theme}', function ($theme) {
+    if (in_array($theme, ['art-print', 'vinyl-cult'])) {
+        session(['theme' => $theme]);
+    }
+    return redirect()->back();
+})->where('theme', 'art-print|vinyl-cult')->name('theme.switch');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -145,6 +153,9 @@ Route::prefix('kiosque')->name('kiosque.')->group(function () {
     // Consultation du catalogue - accessible à tous (visiteurs inclus)
     Route::get('/', [VinyleController::class, 'kiosque'])->name('index');
 
+    // Affichage public d'un vinyle (style galerie)
+    Route::get('/vinyle/{vinyle}', [VinyleController::class, 'showPublic'])->name('show');
+
     // Achat - nécessite d'être connecté
     Route::post('/vendre', [VenteController::class, 'storeFromKiosque'])
         ->middleware('auth')
@@ -183,10 +194,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/mes-commandes', [OrderController::class, 'myOrders'])->name('orders.my');
 
     // Profil utilisateur
-    Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
-    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
-    Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
-    Route::patch('/users/{user}/password', [UserController::class, 'updatePassword'])->name('users.password');
+    Route::get('/profil', [UserController::class, 'profile'])->name('profile');
+    Route::get('/profil/edit', [UserController::class, 'editProfile'])->name('profile.edit');
+    Route::put('/profil', [UserController::class, 'updateProfile'])->name('profile.update');
+    Route::patch('/profil/password', [UserController::class, 'updatePassword'])->name('profile.password');
 });
 
 // Cookies

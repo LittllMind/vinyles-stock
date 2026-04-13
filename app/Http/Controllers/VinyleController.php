@@ -10,7 +10,7 @@ class VinyleController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->except('kiosque');
+        $this->middleware('auth')->except(['kiosque', 'showPublic']);
     }
 
     public function index(Request $request)
@@ -179,12 +179,24 @@ class VinyleController extends Controller
                 'prix'      => $vinyle->prix,
                 'quantite'  => $vinyle->quantite,
                 'image'     => $vinyle->getFirstMediaUrl('photo', 'medium'),
+                'annee'     => $vinyle->created_at?->format('Y'),
             ];
         })->all();
 
-        return view('kiosque', [
+        return view(theme_view('kiosque'), [
             'vinylesData' => $vinylesData,
-            'vinyles' => $vinyles, // Pour les liens de pagination
+            'vinyles' => $vinyles,
         ]);
+    }
+
+    /**
+     * Affichage public d'un vinyle (ART PRINT style galerie)
+     */
+    public function showPublic(Request $request, Vinyle $vinyle)
+    {
+        // Charger les relations nécessaires
+        $vinyle->load(['media']);
+
+        return view(theme_view('vinyles.show-public'), compact('vinyle'));
     }
 }

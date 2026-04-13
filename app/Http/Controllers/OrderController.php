@@ -16,7 +16,7 @@ class OrderController extends Controller
     {
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $cart = $this->cartService->getCart();
 
@@ -36,7 +36,7 @@ class OrderController extends Controller
         $tempShipping = Session::get('order_shipping');
         $tempBilling = Session::get('order_billing');
 
-        return view('orders.create', [
+        return view(theme_view('orders.create'), [
             'cart' => $cart,
             'addresses' => $addresses,
             'tempShipping' => $tempShipping,
@@ -122,7 +122,7 @@ class OrderController extends Controller
         return redirect()->route('orders.payment');
     }
 
-    public function payment()
+    public function payment(Request $request)
     {
         $cart = $this->cartService->getCart();
         
@@ -149,7 +149,7 @@ class OrderController extends Controller
             $order = Order::find(Session::get('pending_order_id'));
             if ($order && $order->statut === 'en_attente') {
                 // Réutiliser la commande existante
-                return view('orders.payment', [
+                return view(theme_view('orders.payment'), [
                     'cart' => $cart,
                     'shipping' => $shipping,
                     'billing' => $billing ?? $shipping,
@@ -164,7 +164,7 @@ class OrderController extends Controller
         // Stocker l'ID de la commande en session pour éviter les doublons
         Session::put('pending_order_id', $order->id);
 
-        return view('orders.payment', [
+        return view(theme_view('orders.payment'), [
             'cart' => $cart,
             'shipping' => $shipping,
             'billing' => $billing ?? $shipping,
@@ -296,13 +296,13 @@ class OrderController extends Controller
     /**
      * Afficher les commandes de l'utilisateur connecté (Mes commandes)
      */
-    public function myOrders()
+    public function myOrders(Request $request)
     {
         $orders = Order::where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
             ->with('items.vinyle')
             ->paginate(10);
 
-        return view('orders.my-orders', compact('orders'));
+        return view(theme_view('orders.my-orders'), compact('orders'));
     }
 }
