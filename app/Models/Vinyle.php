@@ -137,4 +137,22 @@ class Vinyle extends Model implements HasMedia
     {
         return $this->hasMany(OrderItem::class);
     }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function approvedReviews(): HasMany
+    {
+        return $this->reviews()->approved()->with('user');
+    }
+
+    public function averageRating(): ?float
+    {
+        $avg = $this->reviews()
+            ->approved()
+            ->avg('rating');
+        return $avg ? round($avg, 1) : null;
+    }
 }

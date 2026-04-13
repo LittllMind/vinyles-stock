@@ -17,15 +17,16 @@ return new class extends Migration
         
         Schema::create('vinyles', function (Blueprint $table) {
             $table->id();
-            $table->string('reference')->unique();        // Ex: MIR-001, DOR-005
+            $table->string('reference')->unique();        // Ex: VIN-001
             $table->string('artiste');                   // Ex: David Bowie
-            $table->string('modele');                    // Ex: Mirror, Gold, etc.
+            $table->string('modele');                    // Ex: Album title
             $table->string('genre')->nullable();         // Ex: Rock, Électro, Rap
             $table->string('style')->nullable();         // Ex: Glam Rock, French Touch
-            $table->decimal('prix', 8, 2);
+            $table->integer('prix');                      // Prix en CENTIMES
             $table->integer('quantite')->default(0);
             $table->integer('seuil_alerte')->default(5);
-            $table->foreignId('fond_id')->nullable()->constrained('fonds');
+            // Les fonds sont des accessoires séparés, pas des variantes de vinyles
+            // Le lien s'effectue via les lignes de commande (cart_items/order_items)
             $table->timestamps();
             
             $table->index('reference');

@@ -3,6 +3,15 @@
 @section('title', 'Paiement - Commande')
 
 @section('content')
+
+@php
+if (!function_exists('formatPrice')) {
+    function formatPrice($cents) {
+        return number_format($cents / 100, 2, ',', ' ');
+    }
+}
+@endphp
+
 <div class="min-h-screen bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-5xl mx-auto">
         <!-- En-tête -->
@@ -82,7 +91,7 @@
                                     <p class="text-xs mt-1">
                                         @if($item->fond_id && $item->fond)
                                             <span class="text-pink-400">
-                                                ✨ Avec fond {{ $item->fond->nom }} (+{{ number_format($item->fond->prix_achat, 2) }} €)
+                                                ✨ Avec fond {{ $item->fond->nom }} (+€ {{ formatPrice($item->fond->prix_achat) }})
                                             </span>
                                         @else
                                             <span class="text-gray-500">
@@ -95,9 +104,9 @@
                                 <!-- Prix -->
                                 <div class="text-right">
                                     <p class="text-lg font-bold bg-gradient-to-r from-violet-400 to-pink-400 bg-clip-text text-transparent">
-                                        {{ number_format($item->prix_unitaire * $item->quantite, 2) }} €
+                                        € {{ formatPrice($item->prix_unitaire * $item->quantite) }}
                                     </p>
-                                    <p class="text-xs text-gray-500">{{ number_format($item->prix_unitaire, 2) }} € / unité</p>
+                                    <p class="text-xs text-gray-500">€ {{ formatPrice($item->prix_unitaire) }} / unité</p>
                                 </div>
                             </div>
                         @endforeach
@@ -143,7 +152,7 @@
                     <div class="space-y-3 mb-6">
                         <div class="flex justify-between text-sm text-gray-400">
                             <span>Sous-total ({{ $cart->items->count() }} article{{ $cart->items->count() > 1 ? 's' : '' }})</span>
-                            <span>{{ number_format($cart->total, 2) }} €</span>
+                            <span>€ {{ formatPrice($cart->total) }}</span>
                         </div>
                         
                         <div class="flex justify-between text-sm text-gray-400">
@@ -160,7 +169,7 @@
                             <div class="flex justify-between items-center">
                                 <span class="text-lg font-bold text-white">Total à payer</span>
                                 <span class="text-2xl font-bold bg-gradient-to-r from-violet-400 to-pink-400 bg-clip-text text-transparent">
-                                    {{ number_format($cart->total, 2) }} €
+                                    € {{ formatPrice($cart->total) }}
                                 </span>
                             </div>
                         </div>

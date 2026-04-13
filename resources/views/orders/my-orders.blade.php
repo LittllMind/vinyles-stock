@@ -3,6 +3,15 @@
 @section('title', 'Mes Commandes - Fundisc')
 
 @section('content')
+
+@php
+if (!function_exists('formatPrice')) {
+    function formatPrice($cents) {
+        return number_format($cents / 100, 2, ',', ' ');
+    }
+}
+@endphp
+
 <div class="max-w-4xl mx-auto">
     <!-- Header -->
     <div class="mb-8">
@@ -61,7 +70,7 @@
                             </div>
                             <div class="text-gray-400 text-sm">
                                 {{ $order->items->count() }} article(s) • 
-                                <span class="font-semibold text-purple-400">{{ number_format($order->total, 2, ',', ' ') }} €</span>
+                                <span class="font-semibold text-purple-400">€ {{ formatPrice($order->total) }}</span>
                             </div>
                         </div>
 
@@ -88,12 +97,12 @@
                                         </div>
                                         <div class="flex-1">
                                             <div class="font-medium text-gray-300">{{ $item->titre_vinyle }}</div>
-                                            <div class="text-sm text-gray-500">
-                                                {{ $item->quantite }} × {{ number_format($item->prix_unitaire, 2, ',', ' ') }} €
-                                            </div>
+                                        <div class="text-sm text-gray-500">
+                                            {{ $item->quantite }} × € {{ formatPrice($item->prix_unitaire) }}
+                                        </div>
                                         </div>
                                         <div class="font-semibold text-purple-400">
-                                            {{ number_format($item->total, 2, ',', ' ') }} €
+                                            € {{ formatPrice($item->total) }}
                                         </div>
                                     @else
                                         <div class="text-gray-500 italic">Article non disponible</div>
@@ -105,7 +114,7 @@
                         <div class="mt-4 pt-4 border-t border-gray-700 flex justify-between items-center">
                             <span class="text-gray-400">Total</span>
                             <span class="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                                {{ number_format($order->total, 2, ',', ' ') }} €
+                                € {{ formatPrice($order->total) }}
                             </span>
                         </div>
                     </div>

@@ -3,6 +3,15 @@
 @section('title', 'Commande - Livraison')
 
 @section('content')
+
+@php
+if (!function_exists('formatPrice')) {
+    function formatPrice($cents) {
+        return number_format($cents / 100, 2, ',', ' ');
+    }
+}
+@endphp
+
 <div x-data="{ 
     facturationDifferent: {{ ($tempBilling && $tempBilling != $tempShipping) || old('use_same_address') === '0' ? 'true' : 'false' }},
     useSameAddress: {{ old('use_same_address') === '0' ? 'false' : 'true' }},
@@ -284,13 +293,13 @@
                     @if($cart->items->count() > 0)
                         <div class="space-y-3 mb-6 max-h-64 overflow-y-auto">
                             @foreach($cart->items as $item)
-                                <div class="flex items-center justify-between py-2 border-b border-gray-700">
+                                    <div class="flex items-center justify-between py-2 border-b border-gray-700">
                                     <div class="flex-1">
                                         <p class="text-sm font-medium text-white">{{ $item->vinyle->titre ?? 'Vinyle inconnu' }}</p>
                                         <p class="text-xs text-gray-400">Qté: {{ $item->quantite }}</p>
                                     </div>
                                     <p class="text-sm font-semibold text-violet-400">
-                                        {{ number_format($item->prix_unitaire * $item->quantite, 2) }} €
+                                        € {{ formatPrice($item->prix_unitaire * $item->quantite) }}
                                     </p>
                                 </div>
                             @endforeach
@@ -300,7 +309,7 @@
                         <div class="space-y-2 pt-4 border-t border-gray-700">
                             <div class="flex justify-between text-sm text-gray-400">
                                 <span>Sous-total</span>
-                                <span>{{ number_format($cart->total, 2) }} €</span>
+                                <span>€ {{ formatPrice($cart->total) }}</span>
                             </div>
                             <div class="flex justify-between text-sm text-gray-400">
                                 <span>Livraison</span>
@@ -309,7 +318,7 @@
                             <div class="flex justify-between text-lg font-bold text-white pt-2 border-t border-gray-700">
                                 <span>Total</span>
                                 <span class="bg-gradient-to-r from-violet-400 to-pink-400 bg-clip-text text-transparent">
-                                    {{ number_format($cart->total, 2) }} €
+                                    € {{ formatPrice($cart->total) }}
                                 </span>
                             </div>
                         </div>

@@ -4,12 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Payment;
+use App\Services\StockService;
+use App\Mail\OrderConfirmation;
+use App\Mail\AdminOrderNotification;
 use Illuminate\Http\Request;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
 use Stripe\Webhook;
 use Stripe\Event;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class PaymentController extends Controller
 {
@@ -47,7 +52,7 @@ class PaymentController extends Controller
                                 'name' => 'Commande #' . $order->id,
                                 'description' => 'Vinyles Hydrodécoupés',
                             ],
-                            'unit_amount' => (int) ($order->total * 100), // Stripe utilise les centimes
+                            'unit_amount' => (int) ($order->total * 100), // Convertir euros (25.00) en centimes (2500)
                         ],
                         'quantity' => 1,
                     ],
@@ -194,11 +199,29 @@ class PaymentController extends Controller
                 'validee_at' => now(),
             ]);
 
+            // ✅ DÉCRÉMENTER LE STOCK (réservation définitive)
+            $stockService = new StockService();
+            $stockResult = $stockService->reserverStock($payment->order, Auth::id() ?? $payment->user_id);
+            
+            if (!$stockResult['success']) {
+                Log::error('Erreur réservation stock après paiement: ' . $stockResult['error'], [
+                    'order_id' => $payment->order_id,
+                ]);
+                // Notifier admin - stock non décrémenté mais paiement OK
+                Mail::to(config('mail.admin_address', 'contact@vinyle-hydrodecoupe.fr'))
+                    ->queue(new AdminOrderNotification($payment->order));
+            }
+
+            // ✅ Envoyer les emails de confirmation
+            Mail::to($payment->order->email)->queue(new OrderConfirmation($payment->order));
+            Mail::to(config('mail.admin_address', 'contact@vinyle-hydrodecoupe.fr'))
+                ->queue(new AdminOrderNotification($payment->order));
+
             // ✅ Vider le panier après paiement confirmé via webhook
             $cartService = app(\App\Services\CartService::class);
             $cartService->clear();
 
-            Log::info('Paiement confirmé via webhook: ' . $session->id);
+            Log::info('Paiement confirmé via webhook: ' . $session->id . ' Stock réservé: ' . count($stockResult['mouvements'] ?? []));
         }
     }
 

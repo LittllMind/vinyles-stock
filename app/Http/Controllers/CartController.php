@@ -19,13 +19,15 @@ class CartController extends Controller
     /**
      * Afficher le panier
      */
-    public function index()
+    public function index(Request $request)
     {
         $cart = $this->cartService->getCart();
 
-        return view('cart.index', [
+        // Theme handled by middleware
+
+        return view(theme_view('cart.index'), [
             'cart'        => $cart,
-            'stockErrors' => $this->cartService->checkStock(), // retourne un tableau de messages
+            'stockErrors' => $this->cartService->checkStock(),
         ]);
     }
 

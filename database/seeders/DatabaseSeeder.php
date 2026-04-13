@@ -6,7 +6,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Database\Seeders\UserSeeder;
-use Database\Seeders\BougieSeeder;
 use Database\Seeders\VenteSeeder;
 use Database\Seeders\FondSeeder;
 use Database\Seeders\MouvementStockSeeder;
@@ -23,7 +22,6 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserSeeder::class,
             FondSeeder::class,
-            BougieSeeder::class,
             VinyleSeeder::class,
             MouvementStockSeeder::class,
             VenteSeeder::class,

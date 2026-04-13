@@ -162,6 +162,14 @@
                     @endswitch
                 </div>
 
+                {{-- NOTES CLIENT --}}
+                @if($order->notes_client)
+                    <div style="padding: 1rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; margin-bottom: 1.5rem; background: #f0f9ff;">
+                        <h3 style="margin-top: 0;">📝 Notes du client</h3>
+                        <p style="margin: 0; white-space: pre-wrap; color: #1e40af;">{{ $order->notes_client }}</p>
+                    </div>
+                @endif
+
                 {{-- HISTORIQUE --}}
                 <div style="padding: 1rem; border: 1px solid #e5e7eb; border-radius: 0.5rem;">
                     <h3 style="margin-top: 0;">Historique</h3>

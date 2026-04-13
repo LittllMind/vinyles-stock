@@ -16,19 +16,20 @@ class AddressController extends Controller
     /**
      * Liste des adresses de l'utilisateur
      */
-    public function index()
+    public function index(Request $request)
     {
         $addresses = Auth::user()->addresses()->orderBy('is_default', 'desc')->orderBy('created_at', 'desc')->get();
         
-        return view('addresses.index', compact('addresses'));
+        return view(theme_view('addresses.index'), compact('addresses'));
     }
 
     /**
      * Formulaire de création
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view('addresses.create');
+        $theme = $request->get('theme');
+        return view(theme_view('addresses.create'));
     }
 
     /**
@@ -59,8 +60,15 @@ class AddressController extends Controller
 
         $address = Address::create($validated);
 
-        return redirect()->route('addresses.index')
+        $redirect = redirect()->route('addresses.index')
             ->with('success', 'Adresse ajoutée avec succès !');
+        
+        if ($request->has('theme')) {
+            $redirect = redirect()->route('addresses.index', ['theme' => $request->get('theme')])
+                ->with('success', 'Adresse ajoutée avec succès !');
+        }
+        
+        return $redirect;
     }
 
     /**
@@ -75,10 +83,10 @@ class AddressController extends Controller
     /**
      * Formulaire d'édition
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
         $address = Auth::user()->addresses()->findOrFail($id);
-        return view('addresses.edit', compact('address'));
+        return view(theme_view('addresses.edit'), compact('address'));
     }
 
     /**
@@ -112,8 +120,15 @@ class AddressController extends Controller
 
         $address->update($validated);
 
-        return redirect()->route('addresses.index')
+        $redirect = redirect()->route('addresses.index')
             ->with('success', 'Adresse mise à jour !');
+        
+        if ($request->has('theme')) {
+            $redirect = redirect()->route('addresses.index', ['theme' => $request->get('theme')])
+                ->with('success', 'Adresse mise à jour !');
+        }
+        
+        return $redirect;
     }
 
     /**
