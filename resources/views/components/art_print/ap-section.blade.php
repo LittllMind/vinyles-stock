@@ -1,4 +1,4 @@
-{{-- resources/views/components/art-print/ap-section.blade.php --}}
+{{-- resources/views/components/art_print/ap-section.blade.php --}}
 {{-- Section avec titre et compteur --}}
 
 @props(['title' => '', 'count' => '', 'narrow' => false])

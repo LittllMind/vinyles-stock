@@ -1,7 +1,7 @@
 {{-- resources/views/payment/success-art-print.blade.php --}}
 {{-- Confirmation paiement réussi - Style minimaliste --}}
 
-@extends('components.art-print.ap-layout')
+@extends('components.art_print.ap-layout')
 
 @section('title', 'Commande confirmée')
 

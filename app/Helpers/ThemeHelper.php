@@ -11,9 +11,9 @@ if (!function_exists('theme_view')) {
     {
         $theme = request()->attributes->get('theme') ?? session('theme', 'vinyl-cult');
         
-        if ($theme === 'art-print') {
+        if ($theme === 'art_print') {
             // Vérifier si une version art-print existe
-            $artPrintView = $viewBase . '-art-print';
+            $artPrintView = $viewBase . '_art_print';
             if (view()->exists($artPrintView)) {
                 return $artPrintView;
             }
@@ -35,7 +35,7 @@ if (!function_exists('theme_asset')) {
         $theme = request()->attributes->get('theme') ?? session('theme', 'vinyl-cult');
         
         // Remplace 'app.css' par 'art-print.css' ou similaire si besoin
-        if ($theme === 'art-print' && str_contains($path, 'app.css')) {
+        if ($theme === 'art_print' && str_contains($path, 'app.css')) {
             return asset('css/art-print.css');
         }
         

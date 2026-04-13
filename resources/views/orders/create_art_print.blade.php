@@ -1,7 +1,7 @@
 {{-- resources/views/orders/create-art-print.blade.php --}}
 {{-- Checkout ART PRINT - Style minimaliste --}}
 
-@extends('components.art-print.ap-layout')
+@extends('components.art_print.ap-layout')
 
 @section('title', 'Livraison')
 

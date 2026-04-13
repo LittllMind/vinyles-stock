@@ -24,13 +24,15 @@ Route::get('/about', [HomeController::class, 'about'])->name('about');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 Route::get('/articles/hermes-vs-openclaw', [HomeController::class, 'articleHermesVsOpenclaw'])->name('articles.hermes-vs-openclaw');
 
-// Switch de thème (persiste en session)
+// Switch de thème (persiste en session) - Réservé admin via middleware
 Route::get('/theme/{theme}', function ($theme) {
-    if (in_array($theme, ['art-print', 'vinyl-cult'])) {
+    if (in_array($theme, ['art_print', 'vinyl_cult'])) {
         session(['theme' => $theme]);
     }
     return redirect()->back();
-})->where('theme', 'art-print|vinyl-cult')->name('theme.switch');
+})->where('theme', 'art-print|vinyl-cult')
+    ->middleware(['auth'])  // Seuls users connectés peuvent switcher
+    ->name('theme.switch');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

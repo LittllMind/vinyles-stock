@@ -1,4 +1,4 @@
-{{-- resources/views/components/art-print/ap-card.blade.php --}}
+{{-- resources/views/components/art_print/ap-card.blade.php --}}
 {{-- Carte œuvre/vinyle style galerie --}}
 
 @props(['title' => '', 'year' => '', 'subtitle' => '', 'price' => '', 'image' => '', 'url' => '#', 'soldOut' => false, 'addToCartUrl' => null, 'id' => null])

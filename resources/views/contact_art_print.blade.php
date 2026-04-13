@@ -1,7 +1,7 @@
 {{-- resources/views/contact-art-print.blade.php --}}
 {{-- Page Contact - Style minimaliste --}}
 
-@extends('components.art-print.ap-layout')
+@extends('components.art_print.ap-layout')
 
 @section('title', 'Contact')
 

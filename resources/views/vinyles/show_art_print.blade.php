@@ -1,7 +1,7 @@
 {{-- resources/views/vinyles/show-art-print.blade.php --}}
 {{-- Fiche vinyle ART PRINT - Style galerie d'art --}}
 
-@extends('components.art-print.ap-layout')
+@extends('components.art_print.ap-layout')
 
 @section('title', $vinyle->artiste . ' – ' . $vinyle->modele)
 

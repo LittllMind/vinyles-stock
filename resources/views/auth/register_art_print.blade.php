@@ -1,7 +1,7 @@
 {{-- resources/views/auth/register-art-print.blade.php --}}
 {{-- Register ART PRINT - Style minimaliste --}}
 
-@extends('components.art-print.ap-layout')
+@extends('components.art_print.ap-layout')
 
 @section('title', 'Inscription')
 

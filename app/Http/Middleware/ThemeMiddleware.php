@@ -21,15 +21,15 @@ class ThemeMiddleware
             session(['theme' => $theme]);
         }
         
-        // Valeur par défaut : vinyl-cult (le theme original)
+        // Valeur par défaut : art-print (thème unique)
         if (!$theme) {
-            $theme = 'vinyl-cult';
+            $theme = 'art_print';
         }
         
         // Vérifier que c'est un thème valide
-        $allowedThemes = ['vinyl-cult', 'art-print'];
+        $allowedThemes = ['vinyl_cult', 'art_print'];
         if (!in_array($theme, $allowedThemes)) {
-            $theme = 'vinyl-cult';
+            $theme = 'vinyl_cult';
         }
         
         // Rendre le thème disponible dans toutes les vues

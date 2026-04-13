@@ -1,7 +1,7 @@
 {{-- resources/views/about-art-print.blade.php --}}
 {{-- Page À propos - Style minimaliste galerie --}}
 
-@extends('components.art-print.ap-layout')
+@extends('components.art_print.ap-layout')
 
 @section('title', 'Le Concept')
 

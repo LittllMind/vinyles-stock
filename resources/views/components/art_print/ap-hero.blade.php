@@ -1,4 +1,4 @@
-{{-- resources/views/components/art-print/ap-hero.blade.php --}}
+{{-- resources/views/components/art_print/ap-hero.blade.php --}}
 {{-- Hero section style galerie d'art --}}
 
 @props(['label' => '', 'title' => '', 'subtitle' => '', 'light' => '', 'buttons' => []])

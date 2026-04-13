@@ -1,7 +1,7 @@
 {{-- resources/views/auth/login-art-print.blade.php --}}
 {{-- Login ART PRINT - Style minimaliste --}}
 
-@extends('components.art-print.ap-layout')
+@extends('components.art_print.ap-layout')
 
 @section('title', 'Connexion')
 

@@ -1,7 +1,7 @@
 {{-- resources/views/cart/index-art-print.blade.php --}}
 {{-- Panier ART PRINT - Style minimaliste --}}
 
-@extends('components.art-print.ap-layout')
+@extends('components.art_print.ap-layout')
 
 @section('title', 'Panier')
 

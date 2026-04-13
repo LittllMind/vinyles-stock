@@ -1,7 +1,7 @@
 {{-- resources/views/orders/my-orders-art-print.blade.php --}}
 {{-- Mes commandes - Style minimaliste galerie --}}
 
-@extends('components.art-print.ap-layout')
+@extends('components.art_print.ap-layout')
 
 @section('title', 'Mes commandes')
 

@@ -1,7 +1,7 @@
 {{-- resources/views/payment/cancel-art-print.blade.php --}}
 {{-- Paiement annulé - Style minimaliste --}}
 
-@extends('components.art-print.ap-layout')
+@extends('components.art_print.ap-layout')
 
 @section('title', 'Paiement annulé')
 

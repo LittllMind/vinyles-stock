@@ -1,4 +1,4 @@
-{{-- resources/views/components/art-print/ap-text-block.blade.php --}}
+{{-- resources/views/components/art_print/ap-text-block.blade.php --}}
 {{-- Bloc de texte centré style galerie --}}
 
 @props(['title' => '', 'content' => ''])

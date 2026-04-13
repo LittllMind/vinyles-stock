@@ -1,4 +1,4 @@
-{{-- resources/views/components/art-print/ap-nav.blade.php --}}
+{{-- resources/views/components/art_print/ap-nav.blade.php --}}
 {{-- Navigation minimaliste galerie --}}
 
 <nav class="ap-nav">

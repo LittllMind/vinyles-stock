@@ -1,7 +1,7 @@
 {{-- resources/views/orders/payment-art-print.blade.php --}}
 {{-- Paiement - Style minimaliste galerie --}}
 
-@extends('components.art-print.ap-layout')
+@extends('components.art_print.ap-layout')
 
 @section('title', 'Paiement')
 

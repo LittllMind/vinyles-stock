@@ -1,7 +1,7 @@
 {{-- resources/views/landing-art-print.blade.php --}}
 {{-- Landing page ART PRINT - Galerie d'Art --}}
 
-@extends('components.art-print.ap-layout')
+@extends('components.art_print.ap-layout')
 
 @section('title', 'Fundisc • Vinyles ART PRINT')
 

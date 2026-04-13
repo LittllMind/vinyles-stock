@@ -1,4 +1,4 @@
-{{-- resources/views/components/art-print/ap-layout.blade.php --}}
+{{-- resources/views/components/art_print/ap-layout.blade.php --}}
 {{-- Layout de base ART PRINT (galerie MoMA) --}}
 
 <!DOCTYPE html>
@@ -22,7 +22,7 @@
 <body class="art-print-theme">
     
     <!-- Navigation Galerie -->
-    @include('components.art-print.ap-nav')
+    @include('components.art_print.ap-nav')
 
     <!-- Contenu principal -->
     <main>
@@ -30,7 +30,7 @@
     </main>
 
     <!-- Footer Galerie -->
-    @include('components.art-print.ap-footer')
+    @include('components.art_print.ap-footer')
 
 </body>
 </html>
