@@ -87,11 +87,12 @@ class OrderController extends Controller
         
         // Vérifier fonds si présents
         foreach ($cart->items as $item) {
-            if ($item->type_fond) {
-                $fondCheck = $stockService->verifierFondDisponible($item->type_fond);
-                if (!$fondCheck['available']) {
+            if ($item->fond_id) {
+                $fond = $item->fond; // Charger la relation
+                if (!$fond || $fond->quantite < $item->quantite) {
+                    $fondType = $fond ? $fond->type : 'inconnu';
                     return redirect()->route('cart.index')
-                        ->with('error', $fondCheck['error']);
+                        ->with('error', "Stock insuffisant pour le fond {$fondType} sur {$item->vinyle->nom_complet}");
                 }
             }
         }
@@ -258,15 +259,18 @@ class OrderController extends Controller
                         continue;
                     }
                     
+                    // ✅ Utiliser le prix du panier (inclut le supplément fond)
+                    // et copier le fond_id si présent
                     OrderItem::create([
                         'order_id' => $order->id,
                         'vinyle_id' => $vinyle->id,
+                        'fond_id' => $item->fond_id, // ✅ AJOUTÉ : Copier le fond sélectionné
                         'titre_vinyle' => $vinyle->modele,
                         'artiste_vinyle' => $vinyle->artiste,
                         'reference_vinyle' => $vinyle->reference,
                         'quantite' => $item->quantite,
-                        'prix_unitaire' => $vinyle->prix,
-                        'total' => $vinyle->prix * $item->quantite,
+                        'prix_unitaire' => $item->prix_unitaire, // ✅ CORRIGÉ : Prix du panier (avec supplément)
+                        'total' => $item->prix_unitaire * $item->quantite, // ✅ CORRIGÉ : Total avec bon prix
                     ]);
                 }
 

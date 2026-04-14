@@ -22,6 +22,7 @@ class Vinyle extends Model implements HasMedia
         'style',
         'prix',
         'quantite',
+        'reserved_quantity',
         'seuil_alerte',
     ];
 

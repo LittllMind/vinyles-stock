@@ -1,6 +1,6 @@
 @extends('layouts.art-print')
 
-@section('title', 'Vinyles ART PRINT')
+@section('title', 'Vinyles FUN DISC')
 
 @php
 if (!function_exists('formatPrice')) {
@@ -13,28 +13,27 @@ if (!function_exists('formatPrice')) {
 @section('content')
 
 {{-- Hero Section --}}
-<div class="ap-hero" style="background-color: #f8f7f2;">
-    <div style="max-width: 64rem; margin: 0 auto; padding: 4rem 1.5rem; text-align: center;">
-        <p style="font-size: 0.875rem; color: #b8a77d; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 1rem;">
-            Fundisc.fr
-        </p>
-        
-        <h1 style="font-size: clamp(2rem, 5vw, 4rem); font-weight: 300; color: #1a1a1a; margin-bottom: 1.5rem; line-height: 1.1;">
-            Vinyles découpés <br>en laser
+<div class="ap-hero" style="background-color: #1a1a1a; min-height: 80vh; display: flex; align-items: center; justify-content: center;">
+    <div style="text-align: center; padding: 2rem;">
+        {{-- Grand FUN DISC en typographie --}}
+        <h1 style="font-size: clamp(4rem, 15vw, 12rem); font-weight: 900; color: #f8f7f2; line-height: 0.9; letter-spacing: -0.02em; margin: 0;">
+            FUN
+        </h1>
+        <h1 style="font-size: clamp(4rem, 15vw, 12rem); font-weight: 900; color: #f8f7f2; line-height: 0.9; letter-spacing: -0.02em; margin: 0;">
+            DISC
         </h1>
         
-        <p style="font-size: 1.125rem; color: #666; max-width: 600px; margin: 0 auto 2rem;">
-            Découvrez notre collection unique de vinyles découpés en laser,
-            transformés en œuvres d'art murales
+        <p style="font-size: 1rem; color: #b8a77d; text-transform: uppercase; letter-spacing: 0.3em; margin-top: 2rem;">
+            Vinyles découpés
         </p>
         
-        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-            <a href="{{ route('kiosque.index') }}" class="ap-btn ap-btn-dark" style="min-width: 12rem;">>
-                Découvrir la collection
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 3rem;">
+            <a href="{{ route('kiosque.index') }}" class="ap-btn" style="background: #f8f7f2; color: #1a1a1a; border: none; min-width: 12rem;">
+                Découvrir
             </a>
             
-            <a href="{{ auth()->check() ? route('orders.index') : route('login') }}" class="ap-btn ap-btn-outline" style="min-width: 12rem;">
-                {{ auth()->check() ? 'Mes commandes' : 'Se connecter' }}
+            <a href="{{ auth()->check() ? route('orders.index') : route('login') }}" class="ap-btn" style="background: transparent; color: #f8f7f2; border: 1px solid #f8f7f2; min-width: 12rem;">
+                {{ auth()->check() ? 'Mes commandes' : 'Connexion' }}
             </a>
         </div>
     </div>

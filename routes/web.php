@@ -39,14 +39,8 @@ Route::middleware('auth')->group(function () {
     Route::middleware('auth')->group(function () {
         Route::post('/vinyles/{vinyle}/reviews', [App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
     });
-Route::get('/theme/{theme}', function ($theme) {
-    if (in_array($theme, ['art_print', 'vinyl_cult'])) {
-        session(['theme' => $theme]);
-    }
-    return redirect()->back();
-})->where('theme', 'art-print|vinyl-cult')
-    ->middleware(['auth'])
-    ->name('theme.switch');
+// Switcher de thème désactivé - ART PRINT est le thème unique
+// Route::get('/theme/{theme}', function ($theme) { ... })->name('theme.switch');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

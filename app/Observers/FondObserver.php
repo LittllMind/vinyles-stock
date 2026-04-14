@@ -24,36 +24,19 @@ class FondObserver
      */
     public function saving(Fond $fond): void
     {
-        if ($fond->exists) {
-            $this->oldQuantities = [
-                'miroir' => $fond->getOriginal('miroir', $fond->miroir),
-                'dore' => $fond->getOriginal('dore', $fond->dore),
-                'standard' => $fond->getOriginal('standard', $fond->standard),
-            ];
-        }
+        // Désactivé - StockService gère tous les mouvements de vente
+        // Cet observer ne trace plus les quantités pour éviter doublons
     }
 
     /**
      * Handle the Fond "saved" event.
+     * 
+     * NOTE: StockService gère UNIQUEMENT les mouvements de vente (sortie après paiement).
+     * Les modifications manuelles admin sont désactivées ici pour éviter doublons.
      */
     public function saved(Fond $fond): void
     {
-        if (empty($this->oldQuantities)) {
-            return;
-        }
-
-        $types = ['miroir', 'dore', 'standard'];
-        
-        foreach ($types as $type) {
-            $oldQty = $this->oldQuantities[$type] ?? 0;
-            $newQty = $fond->$type;
-
-            if ($oldQty !== $newQty) {
-                StockMovementService::traceFondStockChanged($fond, $type, $oldQty, $newQty);
-            }
-        }
-
-        // Reset après traitement
-        $this->oldQuantities = [];
+        // Désactivé - les mouvements de stock sont créés uniquement par StockService
+        // lors des réservations (ventes) et restitutions (annulations)
     }
 }

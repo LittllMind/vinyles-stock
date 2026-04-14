@@ -8,20 +8,19 @@ use App\Services\StockMovementService;
 class OrderObserver
 {
     /**
+     * Handle the Order "updating" event.
      * Observer le changement de statut de commande
-     * Déclencher les mouvements de sortie quand validée
+     * 
+     * NOTE: Les mouvements de stock sont maintenant gérés par StockService::reserverStock()
+     * après confirmation du paiement (PaymentController::handleCheckoutCompleted).
+     * Cet observer NE décrémente PAS le stock pour éviter le double décrément.
+     * Il ne trace que l'historique si besoin de traçabilité supplémentaire.
      */
     public function updating(Order $order): void
     {
-        // Si le statut passe à 'validee' ou 'prete' (prête à être retirée/enlevée)
-        if ($order->isDirty('statut') && in_array($order->statut, ['validee', 'prete', 'livree'])) {
-            $oldStatut = $order->getOriginal('statut');
-            
-            // Ne tracer qu'une seule fois (passage en cours → terminée)
-            if (!in_array($oldStatut, ['validee', 'prete', 'livree'])) {
-                $this->tracerSortieStock($order);
-            }
-        }
+        // Les mouvements de stock sont gérés dans PaymentController via StockService
+        // pour garantir une seule décrémentation après paiement confirmé.
+        // Ne pas décommenter sans supprimer l'appel dans PaymentController.
     }
 
     /**

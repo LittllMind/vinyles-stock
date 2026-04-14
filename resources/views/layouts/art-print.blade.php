@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Fundisc') • Vinyles ART PRINT</title>
+    <title>@yield('title', 'Fundisc') • Vinyles FUN DISC</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -33,7 +33,7 @@
     {{-- Footer --}}
     <footer class="bg-white border-t border-gray-200 py-12 mt-20">
         <div class="max-w-6xl mx-auto px-6 text-center">
-            <p class="text-gray-500 text-sm">© 2026 FUNDISC • Vinyles en ART PRINT</p>
+            <p class="text-gray-500 text-sm">© 2026 FUNDISC • Vinyles en FUN DISC</p>
         </div>
     </footer>
 

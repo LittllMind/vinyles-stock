@@ -246,8 +246,8 @@
             currentUnitPrice() {
                 if (!this.selectedVinyle) return 0;
                 const base = Number(this.selectedVinyle.prix) || 0;
-                const supplement = this.selectedFond === 'miroir' ? 8 : (this.selectedFond === 'dore' ? 13 : 0);
-                return base + supplement;
+                const supplement = this.selectedFond === 'miroir' ? 800 : (this.selectedFond === 'dore' ? 1300 : 0); // centimes
+                return (base + supplement) / 100; // retourne en euros pour affichage
             },
 
             formatPrice(amount) {

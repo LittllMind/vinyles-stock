@@ -29,11 +29,24 @@
                 <li><a href="#collection">Collection</a></li>
                 <li><a href="#concept">Le Concept</a></li>
                 <li><a href="#contact">Contact</a></li>
+                @auth
+                    <li><a href="{{ route('cart.index') . (request()->query('theme') ? '?theme='.request()->query('theme') : '') }}">Panier</a></li>
+                    <li><a href="{{ route('orders.my') }}">Mes commandes</a></li>
+                @endauth
             </ul>
             
             <div style="display: flex; align-items: center; gap: 1rem;">
-                <a href="{{ route('login') . (request()->query('theme') ? '?theme='.request()->query('theme') : '') }}" class="vc-btn vc-btn-ghost">Connexion</a>
-                <a href="{{ route('register') . (request()->query('theme') ? '?theme='.request()->query('theme') : '') }}" class="vc-btn vc-btn-primary">S'inscrire</a>
+                @guest
+                    <a href="{{ route('login') . (request()->query('theme') ? '?theme='.request()->query('theme') : '') }}" class="vc-btn vc-btn-ghost">Connexion</a>
+                    <a href="{{ route('register') . (request()->query('theme') ? '?theme='.request()->query('theme') : '') }}" class="vc-btn vc-btn-primary">S'inscrire</a>
+                @endguest
+                @auth
+                    <a href="{{ route('orders.my') }}" style="color: var(--vc-text); font-size: 0.875rem;">{{ auth()->user()->name ?? 'Compte' }}</a>
+                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                        @csrf
+                        <button type="submit" class="vc-btn vc-btn-ghost" style="border-color: var(--vc-border);">Déconnexion</button>
+                    </form>
+                @endauth
             </div>
         </div>
     </nav>

@@ -19,3 +19,4 @@ yarn-error.log
 /.vscode
 push_deploy_prod.sh
 .env.testing
+.aider*

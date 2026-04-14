@@ -94,16 +94,12 @@
                         <p class="ap-card-price">€ {{ number_format(($vinyle['prix'] ?? 0) / 100, 2, ',', ' ') }}</p>
                         
                         @if(($vinyle['quantite'] ?? 0) > 0)
-                            <form action="{{ route('cart.add') }}" method="POST" style="margin: 0;">
-                                @csrf
-                                <input type="hidden" name="vinyle_id" value="{{ $vinyle['id'] }}">
-                                <input type="hidden" name="quantite" value="1">
-                                <input type="hidden" name="fond" value="standard">
-                                
-                                <button type="submit" class="ap-btn ap-btn-dark" style="padding: 0.6rem 1.2rem;">
-                                    +
-                                </button>
-                            </form>
+                            <button type="button" 
+                                    onclick="event.stopPropagation(); openFondModal({{ $vinyle['id'] }}, {{ ($vinyle['prix'] ?? 0) / 100 }}, '{{ addslashes($vinyle['artiste']) }}')" 
+                                    class="ap-btn ap-btn-dark" 
+                                    style="padding: 0.6rem 1.2rem;">
+                                +
+                            </button>
                         @else
                             <span style="font-size: 0.7rem; color: #999; text-transform: uppercase; letter-spacing: 0.1em;">Épuisé</span>
                         @endif

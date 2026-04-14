@@ -20,18 +20,16 @@ class VinyleObserver
 
     /**
      * Handle the Vinyle "updated" event.
-     * Note: getOriginal() conserve l'état avant modification
+     * 
+     * NOTE: Les mouvements liés aux ventes sont gérés UNIQUEMENT par StockService.
+     * Cet observer ne trace QUE les modifications manuelles admin (création/suppression).
+     * Le changement de stock via decrement() est géré par StockService pour éviter
+     * les doublons de mouvements.
      */
     public function updated(Vinyle $vinyle): void
     {
-        // getOriginal() retourne la valeur avant modification
-        // Cette valeur est conservée jusqu'à ce que le modèle soit rechargé
-        $oldStock = $vinyle->getOriginal('quantite');
-        $newStock = $vinyle->quantite;
-
-        if ($oldStock !== $newStock) {
-            StockMovementService::traceVinyleStockChanged($vinyle, $oldStock, $newStock);
-        }
+        // Désactivé pour éviter doublons avec StockService::reserverStock()
+        // Les mouvements de vente sont créés uniquement dans StockService
     }
 
     /**

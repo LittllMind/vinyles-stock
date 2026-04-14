@@ -12,9 +12,16 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
+        // Nettoyer les paniers expirés toutes les minutes et libérer le stock réservé
+        $schedule->command('carts:cleanup')
+            ->everyMinute()
+            ->withoutOverlapping()
+            ->onOneServer();
+
+        // Vérification des stocks critiques quotidienne
         $schedule->command('stock:check-critical')
             ->dailyAt(config('stock.notification_time'))
-            ->timezone('Europe/Paris'); // Ajuste selon ta timezone
+            ->timezone('Europe/Paris');
     }
 
 

@@ -197,6 +197,6 @@ class VinyleController extends Controller
         // Charger les relations nécessaires
         $vinyle->load(['media']);
 
-        return view(theme_view('vinyles.show_public'), compact('vinyle'));
+        return view(theme_view('vinyles.show'), compact('vinyle'));
     }
 }

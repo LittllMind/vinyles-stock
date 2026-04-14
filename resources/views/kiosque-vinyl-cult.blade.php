@@ -48,17 +48,32 @@
                 <li><a href="{{ route('kiosque.index') . (request()->query('theme') ? '?theme='.request()->query('theme') : '') }}" class="active">Catalogue</a></li>
                 <li><a href="{{ route('about') . (request()->query('theme') ? '?theme='.request()->query('theme') : '') }}">Le Concept</a></li>
                 <li><a href="{{ route('contact') . (request()->query('theme') ? '?theme='.request()->query('theme') : '') }}">Contact</a></li>
+                @auth
+                    <li><a href="{{ route('cart.index') . (request()->query('theme') ? '?theme='.request()->query('theme') : '') }}">Panier</a></li>
+                    <li><a href="{{ route('orders.my') }}">Mes commandes</a></li>
+                @endauth
             </ul>
             
-             <div style="display: flex; align-items: center; gap: 1rem;">
-                <a href="{{ route('cart.index') . (request()->query('theme') ? '?theme='.request()->query('theme') : '') }}" class="vc-btn vc-btn-ghost" style="position: relative;">
-                    🛒 Panier
-                    @if($cartCount > 0)
-                        <span style="position: absolute; top: -8px; right: -8px; background: var(--vc-label); color: var(--vc-bg-primary); width: 20px; height: 20px; border-radius: 50%; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; font-weight: 700;">
-                            {{ $cartCount }}
-                        </span>
-                    @endif
-                </a>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                @guest
+                    <a href="{{ route('login') . (request()->query('theme') ? '?theme='.request()->query('theme') : '') }}" class="vc-btn vc-btn-ghost">Connexion</a>
+                    <a href="{{ route('register') . (request()->query('theme') ? '?theme='.request()->query('theme') : '') }}" class="vc-btn vc-btn-primary">S'inscrire</a>
+                @endguest
+                @auth
+                    <a href="{{ route('cart.index') . (request()->query('theme') ? '?theme='.request()->query('theme') : '') }}" class="vc-btn vc-btn-ghost" style="position: relative;">
+                        🛒 Panier
+                        @if($cartCount > 0)
+                            <span style="position: absolute; top: -8px; right: -8px; background: var(--vc-label); color: var(--vc-bg-primary); width: 20px; height: 20px; border-radius: 50%; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; font-weight: 700;">
+                                {{ $cartCount }}
+                            </span>
+                        @endif
+                    </a>
+                    <a href="{{ route('orders.my') }}" style="color: var(--vc-text); font-size: 0.875rem;">{{ auth()->user()->name ?? 'Compte' }}</a>
+                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                        @csrf
+                        <button type="submit" class="vc-btn vc-btn-ghost" style="border-color: var(--vc-border);">Déconnexion</button>
+                    </form>
+                @endauth
             </div>
         </div>
     </nav>

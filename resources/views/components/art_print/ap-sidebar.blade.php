@@ -25,7 +25,7 @@ function isActive($route) {
     <div class="sidebar-header">
         <a href="{{ route('landing') }}" class="sidebar-brand">
             <span class="brand-icon">◉</span>
-            <span class="brand-text">ART PRINT</span>
+            <span class="brand-text">FUN DISC</span>
         </a>
         <p class="sidebar-subtitle">Admin</p>
     </div>

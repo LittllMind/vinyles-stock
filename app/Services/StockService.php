@@ -82,12 +82,15 @@ class StockService
                     throw new \Exception("Vinyle introuvable pour item #{$item->id}");
                 }
                 
-                // Vérifier encore (double-check)
-                if ($vinyle->quantite < $quantite) {
-                    throw new \Exception("Stock insuffisant pour '{$vinyle->nom_complet}'");
+                // Stock disponible = quantité physique - réservée par d'autres
+                $dispoReelle = $vinyle->quantite - $vinyle->reserved_quantity + $quantite; // +$quantite car c'est notre réservation
+                if ($dispoReelle < $quantite) {
+                    throw new \Exception("Stock insuffisant pour '{$vinyle->nom_complet}' (disponible: {$dispoReelle})");
                 }
                 
-                // Décrémenter vinyle
+                // Libérer notre réservation ET décrémenter le stock physique
+                // Ex: quantite=10, reserved=3 (dont 1 pour cette commande) → reserved devient 2, quantite devient 9
+                $vinyle->decrement('reserved_quantity', $quantite);
                 $vinyle->decrement('quantite', $quantite);
                 
                 // Créer mouvement sortie
@@ -139,6 +142,7 @@ class StockService
     
     /**
      * Restituer le stock (annulation/remboursement)
+     * Réincrémente le stock physique (la réservation n'existe plus à ce stade)
      */
     public function restituerStock(Order $order, int $userId, string $raison = 'annulation'): array
     {
@@ -153,7 +157,7 @@ class StockService
                 
                 if (!$vinyle) continue;
                 
-                // Réincrémenter vinyle
+                // Réincrémenter vinyle (le stock redevient disponible)
                 $vinyle->increment('quantite', $quantite);
                 
                 // Créer mouvement entrée
@@ -202,10 +206,14 @@ class StockService
      */
     private function decrementerFondById(Fond $fond, int $quantite, int $orderId, int $userId): ?MouvementStock
     {
-        if ($fond->quantite <= 0) {
+        // Stock dispo = physique - réservé (qui inclut notre réservation)
+        $dispoReelle = $fond->quantite - $fond->reserved_quantity + $quantite;
+        if ($dispoReelle < $quantite) {
             return null;
         }
         
+        // Libérer notre réservation ET décrémenter stock
+        $fond->decrement('reserved_quantity', $quantite);
         $fond->decrement('quantite', $quantite);
         
         return MouvementStock::enregistrer(

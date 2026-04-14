@@ -14,7 +14,7 @@ $cartCount = session('cart_count', 0);
 <nav class="ap-nav">
     <div class="ap-nav-container">
         {{-- Brand toujours visible --}}
-        <a href="{{ url('/') }}" class="ap-brand">ART PRINT</a>
+        <a href="{{ url('/') }}" class="ap-brand">FUN<br>DISC</a>
         
         <ul class="ap-nav-links">
             {{-- PUBLIC : Collection & À propos --}}

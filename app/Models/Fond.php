@@ -13,6 +13,7 @@ class Fond extends Model
         'type',
         'visuel',
         'quantite',
+        'reserved_quantity',
         'prix_achat',
         'prix_vente',
     ];

@@ -2,23 +2,20 @@
 
 if (!function_exists('theme_view')) {
     /**
-     * Helper pour retourner le nom de vue approprié selon le thème actif.
+     * Helper pour retourner la vue ART PRINT (thème unique)
      * 
      * @param string $viewBase Nom de base de la vue (ex: 'kiosque.index')
-     * @return string Nom complet de la vue avec suffixe thème si nécessaire
+     * @return string Nom complet de la vue avec suffixe _art_print
      */
     function theme_view(string $viewBase): string
     {
-        $theme = request()->attributes->get('theme') ?? session('theme', 'vinyl-cult');
-        
-        if ($theme === 'art_print') {
-            // Vérifier si une version art-print existe
-            $artPrintView = $viewBase . '_art_print';
-            if (view()->exists($artPrintView)) {
-                return $artPrintView;
-            }
+        // Force le thème ART PRINT pour toutes les vues
+        $artPrintView = $viewBase . '_art_print';
+        if (view()->exists($artPrintView)) {
+            return $artPrintView;
         }
         
+        // Fallback sur la vue de base si pas de version art_print
         return $viewBase;
     }
 }
