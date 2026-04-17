@@ -13,7 +13,8 @@ class FondController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        // Index/show = admin/employé, Store/edit = admin
+        $this->middleware(['auth', 'role:admin,employe']);
     }
 
     /**

@@ -10,7 +10,9 @@ class VinyleController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->except(['kiosque', 'showPublic']);
+        // Kiosque et showPublic = public
+        // Toutes les autres = admin ou employé
+        $this->middleware(['auth', 'role:admin,employe'])->except(['kiosque', 'showPublic']);
     }
 
     public function index(Request $request)

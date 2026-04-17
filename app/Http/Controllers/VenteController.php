@@ -14,7 +14,8 @@ class VenteController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->except('storeFromKiosque');
+        // storeFromKiosque = public, Reste = admin/employé
+        $this->middleware(['auth', 'role:admin,employe'])->except('storeFromKiosque');
     }
 
     public function index(Request $request)

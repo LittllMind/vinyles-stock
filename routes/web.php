@@ -115,7 +115,7 @@ Route::middleware(['auth', 'role:admin,employe'])->prefix('admin')->name('admin.
 // ============================================
 // ROUTES FONDS - LECTURE (Admin et Employé)
 // ============================================
-Route::middleware(['auth', 'role:admin,employe'])->group(function () {
+Route::middleware(['auth', 'role:admin,employe'])->prefix('admin')->group(function () {
     // Liste et affichage des fonds
     Route::get('/fonds', [FondController::class, 'index'])->name('fonds.index');
     Route::get('/fonds/{fond}', [FondController::class, 'show'])->name('fonds.show');
@@ -124,7 +124,7 @@ Route::middleware(['auth', 'role:admin,employe'])->group(function () {
 // ============================================
 // ROUTES FONDS - MODIFICATION (Admin uniquement)
 // ============================================
-Route::middleware(['auth', 'role:admin'])->group(function () {
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     // Modification du stock fonds (Admin uniquement)
     Route::patch('/fonds/{fond}/stock', [FondController::class, 'updateStock'])->name('fonds.updateStock');
     
@@ -135,7 +135,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 // ============================================
 // ROUTES ADMIN (Accès restreint: admin ET employe)
 // ============================================
-Route::middleware(['auth', 'role:admin,employe'])->group(function () {
+Route::middleware(['auth', 'role:admin,employe'])->prefix('admin')->group(function () {
     // Recherche avancée des vinyles - AVANT le resource pour éviter conflit avec {vinyle}
     Route::get('/vinyles/recherche', [VinyleController::class, 'search'])->name('vinyles.search');
     

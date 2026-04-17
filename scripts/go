@@ -1,0 +1,116 @@
+#!/bin/bash
+# =====================================================
+# COMMANDES RAPIDES - SMS STYLE
+# Usage: ./go deploy | logs | rollback | status | backup
+# =====================================================
+
+APP_NAME="vinyles-stock"
+REMOTE_USER="u417457839"
+REMOTE_HOST="195.35.49.242"
+REMOTE_PORT="65002"
+REMOTE_BASE="/home/${REMOTE_USER}/projects/${APP_NAME}"
+DOMAIN="la-main-a-la-pate.online"
+
+colors() {
+    GREEN='\033[0;32m'
+    RED='\033[0;31m'
+    YELLOW='\033[1;33m'
+    BLUE='\033[0;34m'
+    NC='\033[0m'
+}
+colors
+
+case "${1:-}" in
+    deploy|d)
+        echo -e "${BLUE}🚀 GO DEPLOY${NC}"
+        ./scripts/deploy-atomic.sh
+        ;;
+
+    logs|l)
+        echo -e "${BLUE}📜 GO LOGS${NC}"
+        ssh -p ${REMOTE_PORT} ${REMOTE_USER}@${REMOTE_HOST} "tail -n 50 ${REMOTE_BASE}/shared/storage/logs/laravel.log 2>/dev/null || tail -n 50 ${REMOTE_BASE}/current/storage/logs/laravel.log 2>/dev/null || echo 'No logs found'"
+        ;;
+
+    logs-f|lf)
+        echo -e "${BLUE}📜 GO LOGS (FOLLOW)${NC} - Ctrl+C pour quitter"
+        ssh -p ${REMOTE_PORT} ${REMOTE_USER}@${REMOTE_HOST} "tail -f ${REMOTE_BASE}/shared/storage/logs/laravel.log 2>/dev/null || tail -f ${REMOTE_BASE}/current/storage/logs/laravel.log"
+        ;;
+
+    rollback|r)
+        echo -e "${BLUE}↩️  GO ROLLBACK${NC}"
+        ssh -p ${REMOTE_PORT} ${REMOTE_USER}@${REMOTE_HOST} << ENDSSH
+            cd ${REMOTE_BASE}/releases
+            CURRENT=$(ls -la ${REMOTE_BASE}/current | awk '{print \$11}' | xargs basename)
+            PREVIOUS=$(ls -t | grep -v "^${CURRENT}$" | head -1)
+            
+            if [ -z "\$PREVIOUS" ]; then
+                echo -e "${RED}❌ Pas de release précédente${NC}"
+                exit 1
+            fi
+            
+            echo "Reverting to \$PREVIOUS..."
+            ln -sfn ${REMOTE_BASE}/releases/\${PREVIOUS} ${REMOTE_BASE}/current
+            ln -sfn ${REMOTE_BASE}/current/public /home/${REMOTE_USER}/domains/${DOMAIN}/public_html
+            echo -e "${GREEN}✅ Rollback OK${NC}"
+            echo "Version active: \$PREVIOUS"
+ENDSSH
+        ;;
+
+    status|s)
+        echo -e "${BLUE}📊 GO STATUS${NC}"
+        ssh -p ${REMOTE_PORT} ${REMOTE_USER}@${REMOTE_HOST} << ENDSSH
+            echo "=== RELEASES ==="
+            cd ${REMOTE_BASE}/releases 2>/dev/null && ls -lt | head -6 || echo "No releases"
+            
+            echo ""
+            echo "=== CURRENT ==="
+            ls -la ${REMOTE_BASE}/current 2>/dev/null | head -2 || echo "No current symlink"
+            
+            echo ""
+            echo "=== DISK ==="
+            df -h /home/${REMOTE_USER} | tail -1
+ENDSSH
+        echo ""
+        echo -n "=== HTTP === "
+        curl -s -o /dev/null -w "%{http_code}" https://${DOMAIN}
+        echo ""
+        ;;
+
+    backup|b)
+        echo -e "${BLUE}💾 GO BACKUP${NC}"
+        ssh -p ${REMOTE_PORT} ${REMOTE_USER}@${REMOTE_HOST} << ENDSSH
+            DB_NAME=\$(grep DB_DATABASE ${REMOTE_BASE}/shared/.env | cut -d= -f2)
+            DB_USER=\$(grep DB_USERNAME ${REMOTE_BASE}/shared/.env | cut -d= -f2)
+            DB_PASS=\$(grep DB_PASSWORD ${REMOTE_BASE}/shared/.env | cut -d= -f2)
+            BACKUP_FILE="${REMOTE_BASE}/backups/\${DB_NAME}_\$(date +%Y%m%d_%H%M%S).sql"
+            
+            mysqldump -u\${DB_USER} -p\${DB_PASS} \${DB_NAME} > "\${BACKUP_FILE}" 2>/dev/null && \
+                echo -e "${GREEN}✅ Backup: \${BACKUP_FILE}${NC}" || \
+                echo -e "${RED}❌ Backup failed${NC}"
+ENDSSH
+        ;;
+
+    ssh)
+        echo -e "${BLUE}🔌 SSH to production${NC}"
+        ssh -p ${REMOTE_PORT} ${REMOTE_USER}@${REMOTE_HOST}
+        ;;
+
+    ")
+        echo -e "${YELLOW}Usage: ./go [commande]${NC}"
+        echo ""
+        echo "Commandes:"
+        echo "  deploy, d      → Déployer (zero-downtime)"
+        echo "  logs, l        → Voir les logs"
+        echo "  logs-f, lf     → Logs en temps réel"
+        echo "  rollback, r    → Revenir à la version précédente"
+        echo "  status, s      → État du déploiement"
+        echo "  backup, b      → Backup base de données"
+        echo "  ssh            → Connexion SSH directe"
+        echo ""
+        ;;
+    *)
+        echo -e "${RED}❌ Commande inconnue: '$1'${NC}"
+        echo "Usage: ./go [deploy|logs|rollback|status|backup]"
+        exit 1
+        ;;
+esac

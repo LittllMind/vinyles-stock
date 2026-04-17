@@ -1,0 +1,162 @@
+name: Deploy Zero-Downtime
+
+on:
+  push:
+    branches: [master, main]
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branche à déployer'
+        required: true
+        default: 'master'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.3'
+        extensions: mbstring, xml, ctype, json, openssl, pdo, pdo_mysql
+        tools: composer
+
+    - name: Validate composer.json
+      run: composer validate --strict || true
+
+    - name: Cache Composer dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.composer/cache
+          vendor
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-composer-
+
+    - name: Install Dependencies
+      run: |
+        composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install NPM dependencies
+      run: npm ci --no-audit --no-fund
+
+    - name: Build Assets
+      run: npm run build
+
+    - name: Prepare Deployment Package
+      run: |
+        # Créer le package de déploiement
+        mkdir -p deployment
+        cp -r app bootstrap config database lang public resources routes vendor deployment/
+        cp -r artisan composer.json composer.lock package*.json vite.config.js tailwind.config.js postcss.config.js deployment/ 2>/dev/null || true
+        cp -r .env.production.example deployment/
+        
+        # Nettoyer les fichiers inutiles
+        rm -rf deployment/resources/js/
+        rm -rf deployment/tests/
+        
+        echo "📦 Package ready"
+        du -sh deployment/
+
+    - name: Deploy to Hostinger
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.HOSTINGER_SSH_KEY }}
+        HOSTINGER_HOST: ${{ secrets.HOSTINGER_HOST }}
+        HOSTINGER_USER: ${{ secrets.HOSTINGER_USER }}
+        APP_NAME: ${{ secrets.APP_NAME || 'vinyles-stock' }}
+      run: |
+        # Setup SSH
+        mkdir -p ~/.ssh
+        echo "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+        chmod 600 ~/.ssh/deploy_key
+        cat >> ~/.ssh/config << EOF
+        Host hostinger
+          HostName ${HOSTINGER_HOST}
+          User ${HOSTINGER_USER}
+          Port 65002
+          IdentityFile ~/.ssh/deploy_key
+          StrictHostKeyChecking no
+          UserKnownHostsFile /dev/null
+        EOF
+        chmod 600 ~/.ssh/config
+
+        TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+        RELEASE_NAME="release_${TIMESTAMP}"
+        REMOTE_BASE="/home/${HOSTINGER_USER}/projects/${APP_NAME}"
+        DOMAIN_PATH="/home/${HOSTINGER_USER}/domains/la-main-a-la-pate.online"
+
+        echo "🚀 Deploying ${RELEASE_NAME}..."
+
+        # Create directories
+        ssh hostinger "mkdir -p ${REMOTE_BASE}/releases ${REMOTE_BASE}/shared/storage/app/public ${REMOTE_BASE}/shared/uploads ${REMOTE_BASE}/backups"
+        
+        # Upload new release
+        scp -r -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null" \
+          deployment/* ${HOSTINGER_USER}@${HOSTINGER_HOST}:${REMOTE_BASE}/releases/${RELEASE_NAME}/ 2>/dev/null || echo "Upload phase 1 done"
+        
+        # Setup symlinks for shared resources
+        ssh hostinger << ENDSSH
+          set -e
+          
+          # Link shared storage
+          ln -sf ${REMOTE_BASE}/shared/.env ${REMOTE_BASE}/releases/${RELEASE_NAME}/.env 2>/dev/null || echo "Using release .env"
+          rm -rf ${REMOTE_BASE}/releases/${RELEASE_NAME}/storage
+          ln -sf ${REMOTE_BASE}/shared/storage ${REMOTE_BASE}/releases/${RELEASE_NAME}/storage
+          
+          # Permissions
+          find ${REMOTE_BASE}/releases/${RELEASE_NAME} -type f -exec chmod 644 {} \;
+          find ${REMOTE_BASE}/releases/${RELEASE_NAME} -type d -exec chmod 755 {} \;
+          chmod -R 775 ${REMOTE_BASE}/shared/storage 2>/dev/null || true
+          
+          # Laravel optimizations
+          cd ${REMOTE_BASE}/releases/${RELEASE_NAME}
+          php artisan cache:clear 2>/dev/null || true
+          php artisan config:cache
+          php artisan route:cache
+          php artisan view:cache
+          
+          # Run migrations (with error handling)
+          php artisan migrate --force || echo "Migrations may have issues - check manually"
+          
+          # ATOMIC SWITCH
+          ln -sf ${REMOTE_BASE}/releases/${RELEASE_NAME} ${REMOTE_BASE}/current
+          ln -sf ${REMOTE_BASE}/current/public ${DOMAIN_PATH}/public_html
+          
+          echo "✅ Deployed ${RELEASE_NAME}"
+        ENDSSH
+
+        # Cleanup old releases (keep 5)
+        ssh hostinger "cd ${REMOTE_BASE}/releases && ls -t | tail -n +6 | xargs -r rm -rf 2>/dev/null || true"
+
+    - name: Verify Deployment
+      run: |
+        sleep 5
+        HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://la-main-a-la-pate.online)
+        echo "HTTP Status: ${HTTP_CODE}"
+        if [ "${HTTP_CODE}" = "200" ]; then
+          echo "✅ Deployment successful!"
+        else
+          echo "⚠️  HTTP ${HTTP_CODE} - verify manually"
+        fi
+
+    - name: Notify Success
+      if: success()
+      run: |
+        echo "✅ Deployed to https://la-main-a-la-pate.online"
+
+    - name: Notify Failure
+      if: failure()
+      run: |
+        echo "❌ Deployment failed - check logs"

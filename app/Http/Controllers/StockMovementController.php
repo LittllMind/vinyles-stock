@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\DB;
 
 class StockMovementController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['auth', 'role:admin,employe']);
+    }
+
     /**
      * Afficher l'historique des mouvements de stock
      */

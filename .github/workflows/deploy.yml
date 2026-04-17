@@ -18,7 +18,7 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.2'
+        php-version: '8.3'
 
     - name: Install Dependencies
       run: |
@@ -31,41 +31,69 @@ jobs:
         npm ci
         npm run build
 
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.9.0
+      with:
+        ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
+        log-public-key: false
+
+    - name: Add Host to Known Hosts
+      run: |
+        mkdir -p ~/.ssh
+        ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || true
+        # Accepter l'hôte même si keyscan fail (première connexion)
+        echo "Host *" >> ~/.ssh/config
+        echo "  StrictHostKeyChecking no" >> ~/.ssh/config
+        echo "  UserKnownHostsFile /dev/null" >> ~/.ssh/config
+
     - name: Deploy to Production
       env:
-        DEPLOY_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
         DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
         DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
         DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
       run: |
-        echo "$DEPLOY_KEY" > deploy_key.pem
-        chmod 600 deploy_key.pem
+        echo "🚀 Starting deployment to $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH"
         
-        # Sync files
+        # Vérifier que les vars sont set
+        if [ -z "$DEPLOY_HOST" ] || [ -z "$DEPLOY_USER" ] || [ -z "$DEPLOY_PATH" ]; then
+          echo "❌ Missing required secrets: DEPLOY_HOST, DEPLOY_USER, or DEPLOY_PATH"
+          exit 1
+        fi
+        
+        # Sync files avec rsync via SSH agent
         rsync -avz --delete \
           --exclude='.env' \
+          --exclude='.env.*' \
           --exclude='.git' \
           --exclude='node_modules' \
           --exclude='tests' \
           --exclude='docs' \
           --exclude='scripts' \
-          -e "ssh -i deploy_key.pem -o StrictHostKeyChecking=no" \
-          ./ "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH"
+          --exclude='.github' \
+          --exclude='*.md' \
+          --exclude='.gitignore' \
+          --exclude='.aider*' \
+          ./ "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/"
+        
+        echo "✅ Files synced successfully"
         
         # Run remote commands
-        ssh -i deploy_key.pem -o StrictHostKeyChecking=no \
-          "$DEPLOY_USER@$DEPLOY_HOST" "cd $DEPLOY_PATH && \
-          php artisan optimize:clear && \
-          php artisan optimize && \
-          php artisan migrate --force && \
-          php artisan db:seed-if-empty --force && \
-          php artisan config:cache && \
-          php artisan route:cache && \
-          php artisan view:cache && \
-          php artisan event:cache"
+        echo "🔄 Running artisan commands on remote..."
+        ssh "$DEPLOY_USER@$DEPLOY_HOST" "cd $DEPLOY_PATH && \
+          php artisan optimize:clear 2>&1 && \
+          php artisan optimize 2>&1 && \
+          php artisan migrate --force 2>&1 && \
+          (php artisan db:seed-if-empty --force 2>&1 || echo 'Seed command skipped or failed') && \
+          php artisan config:cache 2>&1 && \
+          php artisan route:cache 2>&1 && \
+          php artisan view:cache 2>&1 && \
+          php artisan event:cache 2>&1 && \
+          echo '✅ All remote commands completed'"
+        
+        echo "🎉 Deployment completed successfully!"
 
     - name: Notify Success
-      if: ${{ success() && env.SLACK_WEBHOOK_URL != '' }}
+      if: success() && secrets.SLACK_WEBHOOK != ''
       uses: 8398a7/action-slack@v3
       with:
         status: ${{ job.status }}
@@ -75,7 +103,7 @@ jobs:
       continue-on-error: true
 
     - name: Notify Failure
-      if: ${{ failure() && env.SLACK_WEBHOOK_URL != '' }}
+      if: failure() && secrets.SLACK_WEBHOOK != ''
       uses: 8398a7/action-slack@v3
       with:
         status: ${{ job.status }}

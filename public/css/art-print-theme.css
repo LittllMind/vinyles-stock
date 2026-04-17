@@ -134,7 +134,7 @@ body.art-print-theme,
     font-size: 0.75rem;
     letter-spacing: 0.25em;
     text-transform: uppercase;
-    color: var(--ap-text-primary);
+    color: var(--ap-text-secondary);
     margin-bottom: 1.5rem;
     font-weight: 500;
 }
