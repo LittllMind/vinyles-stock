@@ -33,7 +33,7 @@
     <!-- Footer -->
     <footer class="bg-gray-800 border-t border-gray-700 py-8 mt-auto">
         <div class="container mx-auto px-4 text-center text-gray-400">
-            <p>© 2026 Fundisc - Artisanat & Passion</p>
+            <p>© 2025 Fundisc - Artisanat &amp; Passion</p>
         </div>
     </footer>
 

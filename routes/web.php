@@ -23,6 +23,12 @@ use App\Http\Controllers\ContactController;
 Route::get('/', [HomeController::class, 'landing'])->name('landing');
 Route::get('/about', [HomeController::class, 'about'])->name('about');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
+
+// Pages légales
+Route::get('/conditions-generales-de-vente', [HomeController::class, 'cgv'])->name('cgv');
+Route::get('/mentions-legales', [HomeController::class, 'mentionsLegales'])->name('mentions-legales');
+Route::get('/politique-de-confidentialite', [HomeController::class, 'confidentialite'])->name('confidentialite');
+
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 Route::get('/articles/hermes-vs-openclaw', [HomeController::class, 'articleHermesVsOpenclaw'])->name('articles.hermes-vs-openclaw');
 

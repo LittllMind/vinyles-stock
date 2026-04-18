@@ -25,17 +25,23 @@ class ContactController extends Controller
     public function store(Request $request)
     {
         // Validation avec honeypot anti-spam
+        // Supporte les soumissions simplifiées (email seul) et complètes
         $validated = $request->validate([
-            'nom' => 'required|string|max:255',
+            'nom' => 'nullable|string|max:255',
             'email' => 'required|email|max:255',
             'telephone' => 'nullable|string|max:20',
             'sujet' => 'nullable|string|max:255',
-            'message' => 'required|string|max:5000|min:10',
+            'subject' => 'nullable|string|max:255', // Alias pour sujet (form simplifié)
+            'message' => 'nullable|string|max:5000',
             'website' => 'nullable', // Honeypot - doit rester vide
         ]);
 
         // Protection honeypot
         if (!empty($validated['website'])) {
+            $returnTo = $request->input('return_to');
+            if ($returnTo === 'landing') {
+                return redirect()->route('landing')->with(['success' => 'Merci ! Vous serez alerté(e) dès que les vinyles seront disponibles.']);
+            }
             return redirect()->route('contact')->with(['success' => 'Message envoyé avec succès.']);
         }
 
@@ -50,13 +56,18 @@ class ContactController extends Controller
                 ->withInput();
         }
 
+        // Déterminer nom et message (support formulaires simplifiés)
+        $nom = $validated['nom'] ?? 'Visiteur';
+        $sujet = $validated['sujet'] ?? $validated['subject'] ?? 'Contact FUN DISC';
+        $messageContent = $validated['message'] ?? 'Demande client depuis le site';
+
         // Création du message
         $message = ContactMessage::create([
-            'nom' => $validated['nom'],
+            'nom' => $nom,
             'email' => $validated['email'],
             'telephone' => $validated['telephone'] ?? null,
-            'sujet' => $validated['sujet'] ?? 'Contact sans sujet',
-            'message' => $validated['message'],
+            'sujet' => $sujet,
+            'message' => $messageContent,
             'ip_address' => $ip,
             'user_agent' => $request->userAgent(),
             'statut' => 'non_lu',
@@ -68,7 +79,15 @@ class ContactController extends Controller
 
         // Auto-réponse au client
         Mail::to($validated['email'])
-            ->send(new ContactAutoReply($validated['nom']));
+            ->send(new ContactAutoReply($nom));
+
+        // Redirection intelligente
+        $returnTo = $request->input('return_to');
+        if ($returnTo === 'landing') {
+            return redirect()->route('landing')->with([
+                'success' => 'Merci ! Vous serez alerté(e) dès que les vinyles seront disponibles.',
+            ]);
+        }
 
         return redirect()->route('contact')->with([
             'success' => 'Votre message a été envoyé avec succès. Nous vous répondrons sous 24-48h.',

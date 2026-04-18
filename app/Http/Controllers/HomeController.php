@@ -53,4 +53,28 @@ class HomeController extends Controller
     {
         return view('articles.hermes-vs-openclaw');
     }
+
+    /**
+     * Page Conditions Générales de Vente
+     */
+    public function cgv()
+    {
+        return view('legal.cgv');
+    }
+
+    /**
+     * Page Mention Légales
+     */
+    public function mentionsLegales()
+    {
+        return view('legal.mentions-legales');
+    }
+
+    /**
+     * Page Politique de Confidentialité
+     */
+    public function confidentialite()
+    {
+        return view('legal.confidentialite');
+    }
 }

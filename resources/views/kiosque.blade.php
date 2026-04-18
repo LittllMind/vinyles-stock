@@ -9,7 +9,10 @@
 
 @extends('layouts.kiosque')
 
-@section('title', 'Catalogue - Vinyle Hydrodécoupé')
+@section('title', 'Collection - Vinyle Hydrodécoupé')
+@section('meta_description', 'Découvrez notre collection exclusive de vinyles découpés. Chaque pièce est unique et sélectionnée avec soin. Commandez en ligne dès maintenant.')
+@section('og_title', 'Collection FUN DISC - Vinyles découpés')
+@section('og_description', 'Explorez notre galerie de vinyles transformés en œuvres d\'art uniques. Des pièces rares pour votre décoration.')
 
 @section('content')
 {{-- DEBUG: Vérification données --}}

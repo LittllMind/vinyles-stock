@@ -8,7 +8,7 @@ echo "🎵  REFRESH COMPLET — vinyles-stock"
 echo "🎵 ==============================================="
 echo ""
 
-cd /home/aur-lien/.picoclaw/workspace/vinyles-stock
+cd /home/aur-lien/workspace/projects/vinyles-stock
 
 # Détection de la base de données (defaut: sqlite)
 DB_CONNECTION=$(grep DB_CONNECTION .env 2>/dev/null | cut -d= -f2 | tr -d '"' || echo "sqlite")

@@ -1,0 +1,56 @@
+# ⚠️ ACTION REQUISE : Image Open Graph
+
+## Problème
+Le fichier `/public/images/og-default.jpg` contient du code SVG mais utilise l'extension .jpg.
+Facebook/Twitter ne peuvent pas parser ce fichier.
+
+## Solution rapide
+
+### Option 1 : Renommer en SVG (pas idéal)
+```bash
+cd ~/workspace/projects/vinyles-stock/public/images
+mv og-default.jpg og-default.svg
+```
+
+Puis modifier le layout :
+```php
+<meta property="og:image" content="@yield('og_image', asset('images/og-default.svg'))">
+```
+
+**Note** : Open Graph ne supporte pas SVG. Cette option ne fonctionnera pas pour Facebook/Twitter.
+
+### Option 2 : Convertir en PNG (recommandé)
+Si vous avez Chrome/Chromium installé :
+```bash
+cd ~/workspace/projects/vinyles-stock/public/images
+
+# Créer une version PNG avec Chrome headless
+chromium --headless --screenshot=og-default.png --window-size=1200,630 og-default.svg
+```
+
+Ou utiliser un service en ligne :
+1. Aller sur https://cloudconvert.com/svg-to-png
+2. Uploader le fichier `og-default.svg` (en fait `og-default.jpg` renommé)
+3. Télécharger la conversion
+4. Remplacer le fichier
+
+### Option 3 : Créer manuellement avec GIMP/Inkscape
+1. Ouvrir le SVG dans Inkscape ou Illustrator
+2. Exporter en PNG (1200x630px)
+3. Renommer en og-default.jpg
+
+### Option 4 : Utiliser une image existante
+Si vous avez une photo de vinyle, redimensionnez-la en 1200x630px et remplacez le fichier.
+
+## Vérification après correction
+```bash
+file og-default.jpg
+# Devrait afficher : "JPEG image data" et non "SVG"
+```
+
+## Impact si non corrigé
+- ❌ Facebook ne montre pas l'image lors du partage
+- ❌ Twitter Cards sans image
+- ❌ SEO social dégradé
+
+---

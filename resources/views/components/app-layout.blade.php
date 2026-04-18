@@ -288,7 +288,7 @@
     <!-- Footer -->
     <footer class="bg-gray-800 border-t border-gray-700 py-6 mt-auto">
         <div class="container mx-auto px-4 text-center text-gray-400 text-sm">
-            <p>© 2026 Vinyle Hydrodécoupé - Panel Admin</p>
+            <p>© 2025 Vinyle Hydrodécoupé - Panel Admin</p>
         </div>
     </footer>
 

@@ -1,6 +1,9 @@
 @extends('layouts.art-print')
 
-@section('title', 'Vinyles FUN DISC')
+@section('title', 'Accueil')
+@section('meta_description', 'FUN DISC - Vinyles découpés en œuvres d\'art uniques. Découvrez notre collection de disques vinyles transformés en pièces de décoration contemporaine.')
+@section('og_title', 'FUN DISC - Vinyles découpés en œuvres d\'art')
+@section('og_description', 'Chaque disque devient une œuvre unique. Découvrez notre collection de vinyles découpés.')
 
 @php
 if (!function_exists('formatPrice')) {
@@ -95,8 +98,44 @@ if (!function_exists('formatPrice')) {
         </div>
         
     @else
-        <div style="text-align: center; padding: 4rem 0;">
-            <p style="color: #999; font-size: 1.125rem; margin-bottom: 1rem;">Aucun vinyle en stock</p>
+        <div style="text-align: center; padding: 4rem 0; max-width: 500px; margin: 0 auto;">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">🔜</div>
+            <h3 style="font-size: 1.5rem; font-weight: 500; color: #1a1a1a; margin-bottom: 1rem;">
+                Nouvelle collection en préparation
+            </h3>
+            <p style="color: #666; margin-bottom: 2rem; line-height: 1.6;">
+                Nos vinyles découpés sont en cours de fabrication. 
+                Soyez les premiers informés de la mise en ligne.
+    {{-- Formulaire d'alerte stock - envoi direct via contact --}}
+            <form action="{{ route('contact.store') }}" method="POST" style="margin-bottom: 2rem;">
+                @csrf
+                <input type="hidden" name="subject" value="Alerte stock FUN DISC">
+                <input type="hidden" name="message" value="Je souhaite être alerté(e) quand les vinyles seront de nouveau disponibles sur fundisc.fr">
+                <input type="hidden" name="return_to" value="landing">
+                
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center;">
+                    <input type="email" name="email" placeholder="votre@email.com" required
+                        style="padding: 0.75rem 1rem; border: 1px solid #ddd; border-radius: 4px; min-width: 250px; font-size: 1rem;"
+                        aria-label="Adresse email pour alerte stock">
+                    
+                    <button type="submit" class="ap-btn" style="background: #1a1a1a; color: #f8f7f2; border: none;">
+                        M'alerter
+                    </button>
+                </div>
+                @if(session('success'))
+                    <p style="color: #4ade80; font-size: 0.875rem; margin-top: 0.75rem;">
+                        {{ session('success') }}
+                    </p>
+                @endif
+            </form>
+            
+            <p style="font-size: 0.875rem; color: #999;">
+                Suivez-nous sur Instagram pour les coulisses de la fabrication
+            </p>
+            <a href="https://instagram.com/fundisc" target="_blank" rel="noopener"
+                style="display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 0.75rem; color: #1a1a1a; text-decoration: none; font-weight: 500;">
+                <span>📷 @fundisc</span>
+            </a>
         </div>
     @endif
     

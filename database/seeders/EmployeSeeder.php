@@ -12,11 +12,13 @@ class EmployeSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\User::create([
-            'name' => 'Employé Test',
-            'email' => 'employe@example.com',
-            'password' => bcrypt('password'),
-            'role' => 'employe',
-        ]);
+        \App\Models\User::updateOrCreate(
+            ['email' => 'employe@example.com'],
+            [
+                'name' => 'Employé Test',
+                'password' => bcrypt('password'),
+                'role' => 'employe',
+            ]
+        );
     }
 }

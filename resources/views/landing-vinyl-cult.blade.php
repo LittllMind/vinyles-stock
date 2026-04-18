@@ -329,7 +329,7 @@
             
             <div style="padding-top: 2rem; border-top: 1px solid var(--vc-border); text-align: center;">
                 <p style="color: var(--vc-text-muted); font-size: 0.85rem;">
-                    © 2026 Fundisc. Tous droits réservés. 
+                    © 2025 Fundisc. Tous droits réservés. 
                     <span style="color: var(--vc-label);">❤</span> le vinyle
                 </p>
             </div>
