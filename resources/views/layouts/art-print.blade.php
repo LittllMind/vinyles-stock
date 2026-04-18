@@ -115,7 +115,7 @@
             {{-- Copyright --}}
             <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;">
                 <p style="color: #999; font-size: 0.85rem; margin: 0;">
-                    © 2025 FUN DISC • Tous droits réservés
+                    © 2026 FUN DISC • Tous droits réservés
                 </p>
                 <p style="color: #999; font-size: 0.75rem; margin: 0;">
                     Hébergé par Hostinger • fait avec ❤️ en France
