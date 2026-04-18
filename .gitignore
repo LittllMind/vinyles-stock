@@ -20,3 +20,4 @@ yarn-error.log
 push_deploy_prod.sh
 .env.testing
 .aider*
+storage/database.sqlite

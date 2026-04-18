@@ -7,6 +7,14 @@
 
 @section('content')
 
+@php
+if (!function_exists('formatPrice')) {
+    function formatPrice($cents) {
+        return number_format($cents / 100, 2, ',', ' ');
+    }
+}
+@endphp
+
 {{-- Navigation secondaire --}}
 <div style="padding-top: 7rem; padding-bottom: 2rem; border-bottom: 1px solid #e5e5e5;">
     <div class="ap-container">
@@ -103,7 +111,7 @@
                 {{-- Prix et CTA --}}
                 <div style="margin-bottom: 2rem;">
                     <p style="font-size: 2rem; font-weight: 300; margin-bottom: 2rem;">
-                        € {{ number_format($vinyle->prix, 2, ',', ' ') }}
+                        € {{ formatPrice($vinyle->prix) }}
                     </p>
                     
                     @if($vinyle->quantite > 0)
