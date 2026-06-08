@@ -1,4 +1,9 @@
-<x-guest-layout>
+@extends('layouts.art-print')
+
+@section('title', '')
+
+@section('content')
+<div class="max-w-md mx-auto py-16">
     <form method="POST" action="{{ route('password.store') }}">
         @csrf
 
@@ -36,4 +41,5 @@
             </x-primary-button>
         </div>
     </form>
-</x-guest-layout>
+</div>
+@endsection
