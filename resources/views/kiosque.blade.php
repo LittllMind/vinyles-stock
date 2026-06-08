@@ -1,276 +1,121 @@
-{{-- resources/views/kiosque.blade.php --}}
+{{-- resources/views/kiosque-art-print.blade.php --}}
+{{-- Kiosque version ART PRINT - Galerie d'Art Moderne --}}
 
 @php
-    /** @var \App\Services\CartService $cartService */
-    $cartService = app(\App\Services\CartService::class);
-    $cart = $cartService->getCart();
-    $cartCount = $cart->items->sum('quantite');
-@endphp
-
-@extends('layouts.kiosque')
-
-@section('title', 'Collection - Vinyle Hydrodécoupé')
-@section('meta_description', 'Découvrez notre collection exclusive de vinyles découpés. Chaque pièce est unique et sélectionnée avec soin. Commandez en ligne dès maintenant.')
-@section('og_title', 'Collection FUN DISC - Vinyles découpés')
-@section('og_description', 'Explorez notre galerie de vinyles transformés en œuvres d\'art uniques. Des pièces rares pour votre décoration.')
-
-@section('content')
-{{-- DEBUG: Vérification données --}}
-@if(empty($vinylesData))
-    <div class="bg-red-900/50 border border-red-500 p-6 rounded-xl mb-6">
-        <h2 class="text-xl font-bold text-red-400 mb-2">⚠️ Aucun vinyle à afficher</h2>
-        <p class="text-gray-300">La variable \$vinylesData est vide.</p>
-        <p class="text-sm text-gray-400 mt-2">Vérifiez qu'il y a des vinyles en base de données.</p>
-    </div>
-@else
-    <!-- {{ count($vinylesData) }} vinyles chargés -->
-@endif
-
-<div x-data="kiosqueComponent(@js($vinylesData))" class="space-y-6">
-    <!-- Header avec titre et panier -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-            <h1 class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                🎵 Catalogue Vinyles
-            </h1>
-            <p class="text-gray-400 mt-1">Découvrez notre collection exclusive</p>
-        </div>
-        <a href="{{ route('cart.index') }}" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 px-6 py-3 rounded-2xl font-semibold transition flex items-center justify-center gap-2">
-            🛒 Mon Panier <span class="bg-white/20 px-2 py-0.5 rounded-full text-sm">{{ $cartCount }}</span>
-        </a>
-    </div>
-
-    <!-- Barre de recherche et filtres -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div class="w-full sm:max-w-md">
-            <div class="relative">
-                <input type="text" x-model="search" placeholder="🔍 Rechercher par nom ou modèle..."
-                    class="w-full bg-gray-800 border border-gray-700 rounded-2xl px-4 py-3 text-gray-100 placeholder-gray-500 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition" />
-            </div>
-        </div>
-
-        <div class="flex items-center gap-2">
-            <button type="button" @click="showAll = !showAll"
-                class="px-4 py-2 rounded-xl transition border border-gray-700 hover:border-purple-500 hover:bg-purple-500/10"
-                :class="showAll ? 'bg-purple-500/20 border-purple-500 text-purple-400' : 'bg-gray-800 text-gray-400'">
-                <span x-text="showAll ? 'Masquer rupture de stock' : 'Afficher tous'"></span>
-            </button>
-        </div>
-    </div>
-
-    <!-- Grille de vinyles -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        <template x-for="vinyle in filteredVinyles" :key="vinyle.id">
-            <div class="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 hover:border-purple-500/50 hover:shadow-lg hover:shadow-purple-500/10 transition-all duration-300 group">
-                <!-- Image -->
-                <div class="w-full h-56 bg-gray-900 relative overflow-hidden">
-                    <img :src="vinyle.image || '/images/no-image.png'" :alt="vinyle.artiste"
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                    <div x-show="(vinyle.quantite ?? 0) <= 0" x-cloak
-                        class="absolute inset-0 bg-black/60 flex items-center justify-center">
-                        <span class="bg-red-600 text-white px-4 py-2 rounded-xl font-semibold">Rupture de stock</span>
-                    </div>
-                </div>
-
-                <!-- Contenu -->
-                <div class="p-4 space-y-3">
-                    <div>
-                        <h3 class="font-bold text-lg text-gray-100 truncate" x-text="vinyle.artiste"></h3>
-                        <p class="text-sm text-gray-400" x-text="vinyle.modele"></p>
-                    </div>
-
-                    <div class="flex items-center justify-between">
-                        <div class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                            <span>À partir de </span><span x-text="formatPrice(vinyle.prix)"></span>
-                        </div>
-                        <div class="text-sm text-gray-500" x-text="`Stock: ${vinyle.quantite ?? 0}`"></div>
-                    </div>
-
-                    <button type="button"
-                        @click.stop="openQuantityModal(vinyle)"
-                        :disabled="(vinyle.quantite ?? 0) <= 0"
-                        class="w-full py-3 rounded-xl font-semibold transition"
-                        :class="(vinyle.quantite ?? 0) > 0
-                            ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white'
-                            : 'bg-gray-700 text-gray-500 cursor-not-allowed'">
-                        <span x-show="(vinyle.quantite ?? 0) > 0">Ajouter au panier</span>
-                        <span x-show="(vinyle.quantite ?? 0) <= 0">Indisponible</span>
-                    </button>
-                </div>
-            </div>
-        </template>
-    </div>
-
-    <!-- Message si aucun résultat -->
-    <div x-show="filteredVinyles.length === 0" x-cloak class="text-center py-12">
-        <div class="text-6xl mb-4">🔍</div>
-        <h3 class="text-xl font-semibold text-gray-400">Aucun vinyle trouvé</h3>
-        <p class="text-gray-500 mt-2">Essayez une autre recherche</p>
-    </div>
-
-    <!-- Bouton panier mobile flottant -->
-    <div class="fixed inset-x-4 bottom-4 sm:hidden">
-        <a href="{{ route('cart.index') }}"
-            class="block w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-4 rounded-2xl font-semibold text-center shadow-lg">
-            🛒 Voir mon panier ({{ $cartCount }})
-        </a>
-    </div>
-
-    <!-- Modal de sélection de quantité -->
-    <div x-show="selectedVinyle !== null" x-cloak
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
-        @click.self="closeQuantityModal()"
-        @keydown.escape.window="closeQuantityModal()"
-        x-transition:enter="transition ease-out duration-300"
-        x-transition:enter-start="opacity-0"
-        x-transition:enter-end="opacity-100"
-        x-transition:leave="transition ease-in duration-200"
-        x-transition:leave-start="opacity-100"
-        x-transition:leave-end="opacity-0">
-        <div class="bg-gray-800 rounded-2xl p-6 max-w-md w-full border border-gray-700 shadow-xl"
-            x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0 scale-95"
-            x-transition:enter-end="opacity-100 scale-100"
-            x-transition:leave="transition ease-in duration-200"
-            x-transition:leave-start="opacity-100 scale-100"
-            x-transition:leave-end="opacity-0 scale-95">
-            <h3 class="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
-                x-text="selectedVinyle?.nom"></h3>
-
-            <!-- Image -->
-            <div class="my-4 rounded-xl overflow-hidden bg-gray-900">
-                <img :src="selectedVinyle?.image || '/images/no-image.png'" :alt="selectedVinyle?.nom"
-                    class="w-full h-56 object-contain" />
-            </div>
-
-            <p class="text-sm text-gray-400" x-text="selectedVinyle?.modele"></p>
-
-            <!-- Sélection quantité -->
-            <div class="flex items-center justify-center gap-4 my-4">
-                <button @click="decrementQuantity()"
-                    class="w-12 h-12 rounded-xl bg-gray-700 hover:bg-gray-600 flex items-center justify-center text-xl font-bold transition">-</button>
-                <div class="text-3xl font-bold text-gray-100 w-16 text-center" x-text="selectedQuantity"></div>
-                <button @click="incrementQuantity()"
-                    class="w-12 h-12 rounded-xl bg-gray-700 hover:bg-gray-600 flex items-center justify-center text-xl font-bold transition">+</button>
-            </div>
-
-            <!-- Sélection fond -->
-            <div class="my-4">
-                <label for="fond" class="block text-sm font-semibold text-gray-300 mb-2">Fond</label>
-                <select id="fond" x-model="selectedFond"
-                    class="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3 text-gray-100 focus:outline-none focus:border-purple-500">
-                    <option value="standard">Standard (sans supplément)</option>
-                    <option value="miroir">Fond miroir (+8 €)</option>
-                    <option value="dore">Fond doré (+13 €)</option>
-                </select>
-            </div>
-
-            <!-- Prix total -->
-            <div class="text-center py-3 rounded-xl bg-gray-900 border border-gray-700">
-                <span class="text-sm text-gray-400">Prix unitaire</span>
-                <div class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
-                    x-text="formatPrice(currentUnitPrice())"></div>
-            </div>
-
-            <!-- Boutons -->
-            <div class="flex gap-3 mt-6">
-                <button @click="closeQuantityModal()"
-                    class="flex-1 py-3 rounded-xl bg-gray-700 hover:bg-gray-600 text-gray-300 font-semibold transition">
-                    Annuler
-                </button>
-                <button @click="submitCart()"
-                    class="flex-1 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold transition">
-                    Ajouter
-                </button>
-            </div>
-
-            <!-- Formulaire caché -->
-            <form x-ref="addToCartForm" action="{{ route('cart.add') }}" method="POST" class="hidden">
-                @csrf
-                <input type="hidden" name="vinyle_id" x-ref="vinyleId">
-                <input type="hidden" name="quantite" x-ref="quantite">
-                <input type="hidden" name="fond" x-ref="fond">
-            </form>
-        </div>
-    </div>
-</div>
-@endsection
-
-@push('scripts')
-<script>
-    function kiosqueComponent(vinylesFromPhp) {
-        return {
-            vinyles: vinylesFromPhp,
-            search: '',
-            showAll: false,
-
-            selectedVinyle: null,
-            selectedQuantity: 1,
-            selectedFond: 'standard',
-
-            get filteredVinyles() {
-                const s = (this.search || '').toLowerCase().trim();
-                return this.vinyles.filter(v => {
-                    const artiste = (v.artiste || '').toLowerCase();
-                    const modele = (v.modele || '').toLowerCase();
-                    const matchesSearch = !s || artiste.includes(s) || modele.includes(s);
-                    const inStock = this.showAll || (v.quantite ?? 0) > 0;
-                    return matchesSearch && inStock;
-                });
-            },
-
-            openQuantityModal(vinyle) {
-                if ((vinyle.quantite ?? 0) <= 0) return;
-                this.selectedVinyle = vinyle;
-                this.selectedQuantity = 1;
-                this.selectedFond = 'standard';
-                // Bloquer le scroll du body
-                document.body.style.overflow = 'hidden';
-            },
-
-            closeQuantityModal() {
-                this.selectedVinyle = null;
-                this.selectedQuantity = 1;
-                this.selectedFond = 'standard';
-                // Réactiver le scroll du body
-                document.body.style.overflow = '';
-            },
-
-            incrementQuantity() {
-                if (!this.selectedVinyle) return;
-                const max = (this.selectedVinyle.quantite ?? 0);
-                if (this.selectedQuantity < max) this.selectedQuantity++;
-            },
-
-            decrementQuantity() {
-                if (this.selectedQuantity > 1) this.selectedQuantity--;
-            },
-
-            currentUnitPrice() {
-                if (!this.selectedVinyle) return 0;
-                const base = Number(this.selectedVinyle.prix) || 0;
-                const supplement = this.selectedFond === 'miroir' ? 800 : (this.selectedFond === 'dore' ? 1300 : 0); // centimes
-                return (base + supplement) / 100; // retourne en euros pour affichage
-            },
-
-            formatPrice(amount) {
-                const num = Number(amount) || 0;
-                return new Intl.NumberFormat('fr-FR', {
-                    style: 'currency',
-                    currency: 'EUR'
-                }).format(num);
-            },
-
-            submitCart() {
-                if (!this.selectedVinyle) return;
-
-                this.$refs.vinyleId.value = this.selectedVinyle.id;
-                this.$refs.quantite.value = this.selectedQuantity;
-                this.$refs.fond.value = this.selectedFond;
-
-                this.$refs.addToCartForm.submit();
-            },
+    $cartCount = 0;
+    if (auth()->check()) {
+        try {
+            $cartService = app(\App\Services\CartService::class);
+            $cart = $cartService->getCart();
+            $cartCount = $cart->items ? $cart->items->sum('quantite') : 0;
+        } catch (\Exception $e) {
+            $cartCount = 0;
         }
     }
-</script>
-@endpush
+@endphp
+
+@extends('layouts.art-print')
+
+@section('title', 'Collection')
+
+@section('content')
+
+<!-- Hero Collection -->
+<section class="ap-hero" style="min-height: 60vh; padding-top: 8rem; padding-bottom: 4rem;">
+    <div class="ap-container">
+        <div class="ap-hero-content">
+            <p class="ap-hero-label">Galerie • {{ count($vinylesData ?? []) }} œuvres exposées</p>
+            
+            <h1>
+                Notre<br>
+                <span class="light">collection de vinyles</span>
+            </h1>
+            
+            <p>
+                Chaque disque est sélectionné avec soin et présenté comme une pièce unique.
+                Une exposition permanente de vinyles d'occasion de qualité.
+            </p>
+            
+            <div class="ap-btn-group">
+                @if($cartCount > 0)
+                    <a href="{{ route('cart.index') }}" class="ap-btn ap-btn-dark">
+                        Voir mon panier ({{ $cartCount }}) →
+                    </a>
+                @endif
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Grille de Collection -->
+<section class="ap-section" style="padding-top: 2rem;">
+    
+    <!-- Filtres minimalistes -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4rem; padding-bottom: 2rem; border-bottom: 1px solid #e5e5e5;">
+        <div>
+            <input type="text" 
+                placeholder="Rechercher..." 
+                style="background: transparent; border: 1px solid #e5e5e5; padding: 0.75rem 1rem; font-size: 0.85rem; width: 280px; font-family: 'Inter', sans-serif;">
+        </div>
+        
+        <div style="font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: #666;">
+            {{ count($vinylesData ?? []) }} pièces
+        </div>
+    </div>
+
+    @if(empty($vinylesData))
+        <div class="ap-text-block">
+            <h3>Collection vide</h3>
+            <p>Aucune œuvre n'est actuellement exposée. Revenez prochainement.</p>
+        </div>
+    @else
+        <div class="ap-grid">
+            @foreach($vinylesData as $vinyle)
+                <article class="ap-card" style="cursor: pointer;" onclick="window.location.href='{{ route('kiosque.show', $vinyle['id']) }}">
+                    
+                    <!-- Image Œuvre -->
+                    <div class="ap-card-image">
+                        @if(isset($vinyle['image']) && $vinyle['image'])
+                            <img src="{{ $vinyle['image'] }}" alt="{{ $vinyle['artiste'] }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        @else
+                            <span style="font-size: 4rem;">💿</span>
+                        @endif
+                    </div>
+                    
+                    <!-- Méta Œuvre -->
+                    <div class="ap-card-meta">
+                        <h3 class="ap-card-title">{{ $vinyle['artiste'] }}</h3>
+                        <span class="ap-card-year">{{ $vinyle['genre'] ?? 'Vinyle' }}</span>
+                    </div>
+                    
+                    <p class="ap-card-artist">{{ $vinyle['modele'] ?? 'Vinyle d\'occasion' }}</p>
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
+                        <p class="ap-card-price">€ {{ number_format(($vinyle['prix'] ?? 0) / 100, 2, ',', ' ') }}</p>
+                        
+                        @if(($vinyle['quantite'] ?? 0) > 0)
+                            <button type="button" 
+                                    onclick="event.stopPropagation(); openFondModal({{ $vinyle['id'] }}, {{ ($vinyle['prix'] ?? 0) / 100 }}, '{{ addslashes($vinyle['artiste']) }}')" 
+                                    class="ap-btn ap-btn-dark" 
+                                    style="padding: 0.6rem 1.2rem;">
+                                +
+                            </button>
+                        @else
+                            <span style="font-size: 0.7rem; color: #999; text-transform: uppercase; letter-spacing: 0.1em;">Épuisé</span>
+                        @endif
+                    </div>
+                </article>
+            @endforeach
+        </div>
+    
+    
+    <!-- Pagination -->
+    @if(isset($vinyles) && $vinyles->lastPage() > 1)
+        <div style="margin-top: 4rem; text-align: center;">
+            {{ $vinyles->links() }}
+        </div>
+    @endif
+    @endif
+</section>
+
+@endsection

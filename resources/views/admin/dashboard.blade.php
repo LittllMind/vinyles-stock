@@ -1,5 +1,5 @@
 <!-- resources/views/admin/dashboard.blade.php -->
-@extends('layouts.app')
+@extends('layouts.admin-art-print')
 
 @section('title', 'Tableau de bord Admin')
 

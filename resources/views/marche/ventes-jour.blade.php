@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin-art-print')
 
 @section('title', 'Historique des Ventes du Jour')
 

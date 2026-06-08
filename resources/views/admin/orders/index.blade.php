@@ -1,10 +1,8 @@
-<x-app-layout>
-    <x-slot name="header">
-        <div class="header-actions" style="display: flex; justify-content: space-between; align-items: center;">
-            <h2 style="margin: 0;">Gestion des Commandes</h2>
-        </div>
-    </x-slot>
+@extends('layouts.admin-art-print')
 
+@section('title', 'Gestion des Commandes')
+
+@section('content')
     <div class="page-content">
         {{-- FILTRES --}}
         <form method="GET" action="{{ route('admin.orders.index') }}" style="margin-bottom: 1.5rem; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 0.5rem;">
@@ -107,4 +105,4 @@
             {{ $orders->links() }}
         </div>
     </div>
-</x-app-layout>
+@endsection

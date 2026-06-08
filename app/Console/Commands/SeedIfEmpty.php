@@ -12,18 +12,17 @@ class SeedIfEmpty extends Command
                             {--class=DatabaseSeeder : Classe seeder à utiliser}
                             {--force : Forcer l\'exécution sans confirmation}';
     
-    protected $description = 'Seed la BDD uniquement si elle est vide (tables users, vinyles, fonds, bougies)';
+    protected $description = 'Seed la BDD uniquement si elle est vide (tables users, vinyles, fonds)';
 
     public function handle(): int
     {
-        $this->info('🔍 Vérification du contenu de la base de données...');
+        $this->info('Verification du contenu de la base de donnees...');
 
-        // Tables à vérifier (tables principales métier)
+        // Tables a verifier (tables principales metier)
         $tablesToCheck = [
             'users' => 'utilisateurs',
-            'vinyles' => 'vinyles', 
+            'vinyles' => 'vinyles',
             'fonds' => 'fonds',
-            'bougies' => 'bougies',
         ];
 
         $totalRecords = 0;

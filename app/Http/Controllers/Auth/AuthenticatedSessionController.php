@@ -18,7 +18,7 @@ class AuthenticatedSessionController extends Controller
     public function create(Request $request): View
     {
         $theme = $request->get('theme');
-        return view(theme_view('auth.login'));
+        return view('auth.login');
     }
 
     /**

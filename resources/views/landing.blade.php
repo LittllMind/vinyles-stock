@@ -35,7 +35,7 @@ if (!function_exists('formatPrice')) {
                 Découvrir
             </a>
             
-            <a href="{{ auth()->check() ? route('orders.index') : route('login') }}" class="ap-btn" style="background: transparent; color: #f8f7f2; border: 1px solid #f8f7f2; min-width: 12rem;">
+            <a href="{{ auth()->check() ? route('orders.my') : route('login') }}" class="ap-btn" style="background: transparent; color: #f8f7f2; border: 1px solid #f8f7f2; min-width: 12rem;">
                 {{ auth()->check() ? 'Mes commandes' : 'Connexion' }}
             </a>
         </div>

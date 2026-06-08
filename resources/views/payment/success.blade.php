@@ -1,41 +1,57 @@
-@extends('layouts.app')
+{{-- resources/views/payment/success-art-print.blade.php --}}
+{{-- Confirmation paiement réussi - Style minimaliste --}}
 
-@section('title', 'Paiement réussi')
+@extends('layouts.art-print')
+
+@section('title', 'Commande confirmée')
 
 @section('content')
-<div class="max-w-2xl mx-auto text-center py-12">
-    <div class="text-6xl mb-6">🎉</div>
-    <h1 class="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">
-        Paiement réussi !
-    </h1>
-    <p class="text-gray-300 text-lg mb-8">
-        Merci pour votre commande. Votre paiement a été confirmé.
-    </p>
 
-    <div class="bg-gray-800 rounded-2xl p-6 mb-8">
-        <div class="grid grid-cols-2 gap-4 text-left">
-            <div>
-                <span class="text-gray-400">Numéro de commande</span>
-                <p class="text-white font-semibold">#{{ $payment->order->id }}</p>
-            </div>
-            <div>
-                <span class="text-gray-400">Montant payé</span>
-                <p class="text-white font-semibold">{{ number_format($payment->amount, 2, ',', ' ') }} €</p>
-            </div>
-            <div>
-                <span class="text-gray-400">Date</span>
-                <p class="text-white font-semibold">{{ $payment->paid_at->format('d/m/Y H:i') }}</p>
-            </div>
-            <div>
-                <span class="text-gray-400">Statut</span>
-                <p class="text-green-400 font-semibold">Payé</p>
-            </div>
+<section class="ap-section ap-hero" style="min-height: 70vh; display: flex; align-items: center; text-align: center;">
+    <div class="ap-container" style="max-width: 600px;">
+        
+        <!-- Icône confirmation -->
+        <div style="width: 120px; height: 120px; margin: 0 auto 2rem; border: 2px solid #1A1A1A; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="2">
+                <path d="M20 6L9 17l-5-5"></path>
+            </svg>
         </div>
+        
+        <p class="ap-hero-label">Confirmation</p>
+        
+        <h1 style="margin-bottom: 1rem;">Commande confirmée</h1>
+        
+        <p style="color: #666; margin-bottom: 2rem;">
+            Votre paiement a été validé avec succès.
+        </p>
+        
+        @if(isset($payment) && $payment->order)
+            <div style="border: 1px solid #E5E5E5; padding: 1.5rem; margin-bottom: 2rem; background: #FAFAFA;">
+                <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #666; margin-bottom: 0.5rem;">Numéro de commande</p>
+                <p style="font-size: 1.5rem; font-weight: 600;">#{{ $payment->order->id }}</p>
+            </div>
+        @endif
+        
+        <div style="margin-bottom: 2rem;">
+            <p style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;">
+                Un email de confirmation vous a été envoyé.
+            </p>
+            <p style="font-size: 0.9rem; color: #666;">
+                Votre commande sera expédiée sous 48h ouvrées.
+            </p>
+        </div>
+        
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+            <a  href="{{ route('orders.my') }}" class="ap-btn ap-btn-dark">
+                Mes commandes →
+            </a>
+            
+            <a  href="{{ route('kiosque.index') }}" class="ap-btn ap-btn-outline">
+                Continuer les achats
+            </a>
+        </div>
+        
     </div>
+</section>
 
-    <a href="{{ route('kiosque.index') }}" 
-        class="inline-block bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-3 px-8 rounded-xl transition">
-        Retour au catalogue
-    </a>
-</div>
 @endsection

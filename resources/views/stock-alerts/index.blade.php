@@ -1,5 +1,5 @@
 {{-- resources/views/stock-alerts/index.blade.php --}}
-@extends('layouts.app')
+@extends('layouts.admin-art-print')
 
 @section('title', 'Alertes Stock - Fundisc')
 

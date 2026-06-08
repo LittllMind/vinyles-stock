@@ -1,12 +1,14 @@
-@extends('layouts.app')
+{{-- resources/views/admin/users/create.blade.php --}}
+{{-- Thème ART PRINT unifié --}}
+
+@extends('layouts.admin-art-print')
+
+@section('title', 'Créer un Utilisateur')
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
-    <h1 class="text-2xl font-bold mb-6">Créer un Utilisateur</h1>
-
     @if ($errors->any())
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            <ul>
+        <div class="mb-4 p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg">
+            <ul class="list-disc list-inside">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
@@ -14,37 +16,37 @@
         </div>
     @endif
 
-    <form action="{{ route('admin.users.store') }}" method="POST" class="max-w-lg">
+    <form action="{{ route('admin.users.store') }}" method="POST" class="max-w-lg space-y-4">
         @csrf
 
-        <div class="mb-4">
-            <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Nom</label>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Nom</label>
             <input type="text" name="name" id="name" value="{{ old('name') }}" required
-                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                   class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-200">
         </div>
 
-        <div class="mb-4">
-            <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
             <input type="email" name="email" id="email" value="{{ old('email') }}" required
-                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                   class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-200">
         </div>
 
-        <div class="mb-4">
-            <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Mot de passe</label>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label>
             <input type="password" name="password" id="password" required
-                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                   class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-200">
         </div>
 
-        <div class="mb-4">
-            <label for="password_confirmation" class="block text-gray-700 text-sm font-bold mb-2">Confirmer le mot de passe</label>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Confirmer le mot de passe</label>
             <input type="password" name="password_confirmation" id="password_confirmation" required
-                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                   class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-200">
         </div>
 
-        <div class="mb-6">
-            <label for="role" class="block text-gray-700 text-sm font-bold mb-2">Rôle</label>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Rôle</label>
             <select name="role" id="role" required
-                    class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-200">
                 @foreach($roles as $role)
                     <option value="{{ $role }}" {{ old('role') == $role ? 'selected' : '' }}>
                         {{ ucfirst($role) }}
@@ -53,14 +55,9 @@
             </select>
         </div>
 
-        <div class="flex items-center justify-between">
-            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                Créer
-            </button>
-            <a href="{{ route('admin.users.index') }}" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
-                Annuler
-            </a>
+        <div class="flex items-center gap-4 pt-2">
+            <button type="submit" class="btn btn-primary">Créer</button>
+            <a href="{{ route('admin.users.index') }}" class="text-sm text-gray-500 hover:text-gray-900">Annuler</a>
         </div>
     </form>
-</div>
 @endsection

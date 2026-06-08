@@ -1,60 +1,96 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+{{-- resources/views/auth/login-art-print.blade.php --}}
+{{-- Login ART PRINT - Style minimaliste --}}
 
-    <h2 class="text-2xl font-bold mb-6 bg-gradient-to-r from-violet-400 to-pink-400 bg-clip-text text-transparent text-center">
-        Connexion
-    </h2>
+@extends('layouts.art-print')
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+@section('title', 'Connexion')
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" class="text-gray-300" />
-            <x-text-input id="email" class="block mt-1 w-full bg-gray-700 border-gray-600 text-gray-100 focus:border-violet-500 focus:ring focus:ring-violet-500/50" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+@section('content')
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Mot de passe')" class="text-gray-300" />
+<!-- Hero -->
+<section class="ap-hero" style="min-height: 60vh; display: flex; align-items: center;">
+    <div class="ap-container" style="max-width: 500px; margin: 0 auto;">
+        
+        <p class="ap-hero-label">Accès membre</p>
+        
+        <h1 style="margin-bottom: 3rem;"
+>Connexion</h1>
 
-            <x-text-input id="password" class="block mt-1 w-full bg-gray-700 border-gray-600 text-gray-100 focus:border-violet-500 focus:ring focus:ring-violet-500/50"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+        @if (session('status'))
+            <div style="background: #F8F8F8; border: 1px solid #e5e5e5; padding: 1rem; margin-bottom: 2rem; text-align: center;">
+                {{ session('status') }}
+            </div>
+        @endif
+        
+        <form action="{{ route('login') }}" method="POST">
+            @csrf
+            
+            <input type="hidden" name="redirect" value="{{ request('redirect') }}">
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-600 bg-gray-700 text-violet-500 shadow-sm focus:ring-violet-500" name="remember">
-                <span class="ms-2 text-sm text-gray-400">{{ __('Se souvenir de moi') }}</span>
-            </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-400 hover:text-violet-400 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500 focus:ring-offset-gray-800" href="{{ route('password.request') }}">
-                    {{ __('Mot de passe oublié ?') }}
-                </a>
+            @if(request('theme'))
+                <input type="hidden" name="theme" value="{{ request('theme') }}">
             @endif
-
-            <button type="submit" class="ms-3 px-6 py-2 bg-gradient-to-r from-violet-600 to-pink-600 text-white font-semibold rounded-lg shadow-lg hover:from-violet-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200">
-                {{ __('Se connecter') }}
+            
+            {{-- Email --}}
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #666; margin-bottom: 0.5rem;"
+                >Email</label>
+                
+                <input type="email" name="email" required autofocus
+                       value="{{ old('email') }}"
+                       style="width: 100%; padding: 0.75rem; border: 1px solid #e5e5e5; font-size: 0.9rem;"
+                       placeholder="votre@email.com">
+                
+                @if ($errors->has('email'))
+                    <p style="color: #c00; font-size: 0.8rem; margin-top: 0.5rem;">{{ $errors->first('email') }}</p>
+                @endif
+            </div>
+            
+            {{-- Password --}}
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #666; margin-bottom: 0.5rem;"
+                >Mot de passe</label>
+                
+                <input type="password" name="password" required
+                       style="width: 100%; padding: 0.75rem; border: 1px solid #e5e5e5; font-size: 0.9rem;"
+                       placeholder="••••••••">
+                
+                @if ($errors->has('password'))
+                    <p style="color: #c00; font-size: 0.8rem; margin-top: 0.5rem;">{{ $errors->first('password') }}</p>
+                @endif
+            </div>
+            
+            {{-- Remember Me + Forgot Password --}}
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                
+                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.85rem;"
+                >
+                    <input type="checkbox" name="remember">
+                    Se souvenir de moi
+                </label>
+                
+                @if (Route::has('password.request'))
+                    <a href="{{ route('password.request') }}" style="font-size: 0.8rem; color: #666; text-decoration: underline;"
+                    >
+                        Mot de passe oublié ?
+                    </a>
+                @endif
+            </div>
+            
+            {{-- Submit --}}
+            <button type="submit" class="ap-btn ap-btn-dark" style="width: 100%; padding: 1rem;">
+                Se connecter →
             </button>
+        </form>
+        
+        {{-- Register link --}}
+        <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e5e5e5;">
+            <p style="font-size: 0.9rem; color: #666;">
+                Pas encore de compte ? 
+                <a  href="{{ route('register') }}" style="text-decoration: underline; color: inherit;">Créer un compte</a>
+            </p>
         </div>
-    </form>
-
-    <div class="text-center mt-6">
-        <p class="text-sm text-gray-400">
-            Pas encore de compte ?
-            <a href="{{ route('register') }}" class="text-violet-400 hover:text-violet-300 font-medium">
-                S'inscrire
-            </a>
-        </p>
     </div>
-</x-guest-layout>
+</section>
+
+@endsection

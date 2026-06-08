@@ -217,6 +217,17 @@ class VenteController extends Controller
         return view('ventes.show', compact('vente'));
     }
 
+    public function edit(Vente $vente)
+    {
+        $vente->load('lignes.vinyle');
+        return view('ventes.edit', compact('vente'));
+    }
+
+    public function update(Request $request, Vente $vente)
+    {
+        return redirect()->route('ventes.show', $vente)->with('error', 'Mise a jour non implementee');
+    }
+
     public function destroy(Vente $vente)
     {
         // Charger les lignes

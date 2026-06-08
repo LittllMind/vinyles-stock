@@ -27,6 +27,7 @@ return new class extends Migration
             $table->decimal('total', 10, 2);
             $table->enum('statut', [
                 'en_attente',
+                'payee',
                 'en_preparation',
                 'prete',
                 'livree',

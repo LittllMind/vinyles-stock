@@ -1,6 +1,9 @@
-@extends('layouts.kiosque')
+{{-- resources/views/orders/my-orders-art-print.blade.php --}}
+{{-- Mes commandes - Style minimaliste galerie --}}
 
-@section('title', 'Mes Commandes - Fundisc')
+@extends('layouts.art-print')
+
+@section('title', 'Mes commandes')
 
 @section('content')
 
@@ -12,120 +15,114 @@ if (!function_exists('formatPrice')) {
 }
 @endphp
 
-<div class="max-w-4xl mx-auto">
-    <!-- Header -->
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-            📦 Mes Commandes
-        </h1>
-        <p class="text-gray-400 mt-2">Consultez l'historique de vos commandes et leur statut</p>
-    </div>
-
-    @if($orders->isEmpty())
-        <!-- Aucune commande -->
-        <div class="bg-gray-800/50 border border-gray-700 rounded-2xl p-8 text-center">
-            <div class="text-6xl mb-4">🛒</div>
-            <h2 class="text-xl font-semibold text-gray-300 mb-2">Aucune commande pour le moment</h2>
-            <p class="text-gray-400 mb-6">Vous n'avez pas encore passé de commande.</p>
-            <a href="{{ route('kiosque.index') }}" 
-               class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-xl transition">
-                🎵 Découvrir le catalogue
-            </a>
-        </div>
-    @else
-        <!-- Liste des commandes -->
-        <div class="space-y-4">
-            @foreach($orders as $order)
-                <div class="bg-gray-800/50 border border-gray-700 rounded-2xl p-6 hover:border-purple-500/50 transition">
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                        <!-- Info commande -->
-                        <div>
-                            <div class="flex items-center gap-2 mb-2">
-                                <span class="text-lg font-bold text-purple-400">{{ $order->numero_commande }}</span>
-                                <span class="text-sm text-gray-500">•</span>
-                                <span class="text-sm text-gray-400">{{ $order->created_at->format('d/m/Y') }}</span>
+<section class="ap-section" style="padding-top: 6rem;">
+    <div class="ap-container">
+        
+        <p class="ap-hero-label">Historique</p>
+        
+        <h1 style="margin-bottom: 3rem;">Mes commandes</h1>
+        
+        @if($orders->isEmpty())
+            {{-- Aucune commande --}}
+            
+            <div style="max-width: 500px; margin: 4rem auto; text-align: center; padding: 3rem; border: 1px solid #E5E5E5;">
+                
+                <p style="color: #666; margin-bottom: 1.5rem;">Vous n'avez pas encore passé de commande.</p>
+                
+                <a  href="{{ route('kiosque.index') }}" class="ap-btn ap-btn-dark">
+                    Découvrir la collection →
+                </a>
+            </div>
+        @else
+            {{-- Liste des commandes --}}
+            
+            <div style="max-width: 800px;">
+                @foreach($orders as $order)
+                    <div style="border: 1px solid #E5E5E5; padding: 1.5rem; margin-bottom: 1rem;">
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
+                            <div>
+                                <p style="font-weight: 600; font-size: 1.1rem;">Commande #{{ $order->numero_commande }}</p>
+                                
+                                <p style="font-size: 0.85rem; color: #999;">{{ $order->created_at->format('d/m/Y') }}</p>
                             </div>
-                            <div class="flex items-center gap-2 mb-2">
+                            
+                            <div style="text-align: right;">
                                 @php
-                                    $badgeClass = match($order->statut) {
-                                        'en_attente' => 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
-                                        'en_preparation' => 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-                                        'prete' => 'bg-green-500/20 text-green-400 border-green-500/30',
-                                        'livree' => 'bg-gray-500/20 text-gray-400 border-gray-500/30',
-                                        'annulee' => 'bg-red-500/20 text-red-400 border-red-500/30',
-                                        default => 'bg-gray-500/20 text-gray-400 border-gray-500/30',
+                                    $statusLabel = match($order->statut) {
+                                        'en_attente' => 'En attente',
+                                        'en_preparation' => 'En préparation',
+                                        'prete' => 'Prête',
+                                        'livree' => 'Livrée',
+                                        'annulee' => 'Annulée',
+                                        'paid' => 'Payée',
+                                        default => $order->statut,
                                     };
-                                    $badgeIcon = match($order->statut) {
-                                        'en_attente' => '⏳',
-                                        'en_preparation' => '🔧',
-                                        'prete' => '✅',
-                                        'livree' => '📦',
-                                        'annulee' => '❌',
-                                        default => '⭕',
+                                    $statusColor = match($order->statut) {
+                                        'en_attente' => '#CC9900',
+                                        'en_preparation' => '#0066CC',
+                                        'prete' => '#00AA44',
+                                        'livree' => '#666',
+                                        'annulee' => '#CC0000',
+                                        'paid' => '#1A1A1A',
+                                        default => '#999',
                                     };
                                 @endphp
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium {{ $badgeClass }}">
-                                    {{ $badgeIcon }} {{ $order->statutLabel() }}
+                                
+                                <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: {{ $statusColor }};">
+                                    {{ $statusLabel }}
                                 </span>
-                            </div>
-                            <div class="text-gray-400 text-sm">
-                                {{ $order->items->count() }} article(s) • 
-                                <span class="font-semibold text-purple-400">€ {{ formatPrice($order->total) }}</span>
+                                
+                                <p style="font-weight: 600; margin-top: 0.25rem;">€ {{ formatPrice($order->total) }}</p>
                             </div>
                         </div>
-
-                        <!-- Détail -->
-                        <a href="#" 
-                           onclick="document.getElementById('order-{{ $order->id }}').classList.toggle('hidden')"
-                           class="inline-flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-xl transition text-sm font-medium">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                            </svg>
-                            Détails
-                        </a>
-                    </div>
-
-                    <!-- Détails cachés -->
-                    <div id="order-{{ $order->id }}" class="hidden mt-6 pt-6 border-t border-gray-700">
-                        <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4">Articles commandés</h3>
-                        <div class="space-y-3">
-                            @foreach($order->items as $item)
-                                <div class="flex items-center gap-4 bg-gray-900/50 rounded-xl p-3">
-                                    @if($item->vinyle)
-                                        <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-violet-600/30 to-fuchsia-600/30 flex items-center justify-center text-lg">
-                                            💿
-                                        </div>
-                                        <div class="flex-1">
-                                            <div class="font-medium text-gray-300">{{ $item->titre_vinyle }}</div>
-                                        <div class="text-sm text-gray-500">
-                                            {{ $item->quantite }} × € {{ formatPrice($item->prix_unitaire) }}
-                                        </div>
-                                        </div>
-                                        <div class="font-semibold text-purple-400">
-                                            € {{ formatPrice($item->total) }}
-                                        </div>
-                                    @else
-                                        <div class="text-gray-500 italic">Article non disponible</div>
-                                    @endif
-                                </div>
-                            @endforeach
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid #F0F0F0;">
+                            <p style="font-size: 0.85rem; color: #666;">{{ $order->items->count() }} article(s)</p>
+                            
+                            <button onclick="document.getElementById('order-details-{{ $order->id }}').classList.toggle('hidden')"
+                                    style="background: none; border: none; cursor: pointer; font-size: 0.85rem; text-decoration: underline; color: #666;"
+                            >
+                                Détails
+                            </button>
                         </div>
-
-                        <div class="mt-4 pt-4 border-t border-gray-700 flex justify-between items-center">
-                            <span class="text-gray-400">Total</span>
-                            <span class="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                                € {{ formatPrice($order->total) }}
-                            </span>
+                        
+                        {{-- Détails cachés --}}
+                        
+                        <div id="order-details-{{ $order->id }}" class="hidden" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #E5E5E5;">
+                            
+                            <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #666; margin-bottom: 1rem;">Articles</p>
+                            
+                            <div style="space-y: 1rem;">
+                                @foreach($order->items as $item)
+                                    <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #F5F5F5;">
+                                        <div>
+                                            <p style="font-size: 0.9rem;">{{ $item->titre_vinyle ?? 'Article' }}</p>
+                                            
+                                            <p style="font-size: 0.8rem; color: #999;">Qté: {{ $item->quantite }}</p>
+                                        </div>
+                                        
+                                        <p style="font-size: 0.9rem;">€ {{ formatPrice($item->total) }}</p>
+                                    </div>
+                                @endforeach
+                            </div>
+                            
+                            <div style="display: flex; justify-content: space-between; margin-top: 1rem; padding-top: 1rem;">
+                                <p style="font-weight: 600;">Total</p>
+                                
+                                <p style="font-weight: 600;">€ {{ formatPrice($order->total) }}</p>
+                            </div>
                         </div>
                     </div>
+                @endforeach
+                
+                {{-- Pagination --}}
+                <div style="margin-top: 2rem;">
+                    {{ $orders->links() }}
                 </div>
-            @endforeach
-        </div>
+            </div>
+        @endif
+    </div>
+</section>
 
-        <!-- Pagination -->
-        <div class="mt-6">
-            {{ $orders->links() }}
-        </div>
-    @endif
-</div>
 @endsection

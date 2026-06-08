@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.art-print')
 
 @section('title', 'Modifier Vinyle')
 

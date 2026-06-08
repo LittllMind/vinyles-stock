@@ -1,6 +1,9 @@
-@extends('layouts.app')
+{{-- resources/views/orders/payment-art-print.blade.php --}}
+{{-- Paiement - Style minimaliste galerie --}}
 
-@section('title', 'Paiement - Commande')
+@extends('layouts.art-print')
+
+@section('title', 'Paiement')
 
 @section('content')
 
@@ -12,214 +15,161 @@ if (!function_exists('formatPrice')) {
 }
 @endphp
 
-<div class="min-h-screen bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-5xl mx-auto">
-        <!-- En-tête -->
-        <div class="text-center mb-8">
-            <h1 class="text-4xl font-bold bg-gradient-to-r from-violet-400 to-pink-400 bg-clip-text text-transparent">
-                Récapitulatif de commande
-            </h1>
-            <p class="mt-2 text-gray-400">Étape 3/3 : Paiement sécurisé</p>
-        </div>
-
-        <!-- Progression -->
-        <div class="flex items-center justify-center mb-8">
-            <div class="flex items-center space-x-4">
-                <div class="flex items-center">
-                    <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white text-sm">✓</div>
-                    <span class="ml-2 text-green-400 text-sm">Panier</span>
-                </div>
-                <div class="w-16 h-1 bg-green-500"></div>
-                <div class="flex items-center">
-                    <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white text-sm">✓</div>
-                    <span class="ml-2 text-green-400 text-sm">Livraison</span>
-                </div>
-                <div class="w-16 h-1 bg-violet-500"></div>
-                <div class="flex items-center">
-                    <div class="w-8 h-8 rounded-full bg-violet-500 flex items-center justify-center text-white text-sm font-bold">3</div>
-                    <span class="ml-2 text-violet-400 text-sm font-semibold">Paiement</span>
-                </div>
+<section class="ap-section" style="padding-top: 6rem;">
+    <div class="ap-container" style="max-width: 900px;">
+        
+        {{-- Header --}}
+        <p class="ap-hero-label" style="text-align: center;">Étape 3 sur 3</p>
+        <h1 style="text-align: center; margin-bottom: 3rem;">Paiement sécurisé</h1>
+        
+        {{-- Progress Steps --}}
+        <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 4rem; gap: 1rem;">
+            {{-- Step 1: Panier (done) --}}
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span style="width: 2rem; height: 2rem; border-radius: 50%; background: #1A1A1A; color: white; display: flex; align-items: center; justify-content: center; font-size: 0.75rem;">1</span>
+                <span style="font-size: 0.75rem; color: #666;">Panier</span>
+            </div>
+            <div style="width: 3rem; height: 1px; background: #1A1A1A;"></div>
+            
+            {{-- Step 2: Livraison (done) --}}
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span style="width: 2rem; height: 2rem; border-radius: 50%; background: #1A1A1A; color: white; display: flex; align-items: center; justify-content: center; font-size: 0.75rem;">2</span>
+                <span style="font-size: 0.75rem; color: #666;">Livraison</span>
+            </div>
+            <div style="width: 3rem; height: 1px; background: #1A1A1A;"></div>
+            
+            {{-- Step 3: Paiement (current) --}}
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span style="width: 2rem; height: 2rem; border-radius: 50%; background: #FFB800; color: #1A1A1A; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600;">3</span>
+                <span style="font-size: 0.75rem; font-weight: 600;">Paiement</span>
             </div>
         </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Colonne gauche : Récapitulatif -->
-            <div class="lg:col-span-2 space-y-6">
-                <!-- Adresse de livraison -->
-                <div class="bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-700">
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-2xl font-bold text-white">📍 Adresse de livraison</h2>
-                        <a href="{{ route('orders.create') }}" class="text-sm text-violet-400 hover:text-violet-300 transition-colors">
-                            Modifier
-                        </a>
+        
+        <div style="display: grid; grid-template-columns: 1fr 350px; gap: 3rem;">
+            
+            {{-- Left Column --}}
+            <div>
+                {{-- Adresse de livraison --}}
+                <div style="border: 1px solid #E5E5E5; padding: 1.5rem; margin-bottom: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                        <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #666;">Adresse de livraison</p>
+                        <a  href="{{ route('orders.create') }}" style="font-size: 0.75rem; text-decoration: underline;">Modifier</a>
                     </div>
                     
-                    <div class="space-y-2 text-gray-300">
-                        <p class="font-semibold text-white">{{ $shipping['nom'] }}</p>
-                        <p>{{ $shipping['adresse'] }}</p>
-                        <p>{{ $shipping['code_postal'] }} {{ $shipping['ville'] }}</p>
-                        <p>{{ $shipping['pays'] === 'FR' ? 'France' : ($shipping['pays'] === 'BE' ? 'Belgique' : ($shipping['pays'] === 'CH' ? 'Suisse' : ($shipping['pays'] === 'LU' ? 'Luxembourg' : ($shipping['pays'] === 'DE' ? 'Allemagne' : 'Autre')))) }}</p>
-                        <p class="text-sm text-gray-400 mt-2">
-                            📧 {{ $shipping['email'] }} | 📱 {{ $shipping['telephone'] }}
-                        </p>
-                        @if(!empty($shipping['instructions']))
-                            <p class="text-sm text-gray-400 mt-2 pt-2 border-t border-gray-700">
-                                📝 Instructions : {{ $shipping['instructions'] }}
-                            </p>
-                        @endif
-                    </div>
+                    @if(isset($shipping) && is_array($shipping))
+                        <p style="font-weight: 500;">{{ $shipping['nom'] ?? '' }}</p>
+                        <p style="color: #666;">{{ $shipping['adresse'] ?? '' }}</p>
+                        <p style="color: #666;">{{ ($shipping['code_postal'] ?? '') . ' ' . ($shipping['ville'] ?? '') }}</p>
+                        <p style="color: #666; font-size: 0.9rem; margin-top: 0.5rem;">{{ $shipping['email'] ?? '' }}</p>
+                    @endif
                 </div>
-
-                <!-- Articles commandés -->
-                <div class="bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-700">
-                    <h2 class="text-2xl font-bold text-white mb-4">📦 Articles commandés</h2>
+                
+                {{-- Articles --}}
+                <div style="border: 1px solid #E5E5E5; padding: 1.5rem; margin-bottom: 1.5rem;">
+                    <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #666; margin-bottom: 1.5rem;">Articles commandés</p>
                     
-                    <div class="space-y-4">
+                    @if(isset($cart) && $cart->items)
                         @foreach($cart->items as $item)
-                            <div class="flex items-center space-x-4 p-4 bg-gray-900 rounded-xl border border-gray-700">
-                                <!-- Image placeholder -->
-                                <div class="w-20 h-20 bg-gradient-to-br from-violet-600 to-pink-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
-                                    </svg>
+                            @php
+                                $vinyle = $item->vinyle ?? null;
+                                $fond = $item->fond ?? null;
+                            @endphp
+                            <div style="display: flex; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid #E5E5E5;">
+                                <div style="width: 80px; height: 80px; background: #F5F5F5; display: flex; align-items: center; justify-content: center;">
+                                    <span style="font-size: 0.7rem; color: #999;">Vinyle</span>
                                 </div>
-                                
-                                <!-- Infos vinyle -->
-                                <div class="flex-1">
-                                    <h3 class="text-lg font-semibold text-white">{{ $item->vinyle->nom ?? 'Vinyle inconnu' }}</h3>
-                                    <p class="text-sm text-gray-400">Quantité : {{ $item->quantite }}</p>
-                                    <p class="text-xs mt-1">
-                                        @if($item->fond_id && $item->fond)
-                                            <span class="text-pink-400">
-                                                ✨ Avec fond {{ $item->fond->nom }} (+€ {{ formatPrice($item->fond->prix_achat) }})
-                                            </span>
-                                        @else
-                                            <span class="text-gray-500">
-                                                📀 Vinyle simple
-                                            </span>
-                                        @endif
-                                    </p>
+                                <div style="flex: 1;">
+                                    <p style="font-weight: 500;">{{ $vinyle ? $vinyle->nom : 'Vinyle' }}</p>
+                                    <p style="font-size: 0.85rem; color: #666;">Qté: {{ $item->quantite }}</p>
+                                    @if($fond)
+                                        <p style="font-size: 0.8rem; color: #999;">Avec fond {{ $fond->nom }}</p>
+                                    @endif
                                 </div>
-                                
-                                <!-- Prix -->
-                                <div class="text-right">
-                                    <p class="text-lg font-bold bg-gradient-to-r from-violet-400 to-pink-400 bg-clip-text text-transparent">
-                                        € {{ formatPrice($item->prix_unitaire * $item->quantite) }}
-                                    </p>
-                                    <p class="text-xs text-gray-500">€ {{ formatPrice($item->prix_unitaire) }} / unité</p>
+                                <div style="text-align: right;">
+                                    <p style="font-weight: 500;">€ {{ formatPrice($item->prix_unitaire * $item->quantite) }}</p>
                                 </div>
                             </div>
                         @endforeach
-                    </div>
+                    @endif
                 </div>
-
-                <!-- Mode de paiement -->
-                <div class="bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-700">
-                    <h2 class="text-2xl font-bold text-white mb-4">💳 Mode de paiement</h2>
+                
+                {{-- Paiement sécurisé --}}
+                <div style="border: 1px solid #E5E5E5; padding: 1.5rem;">
+                    <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #666; margin-bottom: 1rem;">Mode de paiement</p>
                     
-                    <div class="space-y-4">
-                        <div class="p-4 bg-gradient-to-r from-violet-900/50 to-pink-900/50 rounded-xl border border-violet-500/30">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center space-x-3">
-                                    <div class="w-12 h-8 bg-white rounded flex items-center justify-center">
-                                        <span class="text-xs font-bold text-violet-600">CB</span>
-                                    </div>
-                                    <div>
-                                        <p class="text-white font-semibold">Carte bancaire</p>
-                                        <p class="text-xs text-gray-400">Visa, Mastercard, American Express</p>
-                                    </div>
-                                </div>
-                                <div class="text-green-400 text-sm font-semibold">✓ Sélectionné</div>
-                            </div>
+                    <div style="background: #F8F8F8; padding: 1rem; display: flex; align-items: center; gap: 1rem;">
+                        <div style="background: white; padding: 0.5rem 1rem; border: 1px solid #E5E5E5;">
+                            <span style="font-size: 0.75rem; font-weight: 600;">CB</span>
                         </div>
-                        
-                        <div class="flex items-center space-x-2 text-xs text-gray-500 justify-center">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                            </svg>
-                            <span>Paiement crypté et sécurisé par Stripe</span>
+                        <div>
+                            <p style="font-weight: 500;">Carte bancaire</p>
+                            <p style="font-size: 0.8rem; color: #999;">Paiement sécurisé par Stripe</p>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Colonne droite : Total et action -->
-            <div class="lg:col-span-1">
-                <div class="bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-700 sticky top-8">
-                    <h2 class="text-xl font-bold text-white mb-6">Récapitulatif financier</h2>
-
-                    <!-- Totaux -->
-                    <div class="space-y-3 mb-6">
-                        <div class="flex justify-between text-sm text-gray-400">
-                            <span>Sous-total ({{ $cart->items->count() }} article{{ $cart->items->count() > 1 ? 's' : '' }})</span>
-                            <span>€ {{ formatPrice($cart->total) }}</span>
-                        </div>
-                        
-                        <div class="flex justify-between text-sm text-gray-400">
-                            <span>Livraison</span>
-                            <span class="text-green-400">Gratuite</span>
-                        </div>
-                        
-                        <div class="flex justify-between text-sm text-gray-400">
-                            <span>Frais de traitement</span>
-                            <span class="text-green-400">Offerts</span>
-                        </div>
-                        
-                        <div class="border-t border-gray-700 pt-4">
-                            <div class="flex justify-between items-center">
-                                <span class="text-lg font-bold text-white">Total à payer</span>
-                                <span class="text-2xl font-bold bg-gradient-to-r from-violet-400 to-pink-400 bg-clip-text text-transparent">
-                                    € {{ formatPrice($cart->total) }}
-                                </span>
-                            </div>
+            
+            {{-- Right Column: Récapitulatif --}}
+            <div style="position: sticky; top: 100px;">
+                <div style="border: 1px solid #E5E5E5; padding: 1.5rem;">
+                    <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #666; margin-bottom: 1.5rem;">Récapitulatif</p>
+                    
+                    @php
+                        $count = isset($cart->items) ? $cart->items->count() : 0;
+                        $subtotal = isset($cart->total) ? $cart->total : 0;
+                    @endphp
+                    
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.9rem;">
+                        <span style="color: #666;">Sous-total ({{ $count }} article{{ $count > 1 ? 's' : '' }})</span>
+                        <span>€ {{ formatPrice($subtotal) }}</span>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.9rem;">
+                        <span style="color: #666;">Livraison</span>
+                        <span style="color: #22C55E;">Gratuite</span>
+                    </div>
+                    
+                    <div style="border-top: 1px solid #E5E5E5; margin-top: 1rem; padding-top: 1rem;">
+                        <div style="display: flex; justify-content: space-between; font-weight: 600;">
+                            <span>Total à payer</span>
+                            <span>€ {{ formatPrice($subtotal) }}</span>
                         </div>
                     </div>
-
-                    <!-- Bouton de paiement -->
-                    <form action="{{ route('payment.checkout') }}" method="POST">
+                    
+                    {{-- Bouton paiement --}}
+                    <form action="{{ route('payment.checkout') }}" method="POST" style="margin-top: 1.5rem;">
                         @csrf
-                        <input type="hidden" name="order_id" value="{{ $order->id ?? '' }}">
-                        <button type="submit"
-                            class="w-full px-6 py-4 bg-gradient-to-r from-violet-600 to-pink-600 hover:from-violet-500 hover:to-pink-500 text-white font-bold rounded-xl transition-all transform hover:scale-105 shadow-lg mb-4 flex items-center justify-center space-x-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                            </svg>
-                            <span>Payer maintenant</span>
+                        @if(isset($order) && $order->id)
+                            <input type="hidden" name="order_id" value="{{ $order->id }}">
+                        @endif
+                        
+                        <button type="submit" class="ap-btn ap-btn-dark" style="width: 100%;">
+                            Payer maintenant →
                         </button>
                     </form>
-
-                    <!-- Bouton retour -->
-                    <a href="{{ route('orders.create') }}"
-                        class="w-full px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-xl transition-colors text-center block mb-6">
+                    
+                    <a  href="{{ route('orders.create') }}
+                      " style="display: block; text-align: center; margin-top: 1rem; font-size: 0.85rem; text-decoration: underline; color: #666;">
                         ← Retour
                     </a>
-
-                    <!-- Garantie -->
-                    <div class="pt-6 border-t border-gray-700">
-                        <div class="space-y-3 text-xs text-gray-400">
-                            <div class="flex items-center space-x-2">
-                                <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                                </svg>
-                                <span>Achat sécurisé et crypté</span>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                                </svg>
-                                <span>Satisfait ou remboursé (14 jours)</span>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-                                </svg>
-                                <span>Paiement CB sécurisé</span>
-                            </div>
-                        </div>
+                    
+                    {{-- Garanties --}}
+                    <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #E5E5E5;">
+                        <p style="font-size: 0.75rem; color: #999; margin-bottom: 0.25rem;">
+                            Paiement crypté SSL
+                        </p>
+                        <p style="font-size: 0.75rem; color: #999; margin-bottom: 0.25rem;">
+                            Satisfait ou remboursé (14 jours)
+                        </p>
+                        <p style="font-size: 0.75rem; color: #999;">
+                            Livraison garantie
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
+        
     </div>
-</div>
+</section>
+
 @endsection

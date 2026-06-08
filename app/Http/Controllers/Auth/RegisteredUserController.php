@@ -21,7 +21,7 @@ class RegisteredUserController extends Controller
     public function create(Request $request): View
     {
         $theme = $request->get('theme');
-        return view(theme_view('auth.register'));
+        return view('auth.register');
     }
 
     /**

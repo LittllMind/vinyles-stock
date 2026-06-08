@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.admin-art-print')
 
 @section('title', 'Conversation #' . $conversation->id)
 

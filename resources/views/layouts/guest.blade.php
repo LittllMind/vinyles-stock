@@ -12,8 +12,7 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
-    <link rel="stylesheet" href="{{ asset('build/assets/app.css') }}">
-    <script src="{{ asset('build/assets/app.js') }}"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body class="font-sans text-gray-100 antialiased bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0">

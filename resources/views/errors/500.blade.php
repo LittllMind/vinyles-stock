@@ -1,7 +1,7 @@
 {{-- resources/views/errors/500.blade.php --}}
 {{-- Vue erreur 500 sans exposition de données sensibles --}}
 
-@extends('layouts.app')
+@extends('layouts.art-print')
 
 @section('title', 'Erreur serveur')
 

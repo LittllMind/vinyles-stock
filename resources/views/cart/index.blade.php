@@ -1,237 +1,227 @@
-{{-- resources/views/cart/index.blade.php --}}
-@php
-    /** @var \App\Services\CartService $cartService */
-    $cartService = app(\App\Services\CartService::class);
-    $cart = $cartService->getCart();
-@endphp
+{{-- resources/views/cart/index-art-print.blade.php --}}
+{{-- Panier ART PRINT - Style minimaliste --}}
 
-@extends('layouts.app')
+@extends('layouts.art-print')
 
-@section('title', 'Mon Panier - Vinyle Hydrodécoupé')
+@section('title', 'Panier')
 
 @section('content')
-<div class="max-w-7xl mx-auto">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-            🛒 Mon Panier
-        </h1>
-        <a href="{{ route('kiosque.index') }}" class="text-purple-300 hover:text-pink-300 transition">
-            ← Continuer mes achats
-        </a>
+
+<!-- Hero -->
+<section class="ap-hero" style="min-height: auto; padding-top: 8rem; padding-bottom: 3rem;">
+    <div class="ap-container">
+        <h1>Votre panier</h1>
+        
+        <p style="color: #666;">
+            @if($cart->items->count() === 0)
+                Votre panier est vide
+            @else
+                {{ $cart->items->sum('quantite') }} article{{ $cart->items->sum('quantite') > 1 ? 's' : '' }} dans votre sélection
+            @endif
+        </p>
     </div>
+</section>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+@php
+if (!function_exists('formatPrice')) {
+    function formatPrice($cents) {
+        return number_format($cents / 100, 2, ',', ' ');
+    }
+}
+$total = 0;
+foreach ($cart->items as $item) {
+    $total += $item->quantite * $item->prix_unitaire;
+}
+@endphp
 
-            {{-- Messages de succès/erreur --}}
-            @if (session('success'))
-                <div class="mb-4 p-4 bg-green-900/30 border border-green-500 text-green-300 rounded-lg">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if (session('error'))
-                <div class="mb-4 p-4 bg-red-900/30 border border-red-500 text-red-300 rounded-lg">
-                    {{ session('error') }}
-                </div>
-            @endif
-
-            {{-- Alertes stock --}}
-            @if (!empty($stockErrors))
-                <div class="mb-4 p-4 bg-yellow-900/30 border border-yellow-500 text-yellow-300 rounded-lg">
-                    <p class="font-semibold mb-2">⚠️ Problèmes de stock :</p>
-                    <ul class="list-disc list-inside">
-                        @foreach ($stockErrors as $error)
-                            <li>{{ is_array($error) ? ($error['message'] ?? $error) : $error }}</li>
+<!-- Contenu Panier -->
+<section class="ap-section" style="padding-top: 2rem; padding-bottom: 6rem;">
+    <div class="ap-container">
+        
+        @if(!$cart->items || $cart->items->isEmpty())
+            
+            <div class="ap-text-block" style="text-align: center; padding: 4rem 0;">
+                <p style="font-size: 4rem; margin-bottom: 1rem;">🛒</p>
+                <h3>Votre sélection est vide</h3>
+                <p style="color: #666;">
+                    Explorez notre collection pour découvrir les pièces disponibles.
+                </p>
+                
+                <a  href="{{ route('kiosque.index') }}" class="ap-btn ap-btn-dark" style="margin-top: 2rem;">
+                    Découvrir la collection
+                </a>
+            </div>
+        
+        @else
+            
+            <div style="display: grid; grid-template-columns: 1fr 400px; gap: 4rem;">
+                
+                {{-- Liste articles --}}
+                <div>
+                    {{-- Erreurs de stock --}}
+                    @if(!empty($stockErrors))
+                        <div style="background: #FEF3F2; border: 1px solid #FECACA; padding: 1rem; margin-bottom: 2rem; font-size: 0.85rem;">
+                            <strong>Quantités ajustées :</strong>
+                            <ul style="margin: 0.5rem 0 0 1rem; padding: 0;">
+                                @foreach($stockErrors as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    
+                    <div style="border-top: 1px solid #e5e5e5;">
+                        @foreach($cart->items as $item)
+                            @php($vinyle = $item->vinyle)
+                            <div style="display: grid; grid-template-columns: 100px 1fr auto; gap: 1.5rem; padding: 1.5rem 0; border-bottom: 1px solid #e5e5e5;">
+                                
+                                {{-- Image --}}
+                                <div style="background: #F8F8F8; aspect-ratio: 1; display: flex; align-items: center; justify-content: center;">
+                                    @if($vinyle->getFirstMediaUrl('photo', 'thumb'))
+                                        <img src="{{ $vinyle->getFirstMediaUrl('photo', 'thumb') }}" 
+                                             alt="{{ $vinyle->artiste }}"
+                                             style="width: 100%; height: 100%; object-fit: cover;">
+                                    @else
+                                        <span style="font-size: 2rem;">💿</span>
+                                    @endif
+                                </div>
+                                
+                                {{-- Détails --}}
+                                <div>
+                                    <p style="font-size: 0.75rem; color: #999; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.25rem;">
+                                        {{ $vinyle->artiste }}
+                                    </p>
+                                    
+                                    <p style="font-weight: 500; margin-bottom: 0.5rem;">
+                                        <a  href="{{ route('kiosque.show', $vinyle->id) }} 
+                                          " style="color: inherit; text-decoration: none;">
+                                            {{ $vinyle->modele }}
+                                        </a>
+                                    </p>
+                                    
+                                    @if($item->fond_id)
+                                        <p style="font-size: 0.75rem; color: #999;">
+                                            + Fond {{ $item->fond->type }}
+                                        </p>
+                                    @endif
+                                    
+                                    {{-- Actions --}}
+                                    <div style="display: flex; align-items: center; gap: 1rem; margin-top: 0.75rem;">
+                                        {{-- Quantité --}}
+                                        <div style="border: 1px solid #e5e5e5; display: flex; align-items: center;">
+                                            <form action="{{ route('cart.update', $item) }}" method="POST" style="display: flex; align-items: center;">
+                                                @csrf
+                                                @method('PATCH')
+                                                
+                                                <button type="submit" name="quantite" value="{{ $item->quantite - 1 }}"
+                                                        {{ $item->quantite <= 1 ? 'disabled' : '' }}
+                                                        style="background: none; border: none; padding: 0.5rem 0.75rem; cursor: pointer; font-size: 0.9rem; opacity: {{ $item->quantite <= 1 ? '0.3' : '1' }};"
+                                                >−</button>
+                                                
+                                                <span style="padding: 0 0.75rem; font-size: 0.85rem; min-width: 30px; text-align: center;">
+                                                    {{ $item->quantite }}
+                                                </span>
+                                                
+                                                <button type="submit" name="quantite" value="{{ $item->quantite + 1 }}"
+                                                        {{ $item->quantite >= $vinyle->quantite ? 'disabled' : '' }}
+                                                        style="background: none; border: none; padding: 0.5rem 0.75rem; cursor: pointer; font-size: 0.9rem; opacity: {{ $item->quantite >= $vinyle->quantite ? '0.3' : '1' }};"
+                                                >+</button>
+                                            </form>
+                                        </div>
+                                        
+                                        {{-- Supprimer --}}
+                                        <form action="{{ route('cart.remove', $item) }}" method="POST" style="display: inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            
+                                            <button type="submit" style="background: none; border: none; color: #999; font-size: 0.75rem; cursor: pointer; text-decoration: underline;"
+                                            >
+                                                Supprimer
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                                
+                                {{-- Prix --}}
+                                <div style="text-align: right;">
+                                    <p style="font-weight: 500;">€ {{ formatPrice($item->prix_unitaire * $item->quantite) }}</p>
+                                    
+                                    <p style="font-size: 0.8rem; color: #999;">
+                                        € {{ formatPrice($item->prix_unitaire) }} / unité
+                                    </p>
+                                </div>
+                            </div>
                         @endforeach
-                    </ul>
-                </div>
-            @endif
-
-            @if ($cart->isEmpty())
-                {{-- Panier vide --}}
-                <div class="bg-gray-800/50 backdrop-blur-sm border border-gray-700 overflow-hidden rounded-xl">
-                    <div class="p-6 text-center">
-                        <div class="text-6xl mb-4">🛒</div>
-                        <h3 class="text-xl font-semibold text-gray-200 mb-2">
-                            Votre panier est vide
-                        </h3>
-                        <p class="text-gray-400 mb-6">
-                            Découvrez notre sélection de vinyles vintage
-                        </p>
-                        <a href="{{ url('/kiosque') }}"
-                            class="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-lg hover:from-purple-700 hover:to-pink-700 transition font-semibold">
-                            Voir les vinyles
+                    </div>
+                    
+                    {{-- Retour collection --}}
+                    <div style="margin-top: 2rem;">
+                        <a  href="{{ route('kiosque.index') }} 
+                          " style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: #666; text-decoration: none;">
+                           ← Continuer mes achats
                         </a>
                     </div>
                 </div>
-            @else
-                {{-- Panier avec articles --}}
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-                    {{-- Colonne principale : Liste des articles --}}
-                    <div class="lg:col-span-2">
-                        <div class="bg-gray-800/50 backdrop-blur-sm border border-gray-700 overflow-hidden rounded-xl">
-                            <div class="p-6">
-                                <h3 class="text-lg font-semibold bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent mb-4">
-                                    Articles ({{ $cart->totalItems }})
-                                </h3>
-
-                                <div class="space-y-4">
-                                    @foreach ($cart->items as $item)
-                                        <div class="flex flex-col sm:flex-row sm:items-center justify-between py-4 border-b border-gray-700 gap-4">
-                                            {{-- Info article --}}
-                                            <div class="flex-1">
-                                                <div class="font-bold text-gray-100 text-lg">
-                                                    {{ $item->vinyle->nom ?? 'Vinyle' }}
-                                                </div>
-                                                <div class="text-sm text-purple-300 mt-1">
-                                                    Fond :
-                                                    @if ($item->fond)
-                                                        {{ ucfirst($item->fond->type) }}
-                                                    @else
-                                                        Standard
-                                                    @endif
-                                                </div>
-                                                <div class="text-sm text-gray-400 mt-1">
-                                                    {{ number_format($item->prix_unitaire, 2, ',', ' ') }} € / unité
-                                                </div>
-                                            </div>
-
-                                            {{-- Contrôles quantité --}}
-                                            <div class="flex items-center gap-4">
-                                                {{-- Formulaire mise à jour quantité --}}
-                                                <form method="POST" action="{{ route('cart.update', $item->id) }}" class="flex items-center gap-2">
-                                                    @csrf
-                                                    @method('PATCH')
-                                                    <label for="qty-{{ $item->id }}" class="sr-only">Quantité</label>
-                                                    <div class="flex items-center">
-                                                        <button type="button"
-                                                            onclick="decrementQty('qty-{{ $item->id }}')"
-                                                            class="w-8 h-8 rounded-l-lg bg-gray-700 hover:bg-gray-600 text-white transition flex items-center justify-center">
-                                                            -
-                                                        </button>
-                                                        <input type="number" id="qty-{{ $item->id }}" name="quantite"
-                                                            value="{{ $item->quantite }}" min="1"
-                                                            class="w-16 h-8 bg-gray-700 border-y border-gray-600 text-center text-white focus:outline-none focus:border-purple-500"
-                                                            onchange="this.form.submit()">
-                                                        <button type="button"
-                                                            onclick="incrementQty('qty-{{ $item->id }}')"
-                                                            class="w-8 h-8 rounded-r-lg bg-gray-700 hover:bg-gray-600 text-white transition flex items-center justify-center">
-                                                            +
-                                                        </button>
-                                                    </div>
-                                                </form>
-
-                                                {{-- Prix total ligne --}}
-                                                <div class="text-right min-w-[100px]">
-                                                    <div class="font-bold text-pink-400 text-lg">
-                                                        {{ number_format($item->prix_unitaire * $item->quantite, 2, ',', ' ') }} €
-                                                    </div>
-                                                </div>
-
-                                                {{-- Bouton suppression --}}
-                                                <form method="POST" action="{{ route('cart.remove', $item->id) }}"
-                                                    onsubmit="return confirm('Supprimer cet article ?')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"
-                                                        class="w-8 h-8 rounded-full bg-red-900/30 border border-red-500/50 text-red-400 hover:bg-red-900/50 hover:text-red-300 transition flex items-center justify-center"
-                                                        title="Supprimer">
-                                                        ×
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-
-                                {{-- Vider le panier --}}
-                                <div class="mt-6 pt-4 border-t border-gray-700">
-                                    <form method="POST" action="{{ route('cart.clear') }}"
-                                        onsubmit="return confirm('Êtes-vous sûr de vouloir vider le panier ?')">
-                                        @csrf
-                                        <button type="submit" class="text-red-400 hover:text-red-300 text-sm font-semibold transition">
-                                            🗑️ Vider le panier
-                                        </button>
-                                    </form>
-                                </div>
+                
+                {{-- Récapitulatif --}}
+                <div>
+                    <div style="background: #FAFAFA; padding: 2rem; border: 1px solid #e5e5e5;">
+                        <h2 style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #e5e5e5;">
+                            Récapitulatif
+                        </h2>
+                        
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.9rem;">
+                                <span>Sous-total</span>
+                                <span>€ {{ formatPrice($total) }}</span>
+                            </div>
+                            
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.9rem; color: #666;">
+                                <span>Estimation livraison</span>
+                                <span>Calculé à l'étape suivante</span>
                             </div>
                         </div>
-                    </div>
-
-                    {{-- Colonne latérale : Récapitulatif avec TVA --}}
-                    <div class="lg:col-span-1">
-                        <div class="bg-gray-800/50 backdrop-blur-sm border border-gray-700 overflow-hidden rounded-xl sticky top-4">
-                            <div class="p-6">
-                                <h3 class="text-lg font-semibold bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent mb-4">
-                                    Récapitulatif
-                                </h3>
-
-                                <div class="space-y-3 mb-4">
-                                    <div class="flex justify-between text-sm">
-                                        <span class="text-gray-400">Articles</span>
-                                        <span class="font-medium text-gray-200">{{ $cart->totalItems }}</span>
-                                    </div>
-                                    <div class="flex justify-between text-sm">
-                                        <span class="text-gray-400">Sous-total HT</span>
-                                        <span class="font-medium text-gray-200">{{ number_format($cart->total, 2, ',', ' ') }} €</span>
-                                    </div>
-                                    <div class="flex justify-between text-sm">
-                                        <span class="text-gray-400">TVA (20%)</span>
-                                        <span class="font-medium text-gray-200">{{ number_format($cart->tva_amount, 2, ',', ' ') }} €</span>
-                                    </div>
-                                </div>
-
-                                <div class="border-t border-gray-700 pt-4 mb-6">
-                                    <div class="flex justify-between text-xl font-bold">
-                                        <span class="text-gray-200">Total TTC</span>
-                                        <span class="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">{{ number_format($cart->total_ttc, 2, ',', ' ') }} €</span>
-                                    </div>
-                                </div>
-
-                                @if (empty($stockErrors))
-                                    <a href="{{ route('orders.create') }}"
-                                        class="block w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-center py-3 rounded-lg font-semibold transition">
-                                        Valider ma commande
-                                    </a>
-                                @else
-                                    <button disabled
-                                        class="block w-full bg-gray-600 text-gray-300 text-center py-3 rounded-lg cursor-not-allowed font-semibold">
-                                        Stock insuffisant
-                                    </button>
-                                @endif
-
-                                @if ($cart->expires_at)
-                                    <p class="text-xs text-gray-500 text-center mt-4">
-                                        Votre panier expire dans {{ $cart->expires_at->diffForHumans() }}
-                                    </p>
-                                @endif
+                        
+                        <div style="border-top: 1px solid #e5e5e5; padding-top: 1rem; margin-bottom: 2rem;">
+                            <div style="display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: 500;">
+                                <span>Total</span>
+                                <span style="font-size: 1.25rem;">€ {{ formatPrice($total) }}</span>
                             </div>
+                            
+                            <p style="font-size: 0.75rem; color: #999; margin-top: 0.5rem;">
+                                TTC • Hors frais de livraison
+                            </p>
                         </div>
+                        
+                        {{-- CTA --}}
+                        @if(auth()->check())
+                            <a  href="{{ route('orders.create') }}" class="ap-btn ap-btn-dark" style="display: block; text-align: center; width: 100%; padding: 1rem;">
+                                Valider ma commande →
+                            </a>
+                        @else
+                            <a href="{{ route('login') }}?redirect={{ urlencode(route('cart.index')) }}" 
+                               class="ap-btn ap-btn-dark" style="display: block; text-align: center; width: 100%; padding: 1rem;">
+                                Se connecter pour commander
+                            </a>
+                            
+                            <p style="text-align: center; font-size: 0.8rem; color: #666; margin-top: 1rem;">
+                                Ou <a href="{{ route('register') }}" style="text-decoration: underline;">créer un compte</a>
+                            </p>
+                        @endif
+                        
+                        {{-- Vider panier --}}
+                        <form action="{{ route('cart.clear') }}" method="POST" style="margin-top: 1rem;">
+                            @csrf
+                            <button type="submit" 
+                                    style="background: none; border: none; width: 100%; text-align: center; font-size: 0.75rem; color: #999; cursor: pointer; text-decoration: underline;">
+                                Vider le panier
+                            </button>
+                        </form>
                     </div>
                 </div>
-            @endif
-        </div>
+            </div>
+        @endif
     </div>
-</div>
+</section>
+
 @endsection
-
-@push('scripts')
-<script>
-    function incrementQty(inputId) {
-        const input = document.getElementById(inputId);
-        input.value = parseInt(input.value) + 1;
-        input.form.submit();
-    }
-
-    function decrementQty(inputId) {
-        const input = document.getElementById(inputId);
-        const newValue = parseInt(input.value) - 1;
-        if (newValue >= 1) {
-            input.value = newValue;
-            input.form.submit();
-        }
-    }
-</script>
-@endpush

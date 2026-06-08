@@ -25,7 +25,7 @@ class CartController extends Controller
 
         // Theme handled by middleware
 
-        return view(theme_view('cart.index'), [
+        return view('cart.index', [
             'cart'        => $cart,
             'stockErrors' => $this->cartService->checkStock(),
         ]);

@@ -5,6 +5,7 @@
 $currentRoute = request()->route() ? request()->route()->getName() : '';
 
 $menuItems = [
+    ['route' => 'admin.dashboard', 'label' => 'Dashboard', 'icon' => '📋'],
     ['route' => 'vinyles.index', 'label' => 'Vinyles', 'icon' => '💿'],
     ['route' => 'admin.orders.index', 'label' => 'Commandes', 'icon' => '📦'],
     ['route' => 'mouvements.index', 'label' => 'Mouvements', 'icon' => '📊'],
@@ -14,6 +15,8 @@ $menuItemsBottom = [
     ['route' => 'fonds.index', 'label' => 'Fonds', 'icon' => '🖼️'],
     ['route' => 'ventes.index', 'label' => 'Ventes', 'icon' => '💰'],
     ['route' => 'stats', 'label' => 'Statistiques', 'icon' => '📈'],
+    ['route' => 'stock-alerts.index', 'label' => 'Alertes', 'icon' => '🚨'],
+    ['route' => 'admin.users.index', 'label' => 'Utilisateurs', 'icon' => '👤'],
 ];
 
 function isActive($route) {

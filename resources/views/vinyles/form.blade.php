@@ -2,7 +2,7 @@
 $isEdit = isset($vinyle) && $vinyle->id !== null;
 @endphp
 
-@extends('layouts.app')
+@extends('layouts.art-print')
 
 @section('title', $isEdit ? '✏️ Modifier : ' . $vinyle->nom : '➕ Nouveau Vinyle')
 

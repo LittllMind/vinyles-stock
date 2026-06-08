@@ -1,5 +1,5 @@
 {{-- resources/views/stock-alerts/history.blade.php --}}
-@extends('layouts.app')
+@extends('layouts.admin-art-print')
 
 @section('title', 'Historique Alertes - Fundisc')
 

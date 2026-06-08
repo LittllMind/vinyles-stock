@@ -1,56 +1,97 @@
-<x-guest-layout>
-    <h2 class="text-2xl font-bold mb-6 bg-gradient-to-r from-violet-400 to-pink-400 bg-clip-text text-transparent text-center">
-        Inscription
-    </h2>
+{{-- resources/views/auth/register-art-print.blade.php --}}
+{{-- Register ART PRINT - Style minimaliste --}}
 
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
+@extends('layouts.art-print')
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Nom')" class="text-gray-300" />
-            <x-text-input id="name" class="block mt-1 w-full bg-gray-700 border-gray-600 text-gray-100 focus:border-violet-500 focus:ring focus:ring-violet-500/50" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
-        </div>
+@section('title', 'Inscription')
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" class="text-gray-300" />
-            <x-text-input id="email" class="block mt-1 w-full bg-gray-700 border-gray-600 text-gray-100 focus:border-violet-500 focus:ring focus:ring-violet-500/50" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+@section('content')
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Mot de passe')" class="text-gray-300" />
-
-            <x-text-input id="password" class="block mt-1 w-full bg-gray-700 border-gray-600 text-gray-100 focus:border-violet-500 focus:ring focus:ring-violet-500/50"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirmer le mot de passe')" class="text-gray-300" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full bg-gray-700 border-gray-600 text-gray-100 focus:border-violet-500 focus:ring focus:ring-violet-500/50"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-6">
-            <a class="underline text-sm text-gray-400 hover:text-violet-400 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500 focus:ring-offset-gray-800" href="{{ route('login') }}">
-                {{ __('Déjà inscrit ?') }}
-            </a>
-
-            <button type="submit" class="ms-4 px-6 py-2 bg-gradient-to-r from-violet-600 to-pink-600 text-white font-semibold rounded-lg shadow-lg hover:from-violet-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200">
-                {{ __("S'inscrire") }}
+<!-- Hero -->
+<section class="ap-hero" style="min-height: 70vh; display: flex; align-items: center;">
+    <div class="ap-container" style="max-width: 500px; margin: 0 auto;">
+        
+        <p class="ap-hero-label">Nouveau membre</p>
+        
+        <h1 style="margin-bottom: 3rem;">Créer un compte</h1>
+        
+        <form action="{{ route('register') }}" method="POST">
+            @csrf
+            
+            <input type="hidden" name="redirect" value="{{ request('redirect') }}">
+            
+            @if(request('theme'))
+                <input type="hidden" name="theme" value="{{ request('theme') }}">
+            @endif
+            
+            {{-- Nom --}}
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #666; margin-bottom: 0.5rem;"
+                >Nom complet</label>
+                
+                <input type="text" name="name" required autofocus
+                       value="{{ old('name') }}"
+                       style="width: 100%; padding: 0.75rem; border: 1px solid #e5e5e5; font-size: 0.9rem;"
+                       placeholder="Votre nom">
+                
+                @if ($errors->has('name'))
+                    <p style="color: #c00; font-size: 0.8rem; margin-top: 0.5rem;">{{ $errors->first('name') }}</p>
+                @endif
+            </div>
+            
+            {{-- Email --}}
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #666; margin-bottom: 0.5rem;"
+                >Email</label>
+                
+                <input type="email" name="email" required
+                       value="{{ old('email') }}"
+                       style="width: 100%; padding: 0.75rem; border: 1px solid #e5e5e5; font-size: 0.9rem;"
+                       placeholder="votre@email.com">
+                
+                @if ($errors->has('email'))
+                    <p style="color: #c00; font-size: 0.8rem; margin-top: 0.5rem;">{{ $errors->first('email') }}</p>
+                @endif
+            </div>
+            
+            {{-- Password --}}
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #666; margin-bottom: 0.5rem;"
+                >Mot de passe</label>
+                
+                <input type="password" name="password" required
+                       style="width: 100%; padding: 0.75rem; border: 1px solid #e5e5e5; font-size: 0.9rem;"
+                       placeholder="8 caractères minimum">
+                
+                @if ($errors->has('password'))
+                    <p style="color: #c00; font-size: 0.8rem; margin-top: 0.5rem;">{{ $errors->first('password') }}</p>
+                @endif
+            </div>
+            
+            {{-- Confirm Password --}}
+            <div style="margin-bottom: 2rem;">
+                <label style="display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #666; margin-bottom: 0.5rem;"
+                >Confirmer le mot de passe</label>
+                
+                <input type="password" name="password_confirmation" required
+                       style="width: 100%; padding: 0.75rem; border: 1px solid #e5e5e5; font-size: 0.9rem;"
+                       placeholder="••••••••">
+            </div>
+            
+            {{-- Submit --}}
+            <button type="submit" class="ap-btn ap-btn-dark" style="width: 100%; padding: 1rem;">
+                Créer mon compte →
             </button>
+        </form>
+        
+        {{-- Login link --}}
+        <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e5e5e5;">
+            <p style="font-size: 0.9rem; color: #666;">
+                Déjà inscrit ? 
+                <a  href="{{ route('login') }}" style="text-decoration: underline; color: inherit;">Se connecter</a>
+            </p>
         </div>
-    </form>
-</x-guest-layout>
+    </div>
+</section>
+
+@endsection

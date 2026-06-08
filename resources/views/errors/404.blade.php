@@ -1,7 +1,7 @@
 {{-- resources/views/errors/404.blade.php --}}
 {{-- Vue erreur 404 sécurisée contre XSS --}}
 
-@extends('layouts.app')
+@extends('layouts.art-print')
 
 @section('title', 'Page non trouvée')
 

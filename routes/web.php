@@ -49,7 +49,7 @@ Route::middleware('auth')->group(function () {
 // Route::get('/theme/{theme}', function ($theme) { ... })->name('theme.switch');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return redirect()->route('admin.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // ============================================

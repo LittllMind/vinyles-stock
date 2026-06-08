@@ -36,7 +36,7 @@ class OrderController extends Controller
         $tempShipping = Session::get('order_shipping');
         $tempBilling = Session::get('order_billing');
 
-        return view(theme_view('orders.create'), [
+        return view('orders.create', [
             'cart' => $cart,
             'addresses' => $addresses,
             'tempShipping' => $tempShipping,
@@ -176,7 +176,7 @@ class OrderController extends Controller
             $order = Order::find(Session::get('pending_order_id'));
             if ($order && $order->statut === 'en_attente') {
                 // Réutiliser la commande existante
-                return view(theme_view('orders.payment'), [
+                return view('orders.payment', [
                     'cart' => $cart,
                     'shipping' => $shipping,
                     'billing' => $billing ?? $shipping,
@@ -191,7 +191,7 @@ class OrderController extends Controller
         // Stocker l'ID de la commande en session pour éviter les doublons
         Session::put('pending_order_id', $order->id);
 
-        return view(theme_view('orders.payment'), [
+        return view('orders.payment', [
             'cart' => $cart,
             'shipping' => $shipping,
             'billing' => $billing ?? $shipping,
@@ -333,6 +333,6 @@ class OrderController extends Controller
             ->with('items.vinyle')
             ->paginate(10);
 
-        return view(theme_view('orders.my-orders'), compact('orders'));
+        return view('orders.my-orders', compact('orders'));
     }
 }

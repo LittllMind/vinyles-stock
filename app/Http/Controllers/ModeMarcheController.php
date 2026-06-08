@@ -34,7 +34,7 @@ class ModeMarcheController extends Controller
                 ];
             });
 
-        return view('admin.marche.index', compact('vinyles'));
+        return view('marche.index', compact('vinyles'));
     }
 
     /**
@@ -266,7 +266,7 @@ class ModeMarcheController extends Controller
             return response()->json(['error' => 'Seules les ventes marché peuvent être annulées ici'], 403);
         }
 
-        if ($order->statut === 'annulée') {
+        if ($order->statut === 'annulee') {
             return response()->json(['error' => 'Cette vente est déjà annulée'], 400);
         }
 

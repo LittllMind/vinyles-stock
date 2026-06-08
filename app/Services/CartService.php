@@ -88,11 +88,11 @@ class CartService
             throw new \Exception("La quantité doit être supérieure à 0");
         }
 
-        // --- Suppléments en centimes (cohérent avec DB) ---
+        // --- Supplements en euros ---
         $fondSupplements = [
-            'standard' => 0,     // €0
-            'miroir'   => 800,   // €8
-            'dore'     => 1300,  // €13
+            'standard' => 0,
+            'miroir'   => 8,
+            'dore'     => 13,
         ];
 
         // --- Vérif/chargement du fond (miroir/doré) ---

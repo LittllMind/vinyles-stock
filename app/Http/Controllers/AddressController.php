@@ -20,7 +20,7 @@ class AddressController extends Controller
     {
         $addresses = Auth::user()->addresses()->orderBy('is_default', 'desc')->orderBy('created_at', 'desc')->get();
         
-        return view(theme_view('addresses.index'), compact('addresses'));
+        return view('addresses.index', compact('addresses'));
     }
 
     /**
@@ -29,7 +29,7 @@ class AddressController extends Controller
     public function create(Request $request)
     {
         $theme = $request->get('theme');
-        return view(theme_view('addresses.create'));
+        return view('addresses.create');
     }
 
     /**
@@ -86,7 +86,7 @@ class AddressController extends Controller
     public function edit(Request $request, $id)
     {
         $address = Auth::user()->addresses()->findOrFail($id);
-        return view(theme_view('addresses.edit'), compact('address'));
+        return view('addresses.edit', compact('address'));
     }
 
     /**

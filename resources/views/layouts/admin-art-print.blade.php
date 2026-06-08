@@ -13,8 +13,15 @@
     {{-- Tailwind CDN pour le style --}}
     <script src="https://cdn.tailwindcss.com"></script>
     
+    {{-- Alpine.js pour les interactions (modales, dropdowns, etc.) --}}
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.3/dist/cdn.min.js"></script>
+    
     {{-- Styles communs --}}
     <link href="{{ asset('css/ap-global.css') }}" rel="stylesheet">
+    
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
     
     <style>
         /* Layout avec sidebar */

@@ -219,7 +219,7 @@ class StatsController extends Controller
 
         $ventesParPeriode = DB::table('ventes')
             ->select(
-                DB::raw("DATE_FORMAT(created_at, '{$sqlGroupFormat}') as periode"),
+                DB::raw("strftime('{$sqlGroupFormat}', created_at) as periode"),
                 DB::raw('SUM(total) as ca')
             )
             ->when($startDate, function ($q) use ($startDate) {

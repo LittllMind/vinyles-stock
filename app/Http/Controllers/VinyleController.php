@@ -43,7 +43,7 @@ class VinyleController extends Controller
             ->paginate(25)
             ->appends($request->only('search', 'filter'));
 
-        return view(theme_view('vinyles.index'), compact('vinyles', 'search', 'filter'));
+        return view('vinyles.index', compact('vinyles', 'search', 'filter'));
     }
 
     public function create()
@@ -141,6 +141,11 @@ class VinyleController extends Controller
             ->with('success', 'Vinyle supprimé avec succès');
     }
 
+    public function search(Request $request)
+    {
+        return redirect()->route('vinyles.index', ['search' => $request->get('q')]);
+    }
+
     public function kiosque(Request $request)
     {
         $allowedSorts = ['artiste', 'modele', 'prix', 'quantite', 'created_at'];
@@ -185,7 +190,7 @@ class VinyleController extends Controller
             ];
         })->all();
 
-        return view(theme_view('kiosque'), [
+        return view('kiosque', [
             'vinylesData' => $vinylesData,
             'vinyles' => $vinyles,
         ]);
@@ -199,6 +204,6 @@ class VinyleController extends Controller
         // Charger les relations nécessaires
         $vinyle->load(['media']);
 
-        return view(theme_view('vinyles.show'), compact('vinyle'));
+        return view('vinyles.show', compact('vinyle'));
     }
 }

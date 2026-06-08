@@ -14,8 +14,28 @@ class UserController extends Controller
         $this->middleware('auth');
     }
 
+    public function profile()
+    {
+        return view('users.profile', ['user' => auth()->user()]);
+    }
+
+    public function editProfile()
+    {
+        return view('users.profile-edit', ['user' => auth()->user()]);
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . auth()->id(),
+        ]);
+        auth()->user()->update($validated);
+        return redirect()->route('profile')->with('success', 'Profil mis a jour');
+    }
+
     /**
-     * Display the specified user profile.
+     * Show the specified resource.
      */
     public function show(User $user)
     {

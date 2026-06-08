@@ -27,7 +27,7 @@ class HomeController extends Controller
         ];
 
         // Utilise le helper theme_view pour le thème depuis session/middleware
-        return view(theme_view('landing'), compact('featured', 'stats'));
+        return view('landing', compact('featured', 'stats'));
     }
 
     /**
@@ -35,7 +35,7 @@ class HomeController extends Controller
      */
     public function about(Request $request)
     {
-        return view(theme_view('about'));
+        return view('about');
     }
 
     /**
@@ -43,7 +43,7 @@ class HomeController extends Controller
      */
     public function contact(Request $request)
     {
-        return view(theme_view('contact'));
+        return view('contact');
     }
 
     /**
