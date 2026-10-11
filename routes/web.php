@@ -16,6 +16,7 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ModeMarcheController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\Admin\ContactMessageController;
 
 // ============================================
 // ROUTES PUBLIQUES (Accès sans authentification)
@@ -53,69 +54,67 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // ============================================
-// ROUTES ADMIN ORDERS (Admin et Employé)
+// ROUTES ADMIN (préfixe admin.*)
 // ============================================
-Route::middleware(['auth', 'role:admin,employe'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/orders', [\App\Http\Controllers\Admin\OrderAdminController::class, 'index'])->name('orders.index');
-    Route::get('/orders/{order}', [\App\Http\Controllers\Admin\OrderAdminController::class, 'show'])->name('orders.show');
-    Route::patch('/orders/{order}/status', [\App\Http\Controllers\Admin\OrderAdminController::class, 'updateStatus'])->name('orders.status');
-    Route::post('/orders/{order}/cancel', [\App\Http\Controllers\Admin\OrderAdminController::class, 'cancel'])->name('orders.cancel');
-});
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
-});
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
 
-// ============================================
-// ROUTES ADMIN REPORTS (Admin et Employé)
-// ============================================
-Route::middleware(['auth', 'role:admin,employe'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/reports/monthly', [\App\Http\Controllers\Admin\ReportController::class, 'monthlyReportForm'])->name('reports.monthly');
-    Route::post('/reports/monthly', [\App\Http\Controllers\Admin\ReportController::class, 'generateMonthlyReport'])->name('reports.monthly.generate');
-    
-    // Rapports T13.1
-    Route::get('/reports/stock', [\App\Http\Controllers\Admin\ReportController::class, 'stock'])->name('reports.stock');
-    Route::get('/reports/artists', [\App\Http\Controllers\Admin\ReportController::class, 'artists'])->name('reports.artists');
-});
+    // --- Commandes (admin + employé) ---
+    Route::middleware(['role:admin,employe'])->group(function () {
+        Route::get('/orders', [\App\Http\Controllers\Admin\OrderAdminController::class, 'index'])->name('orders.index');
+        Route::get('/orders/{order}', [\App\Http\Controllers\Admin\OrderAdminController::class, 'show'])->name('orders.show');
+        Route::patch('/orders/{order}/status', [\App\Http\Controllers\Admin\OrderAdminController::class, 'updateStatus'])->name('orders.status');
+        Route::post('/orders/{order}/cancel', [\App\Http\Controllers\Admin\OrderAdminController::class, 'cancel'])->name('orders.cancel');
+    });
 
-// ============================================
-// ROUTES ADMIN REPORTS INVENTORY (Admin uniquement)
-// ============================================
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/reports/inventory/vinyls/pdf', [\App\Http\Controllers\Admin\ReportController::class, 'exportVinylesInventory'])->name('reports.inventory.vinyls');
-    Route::get('/reports/inventory/fonds/pdf', [\App\Http\Controllers\Admin\ReportController::class, 'exportFondsInventory'])->name('reports.inventory.fonds');
-    // Routes reviews admin
-    Route::get('/reviews', [\App\Http\Controllers\Admin\ReviewController::class, 'index'])->name('reviews.index');
-    Route::get('/reviews/pending', [\App\Http\Controllers\Admin\ReviewController::class, 'pending'])->name('reviews.pending');
-    Route::patch('/reviews/{review}/approve', [\App\Http\Controllers\Admin\ReviewController::class, 'approve'])->name('reviews.approve');
-    Route::patch('/reviews/{review}/reject', [\App\Http\Controllers\Admin\ReviewController::class, 'reject'])->name('reviews.reject');
-});
+    // --- Utilisateurs (admin uniquement) ---
+    Route::middleware(['role:admin'])->group(function () {
+        Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
+    });
 
-// ============================================
-// ROUTES ADMIN DASHBOARD (Admin et Employé)
-// ============================================
-Route::middleware(['auth', 'role:admin,employe'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/stats', [\App\Http\Controllers\Admin\DashboardController::class, 'statsApi'])->name('stats.json');
-    Route::get('/stats/charts', [\App\Http\Controllers\Admin\DashboardController::class, 'chartsApi'])->name('stats.charts');
-});
+    // --- Rapports (admin + employé) ---
+    Route::middleware(['role:admin,employe'])->group(function () {
+        Route::get('/reports/monthly', [\App\Http\Controllers\Admin\ReportController::class, 'monthlyReportForm'])->name('reports.monthly');
+        Route::post('/reports/monthly', [\App\Http\Controllers\Admin\ReportController::class, 'generateMonthlyReport'])->name('reports.monthly.generate');
 
-// ============================================
-// ROUTES ADMIN CONTACT MESSAGES (Admin et Employé)
-// ============================================
-use App\Http\Controllers\Admin\ContactMessageController;
-Route::middleware(['auth', 'role:admin,employe'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/contact-messages', [ContactMessageController::class, 'index'])->name('contact-messages.index');
-    Route::get('/contact-messages/{message}', [ContactMessageController::class, 'show'])->name('contact-messages.show');
-    Route::patch('/contact-messages/{message}/read', [ContactMessageController::class, 'markAsRead'])->name('contact-messages.read');
-    Route::post('/contact-messages/{message}/reply', [ContactMessageController::class, 'reply'])->name('contact-messages.reply');
-    Route::patch('/contact-messages/{message}/archive', [ContactMessageController::class, 'archive'])->name('contact-messages.archive');
+        // Rapports T13.1
+        Route::get('/reports/stock', [\App\Http\Controllers\Admin\ReportController::class, 'stock'])->name('reports.stock');
+        Route::get('/reports/artists', [\App\Http\Controllers\Admin\ReportController::class, 'artists'])->name('reports.artists');
+    });
 
-    // Conversations admin (nouveau)
-    Route::get('/conversations', [\App\Http\Controllers\Admin\ConversationController::class, 'index'])->name('conversations.index');
-    Route::get('/conversations/{conversation}', [\App\Http\Controllers\Admin\ConversationController::class, 'show'])->name('conversations.show');
-    Route::post('/conversations/{conversation}/reply', [\App\Http\Controllers\Admin\ConversationController::class, 'reply'])->name('conversations.reply');
-    Route::patch('/conversations/{conversation}/close', [\App\Http\Controllers\Admin\ConversationController::class, 'close'])->name('conversations.close');
-    Route::patch('/conversations/{conversation}/messages/{message}/read', [\App\Http\Controllers\Admin\ConversationController::class, 'markMessageRead'])->name('conversations.messages.read');
+    // --- Rapports inventaire & avis (admin uniquement) ---
+    Route::middleware(['role:admin'])->group(function () {
+        Route::get('/reports/inventory/vinyls/pdf', [\App\Http\Controllers\Admin\ReportController::class, 'exportVinylesInventory'])->name('reports.inventory.vinyls');
+        Route::get('/reports/inventory/fonds/pdf', [\App\Http\Controllers\Admin\ReportController::class, 'exportFondsInventory'])->name('reports.inventory.fonds');
+
+        // Routes reviews admin
+        Route::get('/reviews', [\App\Http\Controllers\Admin\ReviewController::class, 'index'])->name('reviews.index');
+        Route::get('/reviews/pending', [\App\Http\Controllers\Admin\ReviewController::class, 'pending'])->name('reviews.pending');
+        Route::patch('/reviews/{review}/approve', [\App\Http\Controllers\Admin\ReviewController::class, 'approve'])->name('reviews.approve');
+        Route::patch('/reviews/{review}/reject', [\App\Http\Controllers\Admin\ReviewController::class, 'reject'])->name('reviews.reject');
+    });
+
+    // --- Tableau de bord & APIs stats (admin + employé) ---
+    Route::middleware(['role:admin,employe'])->group(function () {
+        Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/stats', [\App\Http\Controllers\Admin\DashboardController::class, 'statsApi'])->name('stats.json');
+        Route::get('/stats/charts', [\App\Http\Controllers\Admin\DashboardController::class, 'chartsApi'])->name('stats.charts');
+    });
+
+    // --- Messages contact & conversations (admin + employé) ---
+    Route::middleware(['role:admin,employe'])->group(function () {
+        Route::get('/contact-messages', [ContactMessageController::class, 'index'])->name('contact-messages.index');
+        Route::get('/contact-messages/{message}', [ContactMessageController::class, 'show'])->name('contact-messages.show');
+        Route::patch('/contact-messages/{message}/read', [ContactMessageController::class, 'markAsRead'])->name('contact-messages.read');
+        Route::post('/contact-messages/{message}/reply', [ContactMessageController::class, 'reply'])->name('contact-messages.reply');
+        Route::patch('/contact-messages/{message}/archive', [ContactMessageController::class, 'archive'])->name('contact-messages.archive');
+
+        // Conversations admin (nouveau)
+        Route::get('/conversations', [\App\Http\Controllers\Admin\ConversationController::class, 'index'])->name('conversations.index');
+        Route::get('/conversations/{conversation}', [\App\Http\Controllers\Admin\ConversationController::class, 'show'])->name('conversations.show');
+        Route::post('/conversations/{conversation}/reply', [\App\Http\Controllers\Admin\ConversationController::class, 'reply'])->name('conversations.reply');
+        Route::patch('/conversations/{conversation}/close', [\App\Http\Controllers\Admin\ConversationController::class, 'close'])->name('conversations.close');
+        Route::patch('/conversations/{conversation}/messages/{message}/read', [\App\Http\Controllers\Admin\ConversationController::class, 'markMessageRead'])->name('conversations.messages.read');
+    });
 });
 
 // ============================================
